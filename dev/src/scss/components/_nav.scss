@@ -1,0 +1,161 @@
+// Extend default Bootstrap's .nav, .nav-item, .nav-link classes
+
+.nav {
+  --#{$prefix}nav-link-line-height: #{$nav-link-line-height};
+  --#{$prefix}nav-link-active-color: #{$nav-link-active-color};
+
+  flex-direction: row;
+  gap: 0;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+
+  &.show {
+    color: var(--#{$prefix}nav-link-hover-color);
+  }
+
+  &.active {
+    color: var(--#{$prefix}nav-link-active-color);
+  }
+
+  &.disabled,
+  &:disabled {
+    color: var(--#{$prefix}nav-link-disabled-color);
+  }
+
+  &.text-body,
+  &.text-body-secondary,
+  &.text-body-tertiary {
+    &:hover,
+    &:focus-visible,
+    &.show {
+      color: var(--#{$prefix}nav-link-hover-color) !important;
+    }
+    &.active {
+      color: var(--#{$prefix}nav-link-active-color) !important;
+    }
+    &.disabled,
+    &:disabled {
+      color: var(--#{$prefix}nav-link-disabled-color) !important;
+    }
+  }
+}
+
+
+// Navbar nav
+
+.navbar-nav {
+  .btn-check-label {
+    margin: {
+      right: .375rem;
+      left: -(1.125rem + .375rem);
+    }
+    font-size: 1.125rem;
+    opacity: 0;
+    transition: opacity .25s ease-in-out, margin .25s ease-in-out;
+  }
+
+  .btn-check:checked + .nav-link,
+  .nav-link.active {
+    color: $white;
+    background-color: $primary;
+
+    .btn-check-label {
+      margin-left: 0;
+      opacity: 1;
+    }
+  }
+}
+
+
+// Tabs
+
+.nav-tabs {
+  --#{$prefix}nav-tabs-padding: #{$nav-tabs-padding};
+  --#{$prefix}nav-tabs-bg: #{$nav-tabs-bg};
+  --#{$prefix}nav-tabs-border-width: #{$nav-tabs-border-width};
+  --#{$prefix}nav-tabs-border-color: #{$nav-tabs-border-color};
+  --#{$prefix}nav-tabs-link-color: #{$nav-tabs-link-color};
+  --#{$prefix}nav-tabs-link-hover-color: #{$nav-tabs-link-hover-color};
+  --#{$prefix}nav-tabs-link-active-color: #{$nav-tabs-link-active-color};
+  --#{$prefix}nav-tabs-link-hover-bg: #{$nav-tabs-link-hover-bg};
+  --#{$prefix}nav-tabs-link-active-box-shadow: #{$nav-tabs-link-active-box-shadow};
+
+  gap: var(--#{$prefix}nav-tabs-padding);
+  padding: var(--#{$prefix}nav-tabs-padding);
+  background-color: var(--#{$prefix}nav-tabs-bg);
+  border: var(--#{$prefix}nav-tabs-border-width) solid var(--#{$prefix}nav-tabs-border-color);
+  @include border-radius(var(--#{$prefix}nav-tabs-border-radius));
+
+  .nav-item {
+    flex-grow: 1;
+    flex-basis: 0;
+    text-align: center;
+  }
+
+  .nav-link {
+    justify-content: center;
+    width: 100%;
+    line-height: var(--#{$prefix}nav-link-line-height);
+    color: var(--#{$prefix}nav-tabs-link-color);
+    @include border-radius(var(--#{$prefix}nav-tabs-border-radius));
+
+    &:hover,
+    &.show,
+    &:focus-visible {
+      background-color: var(--#{$prefix}nav-tabs-link-hover-bg);
+    }
+
+    &:focus-visible {
+      box-shadow: $nav-link-focus-box-shadow !important;
+    }
+
+    &.active {
+      color: var(--#{$prefix}nav-tabs-link-active-color);
+      background-color: var(--#{$prefix}nav-tabs-link-active-bg);
+      @include box-shadow(var(--#{$prefix}nav-tabs-link-active-box-shadow));
+    }
+
+    &.disabled,
+    &:disabled {
+      background: none;
+    }
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+  &.flex-column .nav-link {
+    justify-content: start;
+  }
+
+  .dropdown-menu {
+    @include border-radius(var(--#{$prefix}dropdown-border-radius));
+  }
+}
+
+
+// Fill and justify
+
+.nav-fill:not(.flex-column) .nav-link,
+.nav-justified:not(.flex-column) .nav-link {
+  justify-content: center;
+}
+
+
+// Dark mode
+
+@if $enable-dark-mode {
+  @include color-mode(dark) {
+    .nav-tabs:not([data-bs-theme="light"]) {
+      .nav-link {
+        --#{$prefix}nav-tabs-link-hover-bg: #{$nav-tabs-link-hover-bg-dark};
+        --#{$prefix}nav-tabs-link-active-bg: #{$nav-tabs-link-active-bg-dark};
+        --#{$prefix}nav-tabs-link-active-box-shadow: #{$nav-tabs-link-active-box-shadow-dark};
+      }
+    }
+  }
+}

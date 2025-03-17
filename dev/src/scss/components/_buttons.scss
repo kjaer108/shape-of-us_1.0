@@ -1,0 +1,273 @@
+// Override Bootstrap's base button class
+
+.btn {
+  --#{$prefix}btn-active-border-color: transparent;
+  --#{$prefix}btn-disabled-border-color: transparent;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  &:focus-visible {
+    box-shadow: $focus-ring-box-shadow;
+  }
+
+  // Fix chevron icons vertical aligment
+  &:not(.btn-icon) [class*=" #{$icon-prefix}chevron"],
+  &:not(.btn-icon) [class^="#{$icon-prefix}chevron"] {
+    margin-top: .125rem;
+  }
+}
+
+
+// Override solid buttons
+/* stylelint-disable */
+@each $color, $value in map-remove($theme-colors, "secondary", "dark", "light") {
+  .btn-#{$color} {
+    --#{$prefix}btn-hover-bg: #{adjust-color($value, $lightness: -10%)};
+    --#{$prefix}btn-active-bg: #{adjust-color($value, $lightness: -10%)};
+    --#{$prefix}btn-hover-border-color: #{adjust-color($value, $lightness: -10%)};
+    --#{$prefix}btn-active-border-color: #{adjust-color($value, $lightness: -10%)};
+  }
+}
+/* stylelint-enable */
+
+.btn-secondary {
+  --#{$prefix}btn-color: #{$gray-700};
+  --#{$prefix}btn-bg: #{$gray-100};
+  --#{$prefix}btn-border-color: #{$gray-100};
+  --#{$prefix}btn-hover-color: #{$gray-900};
+  --#{$prefix}btn-hover-bg: #{$gray-200};
+  --#{$prefix}btn-hover-border-color: #{$gray-200};
+  --#{$prefix}btn-active-color: #{$gray-700};
+  --#{$prefix}btn-active-bg: #{$gray-200};
+  --#{$prefix}btn-active-border-color: #{$gray-200};
+  --#{$prefix}btn-disabled-color: #{$gray-700};
+  --#{$prefix}btn-disabled-bg: #{$gray-100};
+  --#{$prefix}btn-disabled-border-color: #{$gray-100};
+}
+
+.btn-dark {
+  --#{$prefix}btn-hover-bg: #{$gray-950};
+  --#{$prefix}btn-hover-border-color: #{$gray-950};
+  --#{$prefix}btn-active-bg: #{$gray-950};
+  --#{$prefix}btn-active-border-color: #{$gray-950};
+}
+
+.btn-light {
+  --#{$prefix}btn-color: #{$primary};
+  --#{$prefix}btn-border-color: #{$primary};
+  --#{$prefix}btn-hover-color: #{$white};
+  --#{$prefix}btn-hover-bg: #{$primary};
+  --#{$prefix}btn-hover-border-color: #{$primary};
+  --#{$prefix}btn-active-color: #{$white};
+  --#{$prefix}btn-active-bg: #{$primary};
+  --#{$prefix}btn-active-border-color: #{$primary};
+}
+
+.btn-link {
+  font-weight: $btn-font-weight;
+}
+
+
+// Override outline buttons
+
+.btn-outline-secondary {
+  --#{$prefix}btn-color: #{$gray-700};
+  --#{$prefix}btn-border-color: #{$gray-200};
+  --#{$prefix}btn-hover-color: #{$gray-900};
+  --#{$prefix}btn-hover-bg: transparent;
+  --#{$prefix}btn-hover-border-color: #{$gray-500};
+  --#{$prefix}btn-active-color: #{$gray-900};
+  --#{$prefix}btn-active-bg: transparent;
+  --#{$prefix}btn-active-border-color: #{$gray-900};
+  --#{$prefix}btn-disabled-color: #{$gray-700};
+  --#{$prefix}btn-disabled-border-color: #{$gray-200};
+}
+
+
+// Icon button
+
+.btn-icon {
+  --#{$prefix}btn-size: #{$btn-icon-size};
+
+  flex-shrink: 0;
+  width: var(--#{$prefix}btn-size);
+  height: var(--#{$prefix}btn-size);
+  padding: 0;
+
+  &.btn-lg {
+    --#{$prefix}btn-size: #{$btn-icon-size-lg};
+  }
+
+  &.btn-sm {
+    --#{$prefix}btn-size: #{$btn-icon-size-sm};
+  }
+}
+
+
+// Active filter button
+
+.btn-filter {
+  --#{$prefix}btn-padding-x: #{$spacer * .5};
+  --#{$prefix}btn-color: #{$dark};
+  --#{$prefix}btn-hover-color: #{$dark};
+  --#{$prefix}btn-active-color: #{$dark};
+  --#{$prefix}btn-bg: #{$light};
+  --#{$prefix}btn-hover-bg: #{$light};
+  --#{$prefix}btn-active-bg: #{$light};
+  --#{$prefix}btn-border-color: #{$light};
+  --#{$prefix}btn-hover-border-color: #{$light};
+  --#{$prefix}btn-active-border-color: #{$light};
+
+  &:hover .btn-filter-badge {
+    color: $white;
+    background-color: $primary;
+  }
+}
+
+.btn-filter-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1rem;
+  height: 1rem;
+  margin-right: .25rem;
+  font-size: .625rem;
+  color: #897974;
+  transition: color .25s ease-in-out, background-color .25s ease-in-out;
+  @include border-radius(50%);
+}
+
+
+// Btn-check label
+
+.form-label {
+  cursor: pointer;
+}
+
+
+// Swatch item
+
+.btn-swatch {
+  --#{$prefix}btn-swatch-size: #{$btn-swatch-size};
+  --#{$prefix}btn-swatch-border-radius: #{$btn-swatch-border-radius};
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--#{$prefix}btn-swatch-size);
+  height: var(--#{$prefix}btn-swatch-size);
+  @include border-radius(var(--#{$prefix}btn-swatch-border-radius));
+
+  &.btn-swatch-sm {
+    --#{$prefix}btn-swatch-size: #{$btn-swatch-size-sm};
+  }
+}
+
+.btn-swatch-label {
+  color: $light;
+  transition: transform .25s ease-in-out;
+  transform: scale(0);
+  will-change: transform;
+}
+
+.btn-check:checked + .form-label .btn-swatch {
+  .btn-swatch-label {
+    transform: scale(1);
+  }
+}
+
+
+// Form-check button
+
+.btn.form-check {
+  --#{$prefix}btn-color: #{$gray-800};
+  --#{$prefix}btn-hover-color: #{$gray-900};
+  --#{$prefix}btn-active-color: #{$gray-900};
+  --#{$prefix}btn-bg: #{$gray-100};
+  --#{$prefix}btn-hover-bg: #{$gray-100};
+  --#{$prefix}btn-active-bg: #{$white};
+  --#{$prefix}btn-border-color: #{$gray-100};
+  --#{$prefix}btn-hover-border-color: #{$primary};
+  --#{$prefix}btn-active-border-color: #{$primary};
+  --#{$prefix}btn-font-size: #{$font-size-base};
+
+  position: relative;
+  gap: $spacer * .75;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding-left: $spacer * 3.5;
+  overflow: hidden;
+  text-align: left;
+  text-wrap: initial;
+
+  .form-check-label::before {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    content: "";
+  }
+
+  &:has(:checked) {
+    color: var(--#{$prefix}btn-active-color);
+    background-color: var(--#{$prefix}btn-active-bg);
+    border-color: var(--#{$prefix}btn-active-border-color);
+  }
+}
+
+
+// Dark mode
+
+@if $enable-dark-mode {
+  @include color-mode(dark) {
+    .btn-secondary:not([data-bs-theme="light"]) {
+      --#{$prefix}btn-color: #{$gray-200};
+      --#{$prefix}btn-bg: #{$gray-700};
+      --#{$prefix}btn-border-color: #{$gray-700};
+      --#{$prefix}btn-hover-color: #{$white};
+      --#{$prefix}btn-hover-bg: #{$gray-600};
+      --#{$prefix}btn-hover-border-color: #{$gray-600};
+      --#{$prefix}btn-active-color: #{$gray-200};
+      --#{$prefix}btn-active-bg: #{$gray-600};
+      --#{$prefix}btn-active-border-color: #{$gray-600};
+      --#{$prefix}btn-disabled-color: #{$gray-200};
+      --#{$prefix}btn-disabled-bg: #{$gray-700};
+      --#{$prefix}btn-disabled-border-color: #{$gray-700};
+    }
+
+    .btn-dark:not([data-bs-theme="light"]) {
+      @extend .btn-light;
+    }
+
+    .btn-link:not([data-bs-theme="light"]) {
+      --#{$prefix}btn-disabled-color: #{$btn-link-disabled-color-dark};
+    }
+
+    .btn-outline-secondary:not([data-bs-theme="light"]) {
+      --#{$prefix}btn-color: #{$gray-200};
+      --#{$prefix}btn-border-color: #{$gray-700};
+      --#{$prefix}btn-hover-color: #{$white};
+      --#{$prefix}btn-hover-border-color: #{$gray-400};
+      --#{$prefix}btn-active-color: #{$white};
+      --#{$prefix}btn-active-border-color: #{$white};
+      --#{$prefix}btn-disabled-color: #{$gray-200};
+      --#{$prefix}btn-disabled-border-color: #{$gray-700};
+    }
+
+    .btn-outline-dark:not([data-bs-theme="light"]) {
+      --#{$prefix}btn-color: #{$gray-50};
+      --#{$prefix}btn-border-color: #{$gray-50};
+      --#{$prefix}btn-hover-color: #{$gray-900};
+      --#{$prefix}btn-hover-bg: #{$white};
+      --#{$prefix}btn-hover-border-color: #{$white};
+      --#{$prefix}btn-active-color: #{$gray-900};
+      --#{$prefix}btn-active-bg: #{$white};
+      --#{$prefix}btn-active-border-color: #{$white};
+      --#{$prefix}btn-disabled-color: #{$gray-50};
+      --#{$prefix}btn-disabled-border-color: #{$gray-50};
+    }
+  }
+}

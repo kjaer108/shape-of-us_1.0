@@ -1,0 +1,19 @@
+// Custom web fonts
+
+// Clash Display - variable
+@font-face {
+  font-family: "Clash Display";
+  font-style: normal;
+  font-weight: 200 700;
+  src: url("../fonts/clash-display-variable.woff2") format("woff2");
+  font-display: swap;
+}
+
+// Satoshi - variable
+@font-face {
+  font-family: "Satoshi";
+  font-style: normal;
+  font-weight: 300 900;
+  src: url("../fonts/satoshi-variable.woff2") format("woff2");
+  font-display: swap;
+}

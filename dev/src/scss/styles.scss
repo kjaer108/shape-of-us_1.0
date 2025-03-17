@@ -1,0 +1,17 @@
+/*!
+ * Zandora | HTML Website Template
+ * Website styles
+*/
+
+// Configuration & utilities
+@import "fonts";
+@import "variables";
+@import "utilities";
+
+// Bootstrap
+@import "bootstrap";
+
+// Layout, animations & components
+@import "root";
+@import "reboot";
+@import "components";

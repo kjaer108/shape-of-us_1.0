@@ -1,0 +1,156 @@
+// Extend default Bootstrap's .form-control / .form-select classes
+
+.form-control,
+.form-select {
+  --#{$prefix}form-control-bg: #{$input-bg};
+  --#{$prefix}form-control-border-color: #{$input-border-color};
+  --#{$prefix}form-control-focus-bg: #{$input-focus-bg};
+  --#{$prefix}form-control-focus-border-color: #{$input-focus-border-color};
+
+  background-color: var(--#{$prefix}form-control-bg);
+  border-color: var(--#{$prefix}form-control-border-color);
+
+  &:focus {
+    background-color: var(--#{$prefix}form-control-focus-bg);
+    border-color: var(--#{$prefix}form-control-focus-border-color);
+  }
+
+  &:disabled {
+    border-style: dashed;
+  }
+}
+
+
+// Fix small select idicator position
+
+.form-select.form-select-sm {
+  background-position: right $form-select-padding-x-sm * .875 center;
+}
+
+
+// Checkboxes and radios
+
+.form-check-label {
+  font-size: $form-label-font-size;
+  line-height: $form-label-line-height;
+}
+
+.form-check-input {
+  &:focus {
+    box-shadow: none;
+  }
+
+  &:focus-visible {
+    box-shadow: $focus-ring-box-shadow;
+  }
+
+  &:active {
+    background-color: transparent;
+    filter: none;
+  }
+}
+
+
+// Switch
+
+.form-switch {
+  min-height: $form-switch-height;
+  margin-bottom: $form-switch-margin-bottom;
+
+  .form-check-input {
+    height: $form-switch-height;
+    margin-top: 0;
+    background-color: $form-switch-bg-color;
+    border: 0 !important;
+
+    &:checked {
+      background-color: $form-switch-checked-bg-color !important;
+    }
+  }
+}
+
+
+// Dark mode
+
+@if $enable-dark-mode {
+  @include color-mode(dark) {
+    .form-control:not([data-bs-theme="light"]),
+    .form-select:not([data-bs-theme="light"]) {
+      --#{$prefix}form-control-bg: #{$input-bg-dark};
+      --#{$prefix}form-control-border-color: #{$input-border-color-dark};
+      --#{$prefix}form-control-focus-bg: #{$input-focus-bg-dark};
+      --#{$prefix}form-control-focus-border-color: #{$input-focus-border-color-dark};
+    }
+
+    .form-select:not([data-bs-theme="light"]) option {
+      background-color: $dropdown-dark-bg;
+    }
+
+    .form-check-input:not([data-bs-theme="light"]) {
+      background-color: $form-check-input-bg-dark;
+      border: $form-check-input-border-dark;
+
+      &:checked {
+        background-color: $form-check-input-checked-bg-color-dark;
+        border-color: $form-check-input-checked-border-color-dark;
+
+        &[type="checkbox"] {
+          @if $enable-gradients {
+            --#{$prefix}form-check-bg-image: #{escape-svg($form-check-input-checked-bg-image-dark)}, var(--#{$prefix}gradient);
+          } @else {
+            --#{$prefix}form-check-bg-image: #{escape-svg($form-check-input-checked-bg-image-dark)};
+          }
+        }
+
+        &[type="radio"] {
+          @if $enable-gradients {
+            --#{$prefix}form-check-bg-image: #{escape-svg($form-check-radio-checked-bg-image-dark)}, var(--#{$prefix}gradient);
+          } @else {
+            --#{$prefix}form-check-bg-image: #{escape-svg($form-check-radio-checked-bg-image-dark)};
+          }
+        }
+      }
+
+      &[type="checkbox"]:indeterminate {
+        background-color: $form-check-input-indeterminate-bg-color-dark;
+        border-color: $form-check-input-indeterminate-border-color-dark;
+
+        @if $enable-gradients {
+          --#{$prefix}form-check-bg-image: #{escape-svg($form-check-input-indeterminate-bg-image-dark)}, var(--#{$prefix}gradient);
+        } @else {
+          --#{$prefix}form-check-bg-image: #{escape-svg($form-check-input-indeterminate-bg-image-dark)};
+        }
+      }
+    }
+
+
+    .was-validated .form-check-input:invalid,
+    .form-check-input.is-invalid {
+      border-color: var(--#{$prefix}form-invalid-border-color);
+    }
+
+    .form-switch:not([data-bs-theme="light"]) {
+      .form-check-input {
+        background-color: $form-switch-bg-color-dark;
+        border: 0;
+
+        &:checked {
+          background-color: $form-switch-checked-bg-color;
+        }
+
+        &:not(:checked):not(:focus) {
+          --#{$prefix}form-switch-bg: #{escape-svg($form-switch-bg-image)};
+        }
+      }
+    }
+
+    .count-input:not([data-bs-theme="light"]) {
+      background-color: $input-bg-dark;
+      border-color: $input-border-color-dark;
+    }
+
+    .input-group:not([data-bs-theme="light"]) .input-group-text {
+      border-color: $input-group-addon-border-color-dark;
+    }
+  }
+}

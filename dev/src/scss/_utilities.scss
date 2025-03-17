@@ -1,0 +1,127 @@
+// Utilities
+// Extend / update default Bootstrap's utility classes
+
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/variables-dark";
+@import "bootstrap/scss/maps";
+@import "bootstrap/scss/mixins";
+@import "bootstrap/scss/utilities";
+
+/* stylelint-disable @stylistic/value-list-max-empty-lines, @stylistic/function-max-empty-lines */
+$utilities: map-merge(
+  $utilities,
+  (
+    // Remove utilities
+    "link-offset": null,
+    "link-underline": null,
+    "link-underline-opacity": null,
+
+    // Min width
+    "min-width": (
+      property: min-width,
+      class: min-w,
+      values: (
+        0: 0,
+        100: 100
+      )
+    ),
+
+    // Line height
+    "line-height": (
+      property: line-height,
+      class: lh,
+      values: (
+        0: 0,
+        1: 1,
+        sm: $line-height-sm,
+        base: $line-height-base,
+        lg: $line-height-lg,
+      )
+    ),
+
+    // Opacity
+    "opacity": (
+      property: opacity,
+      values: (
+        0: 0,
+        25: .25,
+        40: .4,
+        50: .5,
+        60: .6,
+        75: .75,
+        100: 1,
+      )
+    ),
+
+    // z-index
+    "z-index": (
+      property: z-index,
+      class: z,
+      values: map-merge(
+        $zindex-levels,
+        (
+          sticky: $zindex-sticky,
+          fixed: $zindex-fixed
+        )
+      )
+    ),
+  )
+);
+
+
+// Disable :focus / :focus-visible
+
+.focus-none {
+  &:focus,
+  &:focus-visible {
+    outline: none !important;
+    box-shadow: none !important;
+  }
+}
+
+
+// Fix Safari quirk of rounded corners
+
+[class^="rounded"].overflow-hidden,
+[class*=" rounded"].overflow-hidden {
+  transform: translateZ(0);
+}
+
+
+// Extra font-family
+
+.ff-extra {
+  font-family: $font-family-sans-serif-2 !important;
+}
+
+
+// Wizard sidebar illustration
+
+.sidebar-illustration {
+  img {
+    transition: transform .4s ease-in-out;
+  }
+  &:hover img {
+    &:nth-child(even) {
+      transform: rotate(-10deg);
+    }
+    &:nth-child(odd) {
+      transform: rotate(5deg);
+    }
+  }
+}
+
+
+// Tooltip icon
+
+.tooltip-icon {
+  color: $gray-500;
+  transition: color .25s ease-in-out;
+
+  &:hover {
+    color: $primary;
+  }
+}
+
+/* stylelint-enable @stylistic/value-list-max-empty-lines, @stylistic/function-max-empty-lines */
