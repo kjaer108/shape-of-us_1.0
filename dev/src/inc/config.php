@@ -2,9 +2,9 @@
 
 
 if (is_localhost) {
-    $envFilePath = "C:\Users\ThomasKjær\PhpstormProjects\zandora.env";
+    $envFilePath = "C:\Users\ThomasKjær\PhpstormProjects\shapeofus.env";
 } else {
-    $envFilePath = "/var/www/zandora.env";
+    $envFilePath = "/var/www/shapeofus.env";
 }
 
 if (file_exists($envFilePath) && is_readable($envFilePath)) {
@@ -31,8 +31,22 @@ return [
     // Linode MariaDB
     'DB' => [
         'host' => '194.233.171.92',
-        'username' => getenv('DB_ZAN_USER'),
-        'password' => getenv('DB_ZAN_PASS'),
+        'username' => getenv('DB_USER'),
+        'password' => getenv('DB_PASS'),
         'charset' => 'utf8mb4'
+    ],
+    'BREVO' => [
+        'api' => [
+            'host' => 'https://api.brevo.com',
+            'name' => getenv('BREVO_API_NAME'),
+            'key' => getenv('BREVO_API_KEY'),
+        ],
+        'list' => [
+            'newsletter' => 7
+        ]
+    ],
+    'deepL' => [
+        'apiKey' => getenv('DEEPL_API_KEY'),
+        'endpoint' => 'https://api-free.deepl.com/'
     ]
 ];
