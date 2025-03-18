@@ -1,3 +1,69 @@
+let currentUrl = new URL(window.location.href);
+console.log("Current URL:", currentUrl.toString());
+
+// Check if running on localhost (assumes port 8000, 8080, etc., or "localhost" in hostname)
+let isLocalhost = url.hostname === "localhost" || url.hostname.startsWith("127.") || url.port;
+console.log("Running on localhost?", isLocalhost);
+
+
+/* *********************************************************************
+    Handle language changes
+   ********************************************************************* */
+
+function setLanguage(lang) {
+    console.log("Setting language to", lang);
+
+    // Create request data object
+    const requestData = {
+        cmd: "set_language",
+        lang: lang
+    };
+
+    // Submit data via AJAX
+    fetch("src/xhr/shapeofus.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams(requestData).toString(),
+    })
+        .then((response) => response.json())
+        .then((data) => {
+            if (data.success) {
+                changeLanguage(lang);
+            }
+        })
+        .catch((error) => {
+            console.error("Error:", error);
+            alert("An unexpected error occurred.");
+        });
+}
+
+function changeLanguage(lang) {
+    let url = new URL(window.location.href);
+    let isLocalhost = url.hostname === "localhost" || url.hostname.startsWith("127.") || url.port;
+
+    if (isLocalhost) {
+        // Use query parameter for localhost
+        url.searchParams.set('lang', lang);
+    } else {
+        // Use subdirectory for live site
+        let pathParts = url.pathname.split('/');
+
+        // Ensure we have a valid language structure in the URL
+        if (pathParts.length > 1 && /^[a-z]{2}$/.test(pathParts[1])) {
+            pathParts[1] = lang; // Replace the first segment (language)
+        } else {
+            pathParts.splice(1, 0, lang); // Insert language at the beginning if missing
+        }
+
+        url.pathname = pathParts.join('/');
+    }
+
+    window.location.href = url.toString(); // Redirect with updated language
+}
+
+
+
+
 document.addEventListener("DOMContentLoaded", function() {
     console.log(`
  ____  _                       ___   __ _   _                 
@@ -189,6 +255,7 @@ document.addEventListener("DOMContentLoaded", function() {
         const modalInstance = new bootstrap.Modal(modal, {});
         modalInstance.show();
     }
+
 
 
     /* *********************************************************************

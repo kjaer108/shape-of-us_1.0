@@ -1,11 +1,11 @@
 <?php
 require_once __DIR__."/../inc/init.php";
+require_once __DIR__."/../inc/lang.php";
 
 $debug = FALSE;
 $dont_write = FALSE;
 //$debug = TRUE;
 //$dont_write = TRUE;
-
 
 // *** Get parameters *********************************************************
 $cmd = get_param("cmd");
@@ -91,8 +91,11 @@ if ($cmd == "newsletter-signup") {
     /*****************************************************************************
 
      *****************************************************************************/
-} else if ($cmd == "delthumb") {
+} else if ($cmd == "set_language") {
 
+    $lang = get_param("lang");
+
+    setLanguage($lang);
 
     // We are done, let's return the data
     $result["success"] = $success;

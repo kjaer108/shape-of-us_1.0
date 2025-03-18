@@ -138,7 +138,7 @@ class DeepL {
         $results = [];
 
         foreach ($texts as $index => $text) {
-            $sql = "SELECT text FROM translate_cache WHERE hash=:hash and language=:language ";
+            $sql = "SELECT text FROM `sou_translate_cache` WHERE `hash` LIKE :hash AND `language` LIKE :language ";
             $params = array(
                 ':hash' =>  hash('sha256', $text),
                 ':language' => strtoupper($targetLang)
@@ -159,7 +159,7 @@ class DeepL {
 
     private function storeInCache($sourceText, $translatedText, $targetLang) {
 
-        $sql = "INSERT INTO `translate_cache` (`hash`, `language`, `source`, `text`) VALUES (:hash, :language, :source, :text)";
+        $sql = "INSERT INTO `sou_translate_cache` (`hash`, `language`, `source`, `text`) VALUES (:hash, :language, :source, :text)";
         $params = array(
             ":hash"=>  hash('sha256', $sourceText),
             ":language"=> $targetLang,

@@ -26,6 +26,10 @@ require_once __DIR__."/../classes/DeepL.php";
 $DeepL = new DeepL(getLanguage(),false);
 
 
+
+$selectedLang = getLanguage();
+
+
 // Set user IP
 if( array_key_exists('HTTP_X_FORWARDED_FOR', $_SERVER) && !empty($_SERVER['HTTP_X_FORWARDED_FOR']) ) {
     if (strpos($_SERVER['HTTP_X_FORWARDED_FOR'], ',')>0) {
@@ -46,7 +50,7 @@ else {
    ************************************************************************* */
 
 if (isset($page) && $page) {
-    $sql = "SELECT `title`, `title_elements`, `head_title`, `head_desc`, `noindex`, `nofollow`, `canonical`, `modals`, `include_js`, `vendor_js` FROM `pagedata` WHERE `pagename` LIKE :pagename";
+    $sql = "SELECT `title`, `title_elements`, `head_title`, `head_desc`, `noindex`, `nofollow`, `canonical`, `modals`, `include_js`, `vendor_js` FROM `sou_pagedata` WHERE `pagename` LIKE :pagename";
     $params = [
         ":pagename" => $page["name"]
     ];
@@ -62,8 +66,6 @@ if (isset($page) && $page) {
     $page["include_js"] = $page_data["include_js"] ?? NULL;
     $page["vendor_js"] = $page_data["vendor_js"] ?? NULL;
     $page["title_elements"] = $page_data["title_elements"] ?? NULL;
-
-    $page["include_js"] = "self";
 
     unset($page_data);
 }

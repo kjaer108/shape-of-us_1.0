@@ -4,7 +4,7 @@
   'use strict';
 
   const filtersForm = document.getElementById('offcanvas-filters');
-  const apiUrl = 'src/xhr/get-images.php';
+  const apiUrl = 'http://localhost:8001/get_images.php';
   const viewer = OpenSeadragon({
     id: "app",
     prefixUrl: "https://openseadragon.github.io/openseadragon/images/",

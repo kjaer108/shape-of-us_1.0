@@ -6372,7 +6372,7 @@
         containerInner: 'form-select'
       }
     };
-    selects.forEach(select => {
+    selects.forEach((select, key) => {
       let dataAttr = select.getAttribute('data-select'),
         template = select.getAttribute('data-select-template'),
         userOptions,
@@ -6430,7 +6430,21 @@
       }
 
       /* eslint-disable no-unused-vars, no-undef */
-      new Choices(select, options);
+      const choices = new Choices(select, options);
+      // Store the instances globally in window object, using the select element's name, id or `choises-${key}` as key
+      let identifier;
+      if (select.name) {
+        // Slice the [] from the name attribute if exists
+        identifier = select.name.replace(/\[|\]/g, '');
+      } else if (select.id) {
+        identifier = select.id;
+      } else {
+        identifier = `choices-${key}`;
+      }
+      // Make sure we have window.choices object
+      if (!window.choices) window.choices = {};
+      // Store the instance
+      window.choices[identifier] = choices;
       /* eslint-enable no-unused-vars, no-undef */
     });
   })();

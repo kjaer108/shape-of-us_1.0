@@ -2,8 +2,6 @@
 $page = ["name"=>"coming-soon", "translate"=>true, "sourcelang" => "en"];
 require_once "src/inc/init.php";
 
-$selectedLang = getLanguage();
-
 //log_page_load();
 
 //*** HERE WE GO! Let's render the page ***************************************?>
@@ -16,12 +14,6 @@ $selectedLang = getLanguage();
     <header class="container-fluid position-absolute top-0 start-0 end-0">
         <div class="d-flex align-items-center justify-content-sm-end justify-content-between gap-2 py-2">
             <div class="d-sm-none d-flex align-items-center gap-4">
-                <div>
-                    <img src="assets/img/shape-of-us.png" width="180" alt="Shape of Us">
-                </div>
-                <a href="#" target="_blank" rel="noopener" class="d-block mt-n1">
-                    <img src="assets/img/zandora.png" width="108" alt="by Zandora">
-                </a>
             </div>
             <div class="dropdown mt-sm-2">
                 <button class="btn btn-lg btn-icon btn-light rounded-circle bg-transparent border-0 text-primary" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Switch language">
@@ -45,45 +37,42 @@ $selectedLang = getLanguage();
                 </ul>
             </div>
         </div>
-
-        <!-- Page progress (mobile) -->
-        <div class="progress d-sm-none mx-n3" role="progressbar" aria-label="Steps progress" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style="height: 4px">
-            <div class="progress-bar" style="width: 20%"></div>
-        </div>
     </header>
 
     <!-- Page content -->
-<main class="content-wrapper">
-    <div class="min-vh-100 d-flex align-items-center justify-content-center text-center px-3">
-        <div class="mx-auto w-100" style="max-width: 43.125rem;">
-            <a href="https://zandora.net/" target="_blank" class="d-inline-block">
-                <img src="assets/img/zandora.png" width="142" alt="Zandora">
-            </a>
-            <img src="assets/img/shape-of-us.png" width="456" alt="Shape of Us" class="d-block mx-auto">
+    <main class="content-wrapper">
+        <div class="min-vh-100 d-flex align-items-center justify-content-center text-center px-3">
+            <div class="mx-auto w-100" style="max-width: 43.125rem;">
+                <a href="https://zandora.net/" target="_blank" class="d-inline-block">
+                    <img src="assets/img/zandora.png" width="142" alt="Zandora">
+                </a>
+                <img src="assets/img/shape-of-us.png" width="456" alt="Shape of Us" class="d-block mx-auto">
 
-            <!-- Form -->
-            <div class="mt-4 pt-md-2">
-                <h1 class="fw-semibold">
-                    <?= __("Coming Soon") ?>
-                </h1>
-                <p class="fs-lg">
-                    <?= __("The Shape of Us Project is launching soon. Stay tuned for updates!") ?>
-                </p>
-                <form class="mt-4 pt-lg-3 pt-md-2 d-flex align-items-center gap-2 newsletter-signup">
-                    <div class="border-bottom border-dark w-100">
-                        <input type="email" class="form-control form-control-lg bg-transparent border-0 rounded-0 px-0" placeholder="<?= __("E-mail") ?>" required>
-                    </div>
-                    <button type="submit" class="btn btn-lg btn-primary rounded-pill py-3 flex-shrink-0">
-                        <?= __("Sign up") ?>
+                <!-- Form -->
+                <div class="mt-4 pt-md-2">
+                    <h1 class="fw-semibold">
+                        <?= __("Coming Soon") ?>
+                    </h1>
+                    <p class="fs-lg">
+                        <?= __("The Shape of Us Project is launching soon. Stay tuned for updates!") ?>
+                    </p>
+                    <form class="mt-4 pt-lg-3 pt-md-2 d-flex align-items-center gap-2 newsletter-signup">
+                        <div class="border-bottom border-dark w-100">
+                            <input type="email" class="form-control form-control-lg bg-transparent border-0 rounded-0 px-0" placeholder="<?= __("E-mail") ?>" required>
+                        </div>
+                        <button type="submit" class="btn btn-lg btn-primary rounded-pill py-3 flex-shrink-0">
+                            <?= __("Sign up") ?>
+                        </button>
+                    </form>
+
+                    <!-- Modal toggle -->
+                    <button type="button" class="btn btn-lg btn-primary rounded-pill py-3 flex-shrink-0" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                        Modal
                     </button>
-                </form>
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-info">
-                    <?= __("Open Modal") ?>
-                </button>
+                </div>
             </div>
         </div>
-    </div>
-</main>
+    </main>
 
 <?php include "src/html/html_modals.php"; ?>
 <?php include "src/html/html-scripts.php"; ?>

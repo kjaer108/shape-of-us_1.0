@@ -1,5 +1,7 @@
 <?php
 function getLanguage() {
+    global $language_support;
+
     // Check session first
     if (isset($_SESSION['lang'])) {
         return $_SESSION['lang'];
@@ -13,9 +15,8 @@ function getLanguage() {
 
     // Check browser settings (optional)
     $browserLang = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? 'en', 0, 2);
-    $supportedLanguages = ['en', 'da'];
 
-    $lang = in_array($browserLang, $supportedLanguages) ? $browserLang : 'en';
+    $lang = in_array($browserLang, $language_support) ? $browserLang : 'en';
 
     // Save the detected default language
     setLanguage($lang);
@@ -24,9 +25,9 @@ function getLanguage() {
 }
 
 function setLanguage($lang) {
-    $supportedLanguages = ['en', 'da']; // Add more if needed
+    global $language_support;
 
-    if (in_array($lang, $supportedLanguages)) {
+    if (in_array($lang, $language_support)) {
         $_SESSION['lang'] = $lang;
         setcookie('lang', $lang, time() + (365 * 24 * 60 * 60), "/"); // Store for 1 year
     }

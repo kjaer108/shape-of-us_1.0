@@ -1,0 +1,38 @@
+# Use PHP 8.2
+AddType application/x-httpd-php82 .php
+
+# Enable mod_rewrite
+Options +FollowSymLinks
+RewriteEngine On
+RewriteBase /
+
+# Redirect www to non-www (optional, recommended)
+RewriteCond %{HTTP_HOST} ^www\.shapeofus\.eu [NC]
+RewriteRule ^(.*)$ https://shapeofus.eu/$1 [L,R=301]
+
+# Force HTTPS (optional, recommended)
+RewriteCond %{HTTPS} !=on
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Prevent direct access to sensitive files (security)
+<FilesMatch "(^\.htaccess|\.env|config\.php|composer\.(json|lock))">
+    Require all denied
+</FilesMatch>
+
+# Prevent directory listing (security)
+Options -Indexes
+
+# Ensure all URLs have a trailing slash (except for allowed file extensions)
+RewriteCond %{REQUEST_URI} !\.(php|html?|jpg|jpeg|png|gif|svg|css|js|json|webp|mp3|mp4|pdf|zip)$
+RewriteCond %{REQUEST_URI} !/$
+RewriteCond %{QUERY_STRING} ^$
+RewriteCond %{REQUEST_URI} !/(bot\.html|robots\.txt|sitemap\.xml)$
+RewriteRule ^(.*[^/])$ $1/ [R=301,L]
+
+# Skip rewrite rules for existing files and directories
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# Redirect "/coming-soon" to coming-soon.php
+RewriteRule ^coming-soon/?$ coming-soon.php [L]
