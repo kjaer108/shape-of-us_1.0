@@ -2,7 +2,7 @@ let currentUrl = new URL(window.location.href);
 console.log("Current URL:", currentUrl.toString());
 
 // Check if running on localhost (assumes port 8000, 8080, etc., or "localhost" in hostname)
-let isLocalhost = url.hostname === "localhost" || url.hostname.startsWith("127.") || url.port;
+let isLocalhost = currentUrl.hostname === "localhost" || currentUrl.hostname.startsWith("127.") || currentUrl.port;
 console.log("Running on localhost?", isLocalhost);
 
 
@@ -81,7 +81,7 @@ document.addEventListener("DOMContentLoaded", function() {
        ********************************************************************* */
 
     function show_info_modal(title, body, buttons = ["OK"], callback = null) {
-        const modal = document.getElementById('modal-info');
+        const modal = document.getElementById('exampleModal');
         const modalTitle = modal.querySelector(".modal-title");
         const modalBody = modal.querySelector(".modal-body");
         const modalLogout = modal.querySelector(".login-button");
@@ -290,9 +290,17 @@ document.addEventListener("DOMContentLoaded", function() {
             })
                 .then((response) => response.json())
                 .then((data) => {
+                    console.log(data);
+
                     if (data.success) {
-                        alert("Thank you for signing up!");
+                        //alert("Thank you for signing up!");
                         form.reset(); // Clear only this form
+
+                        show_info_modal(
+                            "Tak for din tilmelding!",
+                            "Du er nu tilmeldt vores nyhedsbrev.",
+                            ["OK"]
+                        )
                     } else {
                         alert(data.error || "An error occurred. Please try again.");
                     }
