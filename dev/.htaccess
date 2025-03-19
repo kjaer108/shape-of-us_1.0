@@ -22,17 +22,19 @@ RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 # Prevent directory listing (security)
 Options -Indexes
 
-# Ensure all URLs have a trailing slash (except for allowed file extensions)
-RewriteCond %{REQUEST_URI} !\.(php|html?|jpg|jpeg|png|gif|svg|css|js|json|webp|mp3|mp4|pdf|zip)$
-RewriteCond %{REQUEST_URI} !/$
-RewriteCond %{QUERY_STRING} ^$
-RewriteCond %{REQUEST_URI} !/(bot\.html|robots\.txt|sitemap\.xml)$
-RewriteRule ^(.*[^/])$ $1/ [R=301,L]
+# 🔹 Fix: Ensure Static Files (CSS, JS, images) Are Not Rewritten
+RewriteCond %{REQUEST_URI} \.(php|html?|jpg|jpeg|png|gif|svg|css|js|json|webp|mp3|mp4|pdf|zip|woff|woff2|eot|ttf|otf|ico|txt|xml)$ [NC]
+RewriteRule ^ - [L]
 
-# Skip rewrite rules for existing files and directories
+# 🔹 Fix: Ensure "/" Redirects to "/coming-soon" But Allows Direct File Access
+RewriteCond %{REQUEST_URI} ^/$
+RewriteRule ^$ /coming-soon [R=302,L]
+
+# 🔹 Multi-Language Coming Soon Support
+RewriteRule ^(en|da|de|es|fr|it|pl)/coming-soon/?$ coming-soon.php?lang=$1 [L]
+RewriteRule ^coming-soon/?$ coming-soon.php [L]
+
+# 🔹 Fix: Skip Rewrite Rules for Existing Files and Directories
 RewriteCond %{REQUEST_FILENAME} -f [OR]
 RewriteCond %{REQUEST_FILENAME} -d
 RewriteRule ^ - [L]
-
-# Redirect "/coming-soon" to coming-soon.php
-RewriteRule ^coming-soon/?$ coming-soon.php [L]

@@ -24,10 +24,15 @@ require_once __DIR__."/lang.php";
 
 require_once __DIR__."/../classes/DeepL.php";
 $DeepL = new DeepL(getLanguage(),false);
-
-
-
 $selectedLang = getLanguage();
+
+
+// Resolve base_url and base_path
+if (is_localhost) {
+    define("base_url", "http://localhost:63342/shape-of-us_1.0/dev/");
+} else {
+    define("base_url", "https://".SITE_DOMAIN."/");
+}
 
 
 // Set user IP
@@ -42,6 +47,7 @@ if( array_key_exists('HTTP_X_FORWARDED_FOR', $_SERVER) && !empty($_SERVER['HTTP_
 else {
     define("user_ip", $_SERVER['REMOTE_ADDR']);
 }
+
 
 
 

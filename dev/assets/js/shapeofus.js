@@ -74,133 +74,116 @@ document.addEventListener("DOMContentLoaded", function() {
                   |_|                                          
 `);
 
+    const script = document.getElementById("translations");
+    if (script) {
+        translations = JSON.parse(script.textContent);
+    } else {
+        console.warn("No translations found in the document.");
+    }
 
+    /**
+     * Lookup function for translations
+     * @param {string} text - The source text to translate
+     * @returns {string} - Translated text (or original if not found)
+     */
+    function t(text) {
+        return translations[text] || text; // Return translation if found, otherwise original text
+    }
 
     /* *********************************************************************
         Info and Confirm Modals
        ********************************************************************* */
 
     function show_info_modal(title, body, buttons = ["OK"], callback = null) {
-        const modal = document.getElementById('exampleModal');
+        const modal = document.getElementById("modalInfo");
+        if (!modal) {
+            console.error("Modal element #modalInfo not found!");
+            return;
+        }
+
         const modalTitle = modal.querySelector(".modal-title");
         const modalBody = modal.querySelector(".modal-body");
-        const modalLogout = modal.querySelector(".login-button");
+        const modalFooter = modal.querySelector(".modal-footer");
 
-        const loginButtonOutlineHTML = `
-    <button data-bs-toggle="modal" class="btn btn-lg btn-outline-primary w-100 m-0 login-button">
-        Log ind
-    </button>`;
-
-        const loginButtonPrimaryHTML = `
-    <button data-bs-toggle="modal" class="btn btn-lg btn-primary w-100 m-0 login-button">
-        Log ind
-    </button>`;
-
-        const registerButtonHTML = `
-    <button class="btn btn-lg btn-brown w-100 m-0 register-button">
-        Opret Profil
-    </button>`;
-
-        const okButtonHTML = `
-    <button class="btn btn-lg btn-primary w-100 m-0">
-        OK
-    </button>`;
+        // Button Templates
+        const loginButtonOutlineHTML = `<button class="btn btn-lg btn-outline-primary w-100 m-0 login-button">Log ind</button>`;
+        const loginButtonPrimaryHTML = `<button class="btn btn-lg btn-primary w-100 m-0 login-button">Log ind</button>`;
+        const registerButtonHTML = `<button class="btn btn-lg btn-brown w-100 m-0 register-button">Opret Profil</button>`;
+        const okButtonHTML = `<button class="btn btn-lg btn-primary w-100 m-0 ok-button">OK</button>`;
 
         // Set modal title
         modalTitle.innerHTML = title;
 
-        // Clear existing body content
-        modalBody.innerHTML = '';
-
-        console.log(body);
-        // Check if bodyContent is an array
+        // Clear and set modal body content
+        modalBody.innerHTML = "";
         if (Array.isArray(body)) {
-            // If it's an array, loop through the items and create <p> elements
             body.forEach(content => {
-                const paragraph = document.createElement('p');
+                const paragraph = document.createElement("p");
                 paragraph.innerHTML = content;
-                paragraph.classList.add('mb-2');
+                paragraph.classList.add("mb-2");
                 modalBody.appendChild(paragraph);
             });
         } else {
-            // If it's a single string, create a <p> element for it
-            const paragraph = document.createElement('p');
+            const paragraph = document.createElement("p");
             paragraph.innerHTML = body;
-            paragraph.classList.add('mb-2');
+            paragraph.classList.add("mb-2");
             modalBody.appendChild(paragraph);
         }
 
-        // Initialize an empty string to store the final innerHTML
-        let modalFooterHTML = '';
-
-        console.log(buttons);
-
-        // Loop through the buttonOrder array and build innerHTML
+        // Generate buttons dynamically
+        modalFooter.innerHTML = ""; // Clear existing buttons
         buttons.forEach(button => {
-            if (button === 'LOGINO') {
-                modalFooterHTML += loginButtonOutlineHTML;
-            } else if (button === 'LOGINP') {
-                modalFooterHTML += loginButtonPrimaryHTML;
-            } else if (button === 'REGISTER') {
-                modalFooterHTML += registerButtonHTML;
-            } else if (button === 'OK') {
-                modalFooterHTML += okButtonHTML;
-            }
+            let buttonHTML = "";
+            if (button === "LOGINO") buttonHTML = loginButtonOutlineHTML;
+            else if (button === "LOGINP") buttonHTML = loginButtonPrimaryHTML;
+            else if (button === "REGISTER") buttonHTML = registerButtonHTML;
+            else if (button === "OK") buttonHTML = okButtonHTML;
+
+            if (buttonHTML) modalFooter.innerHTML += buttonHTML;
         });
 
-        // Get the modal footer element and insert buttons into the modal footer
-        const modalFooter = document.querySelector('#modal-info .modal-footer');
-        modalFooter.innerHTML = modalFooterHTML;
+        // Initialize Bootstrap modal
+        const modalInstance = bootstrap.Modal.getOrCreateInstance(modal);
 
-        const modalInstance = new bootstrap.Modal(modal, {});
+        // Remove old event listeners to prevent duplication
+        modal.replaceWith(modal.cloneNode(true));
 
-        // Add an event listener to the modal's backdrop (click outside modal)
+        // Add event listener for closing modal via backdrop
         modal.addEventListener("click", function (e) {
             if (e.target === modal) {
-                // If the click target is the modal's backdrop, treat it like clicking "OK"
                 modalInstance.hide();
-                if (typeof callback === "function") {
-                    callback();
-                }
+                if (typeof callback === "function") callback();
             }
         });
 
-        // Add an event listener to the "OK" button
-        if (buttons.includes('OK')) {
-            modal.querySelector(".btn-primary").addEventListener("click", function () {
+        // Attach event listener for "OK" button
+        const okButton = modal.querySelector(".ok-button");
+        if (okButton) {
+            okButton.addEventListener("click", function () {
                 modalInstance.hide();
-                if (typeof callback === "function") {
-                    callback();
-                }
+                if (typeof callback === "function") callback();
             });
         }
 
-        // Add an event listener to the "Log ind" button
-
-        // Check if "LOGIN" is present in the buttons array
-        if (buttons.includes('LOGINO') || buttons.includes('LOGINP')) {
-            // Get the modal element
-            const modal = document.querySelector('#modal-info');
-
-            // Add an event listener for the "LOGIN" button
-            modal.querySelector(".login-button").addEventListener("click", function(e){
-                bootstrap.Modal.getInstance(modal).hide();
+        // Attach event listener for "Log ind" buttons
+        const loginButton = modal.querySelector(".login-button");
+        if (loginButton) {
+            loginButton.addEventListener("click", function (e) {
+                modalInstance.hide();
                 handle_login_button_click(e);
             });
         }
 
-        // Check if "REGISTRE" is present in the buttons array
-        if (buttons.includes('REGISTER')) {
-            // Get the modal element
-            const modal = document.querySelector('#modal-info');
-
-            // Add an event listener for the "LOGIN" button
-            modal.querySelector(".register-button").addEventListener("click", function(e) {
-                bootstrap.Modal.getInstance(modal).hide();
+        // Attach event listener for "Register" button
+        const registerButton = modal.querySelector(".register-button");
+        if (registerButton) {
+            registerButton.addEventListener("click", function (e) {
+                modalInstance.hide();
                 handle_register_button_click(e);
             });
         }
 
+        // Show the modal
         modalInstance.show();
     }
 
@@ -297,10 +280,11 @@ document.addEventListener("DOMContentLoaded", function() {
                         form.reset(); // Clear only this form
 
                         show_info_modal(
-                            "Tak for din tilmelding!",
-                            "Du er nu tilmeldt vores nyhedsbrev.",
+                            t("Thank you for signing up!"),
+                            t("You've been added to our newsletter list. We'll keep you updated on the Shape of Us project."),
                             ["OK"]
                         )
+
                     } else {
                         alert(data.error || "An error occurred. Please try again.");
                     }

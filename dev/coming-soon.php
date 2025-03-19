@@ -64,16 +64,17 @@ require_once "src/inc/init.php";
                             <?= __("Sign up") ?>
                         </button>
                     </form>
-
-                    <!-- Modal toggle -->
-                    <button type="button" class="btn btn-lg btn-primary rounded-pill py-3 flex-shrink-0" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                        Modal
-                    </button>
                 </div>
             </div>
         </div>
     </main>
 
 <?php include "src/html/html_modals.php"; ?>
+<script id="translations" type="application/json">
+    {
+        "Thank you for signing up!": "<?= __("Thank you for signing up!") ?>",
+        "You've been added to our newsletter list. We'll keep you updated on the Shape of Us project.": "<?= __("You've been added to our newsletter list. We'll keep you updated on the Shape of Us project.") ?>"
+    }
+</script>
 <?php include "src/html/html-scripts.php"; ?>
 <?php include "src/html/html-end.php"; ?>
