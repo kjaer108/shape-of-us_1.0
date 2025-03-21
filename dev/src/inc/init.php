@@ -26,6 +26,9 @@ require_once __DIR__."/../classes/DeepL.php";
 $DeepL = new DeepL(getLanguage(),false);
 $selectedLang = getLanguage();
 
+// Include arrays with translations
+require_once __DIR__."/../../locale/".$selectedLang."/language_".$selectedLang.".php";
+
 
 // Resolve base_url and base_path
 if (is_localhost) {

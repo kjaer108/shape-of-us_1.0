@@ -11,3 +11,5 @@ $language_data = [
         "pl" => "Polski"
     ]
 ];
+
+$country_favorites = ["dk", "gb", "de", "fr", "es", "it", "pl"];

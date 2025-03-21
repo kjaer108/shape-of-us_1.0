@@ -70,6 +70,7 @@ require_once "src/inc/init.php";
     </main>
 
 <?php include "src/html/html_modals.php"; ?>
+
 <script id="translations" type="application/json">
     {
         "Thank you for signing up!": "<?= __("Thank you for signing up!") ?>",
