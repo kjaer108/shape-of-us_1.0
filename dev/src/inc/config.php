@@ -1,7 +1,7 @@
 <?php
 
 
-if (is_localhost) {
+if (IS_LOCALHOST) {
     $envFilePath = "C:\Users\ThomasKjær\PhpstormProjects\shapeofus.env";
 } else {
     $envFilePath = "/var/www/shapeofus.env";

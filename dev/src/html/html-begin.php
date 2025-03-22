@@ -6,7 +6,7 @@ $absoluteUrlWithoutParams = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === '
 <html lang="<?=$selectedLang?>">
 <head>
     <meta charset="utf-8">
-    <base href="<?=base_url?>">
+    <base href="<?=BASE_URL?>">
 
     <!-- Viewport -->
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover">
@@ -18,7 +18,7 @@ if (isset($page["translate"]) && $page["translate"] == 1) {
     $currentLangPattern = '@/(' . implode('|', $language_support) . ')/@';
 
     foreach ($language_support as $lang) {
-        if (is_localhost) {
+        if (IS_LOCALHOST) {
             echo '<link rel="alternate" hreflang="' . $lang . '" href="' . $absoluteUrlWithoutParams . '?lang=' . $lang . '" />' . PHP_EOL;
         } else {
             // Detect if the URL already contains a language prefix
@@ -58,7 +58,7 @@ if (isset($page["translate"]) && $page["translate"] == 1) {
 
     <!-- Webmanifest + Favicon / App icons -->
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
-<?php if (!is_localhost) { ?>
+<?php if (!IS_LOCALHOST) { ?>
     <link rel="manifest" href="/manifest.json">
 <?php } ?>
 

@@ -9,7 +9,7 @@ if (!isset($no_debug)) $no_debug = false;
 if ($no_debug) $debug = false; // $no_debug overrides the manual setting
 
 define("SITE_DOMAIN", "shapeofus.eu");
-define("is_localhost", in_array($_SERVER['REMOTE_ADDR'], ['127.0.0.1', '::1']));
+define("IS_LOCALHOST", in_array($_SERVER['REMOTE_ADDR'], ['127.0.0.1', '::1']));
 
 // Include config file
 $config = include(__DIR__."/config.php");
@@ -20,6 +20,7 @@ require_once __DIR__."/session.php";
 require_once __DIR__."/data.php";
 require_once __DIR__."/system.php";
 require_once __DIR__."/database.php";
+require_once __DIR__."/navigation.php";
 require_once __DIR__."/lang.php";
 
 require_once __DIR__."/../classes/DeepL.php";
@@ -30,11 +31,11 @@ $selectedLang = getLanguage();
 require_once __DIR__."/../../locale/".$selectedLang."/language_".$selectedLang.".php";
 
 
-// Resolve base_url and base_path
-if (is_localhost) {
-    define("base_url", "http://localhost:63342/shape-of-us_1.0/dev/");
+// Resolve BASE_URL and base_path
+if (IS_LOCALHOST) {
+    define("BASE_URL", "http://localhost:63342/shape-of-us_1.0/dev/");
 } else {
-    define("base_url", "https://".SITE_DOMAIN."/");
+    define("BASE_URL", "https://".SITE_DOMAIN."/");
 }
 
 

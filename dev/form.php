@@ -2,11 +2,14 @@
 $page = ["name"=>"form", "translate"=>true, "sourcelang" => "en"];
 require_once "src/inc/init.php";
 
+zdebug(IS_LOCALHOST);
+
+
 //log_page_load();
 
 //unset($_SESSION["formdata"]);
-zdebug($_SESSION["formdata"][3] ?? null);
-zdebug($_SESSION["formdata"][2]["anatomy"] ?? null);
+zdebug($_SESSION["formdata"] ?? null);
+//zdebug($_SESSION["formdata"][2]["anatomy"] ?? null);
 
 // Get the current step
 $curStep = get_param("step", 1);
@@ -105,7 +108,7 @@ $isFtM = $_SESSION["formdata"][1]["ftm"] ?? false;
                     <!-- Navigation -->
                     <ul class="nav flex-column gap-3" style="--zs-nav-link-font-size: 1.25rem; --zs-nav-link-padding-y: 0; --zs-nav-link-padding-x: 0;">
                         <li class="nav-item">
-                            <a href="http://localhost:63342/shape-of-us_1.0/dev/form.php?step=1&lang=en" class="nav-link align-items-start<?= $curStep <= 1 ? " pe-none" : "" ?><?= $curStep == 1 ? " active" : "" ?>">
+                            <a href="<?= get_url("form-step", 1) ?>" class="nav-link align-items-start<?= $curStep <= 1 ? " pe-none" : "" ?><?= $curStep == 1 ? " active" : "" ?>">
 <?php if ($curStep <= 1) { ?>
                                 <span class="d-block me-2 pe-1 text-center" style="min-width: 28px;">01</span>
 <?php } else { ?>

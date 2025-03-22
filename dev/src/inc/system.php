@@ -1029,7 +1029,7 @@ function get_comment_cnt($type, $type_id, $set_empty_zero = FALSE) {
 }
 
 function get_current_file($remove_initial_slash = FALSE) {
-    if (is_localhost) {
+    if (IS_LOCALHOST) {
         $currentUrl = $_SERVER['REQUEST_URI'];
 
         // Use parse_url to get the path part of the URL

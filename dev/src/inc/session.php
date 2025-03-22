@@ -1,5 +1,5 @@
 <?php
-if(defined('SITE_DOMAIN') && !is_localhost) {
+if(defined('SITE_DOMAIN') && !IS_LOCALHOST) {
     $cookieParams = session_get_cookie_params();
     session_set_cookie_params(
         $cookieParams["lifetime"],
