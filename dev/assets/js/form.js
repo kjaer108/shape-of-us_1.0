@@ -39,7 +39,7 @@ function submitFormData(formData, step, nextStep) {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                //window.location.href = buildStepUrl(nextStep);
+                window.location.href = buildStepUrl(nextStep);
             } else {
                 console.error("Error saving data:", data.error);
             }

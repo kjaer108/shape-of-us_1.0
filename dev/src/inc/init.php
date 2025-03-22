@@ -43,13 +43,13 @@ if (IS_LOCALHOST) {
 if( array_key_exists('HTTP_X_FORWARDED_FOR', $_SERVER) && !empty($_SERVER['HTTP_X_FORWARDED_FOR']) ) {
     if (strpos($_SERVER['HTTP_X_FORWARDED_FOR'], ',')>0) {
         $addr = explode(",",$_SERVER['HTTP_X_FORWARDED_FOR']);
-        define("user_ip", trim($addr[0]));
+        define("USER_IP", trim($addr[0]));
     } else {
-        define("user_ip", $_SERVER['HTTP_X_FORWARDED_FOR']);
+        define("USER_IP", $_SERVER['HTTP_X_FORWARDED_FOR']);
     }
 }
 else {
-    define("user_ip", $_SERVER['REMOTE_ADDR']);
+    define("USER_IP", $_SERVER['REMOTE_ADDR']);
 }
 
 

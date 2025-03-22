@@ -26,6 +26,179 @@ if ($curStep > 1 && !isset($_SESSION["formdata"][$curStep - 1])) {
 
 zdebug("Active curStep: ".$curStep);
 
+// *** Save form data *********************************************************
+
+function generateUniquePhotoId(PDO $pdo): int {
+    $ranges = [
+        ['min' => 1000, 'max' => 9999],      // Tier 2: 100–9999
+        ['min' => 1000, 'max' => 99999],     // Tier 3: 100–999999
+        ['min' => 1000, 'max' => 999999],    // Tier 4: 100–9999999
+    ];
+
+    foreach ($ranges as $range) {
+        $stmt = $pdo->prepare("
+            SELECT COUNT(*) FROM sou_form_entries 
+            WHERE photo_id BETWEEN :min AND :max
+        ");
+        $stmt->execute(['min' => $range['min'], 'max' => $range['max']]);
+        $usedCount = (int) $stmt->fetchColumn();
+
+        $totalPossible = $range['max'] - $range['min'] + 1;
+        $threshold = (int) ($totalPossible * 0.8);
+
+        if ($usedCount < $threshold) {
+            // Try generating a unique ID
+            $attempts = 0;
+            do {
+                $photoId = random_int($range['min'], $range['max']);
+                $stmt = $pdo->prepare("SELECT 1 FROM sou_form_entries WHERE photo_id = :photo_id LIMIT 1");
+                $stmt->execute(['photo_id' => $photoId]);
+                $exists = $stmt->fetchColumn() > 0;
+                $attempts++;
+            } while ($exists && $attempts < 1000);
+
+            if (!$exists) {
+                return $photoId;
+            }
+        }
+    }
+
+    throw new Exception("Unable to generate a unique photo_id – all ranges are saturated.");
+}
+
+
+if ($curStep == 5) {
+
+    $photoId = generateUniquePhotoId($pdo);
+    $ipHashed = hash('sha256', USER_IP);
+    $formData = $_SESSION["formdata"];
+
+// Insert main entry
+    $sql = "
+INSERT INTO sou_form_entries (
+    id, photo_id, male, female, intersex, mtf, ftm,
+    age, skin_tones, residence, birth, anatomy,
+    vulva_vulva, vulva_vulva_text,
+    vulva_breast, vulva_breast_text,
+    penis_penis, penis_penis_text,
+    penis_breast, penis_breast_text,
+    trans_mtf, trans_mtf_text,
+    trans_ftm, trans_ftm_text,
+    buttocks, buttocks_text,
+    hormone, hormone_text,
+    hair_chest, hair_above, hair_below, hair_buttocks,
+    marks, marks_text, pregnancy, vaginal_birth, c_section, breastfeeding,
+    piercings, piercings_other_text, tattoos, tattoos_other_text,
+    hormonal_influence, menstrual_cycle, ip
+) VALUES (
+    UUID(), :photo_id, :male, :female, :intersex, :mtf, :ftm,
+    :age, :skin_tones, :residence, :birth, :anatomy,
+    :vulva_vulva, :vulva_vulva_text,
+    :vulva_breast, :vulva_breast_text,
+    :penis_penis, :penis_penis_text,
+    :penis_breast, :penis_breast_text,
+    :trans_mtf, :trans_mtf_text,
+    :trans_ftm, :trans_ftm_text,
+    :buttocks, :buttocks_text,
+    :hormone, :hormone_text,
+    :hair_chest, :hair_above, :hair_below, :hair_buttocks,
+    :marks, :marks_text, :pregnancy, :vaginal_birth, :c_section, :breastfeeding,
+    :piercings, :piercings_other_text, :tattoos, :tattoos_other_text,
+    :hormonal_influence, :menstrual_cycle, :ip
+)";
+
+    $params = [
+        ':photo_id' => $photoId,
+        ':male'     => $formData[1]['male'],
+        ':female'   => $formData[1]['female'],
+        ':intersex' => $formData[1]['intersex'],
+        ':mtf'      => $formData[1]['mtf'],
+        ':ftm'      => $formData[1]['ftm'],
+        ':age'        => $formData[2]['age'],
+        ':skin_tones' => $formData[2]['skin_tones'],
+        ':residence'  => $formData[2]['residence'],
+        ':birth'      => $formData[2]['birth'],
+        ':anatomy'    => json_encode(explode(',', $formData[2]['anatomy'] ?? '')),
+        ':vulva_vulva'        => json_encode(explode(',', $formData[3]['vulva_vulva'] ?? '')),
+        ':vulva_vulva_text'   => $formData[3]['vulva_vulva_text'] ?? null,
+        ':vulva_breast'       => json_encode(explode(',', $formData[3]['vulva_breast'] ?? '')),
+        ':vulva_breast_text'  => $formData[3]['vulva_breast_text'] ?? null,
+        ':penis_penis'        => json_encode(explode(',', $formData[3]['penis_penis'] ?? '')),
+        ':penis_penis_text'   => $formData[3]['penis_penis_text'] ?? null,
+        ':penis_breast'       => json_encode(explode(',', $formData[3]['penis_breast'] ?? '')),
+        ':penis_breast_text'  => $formData[3]['penis_breast_text'] ?? null,
+        ':trans_mtf'          => json_encode(explode(',', $formData[3]['trans_mtf'] ?? '')),
+        ':trans_mtf_text'     => $formData[3]['trans_mtf_text'] ?? null,
+        ':trans_ftm'          => json_encode(explode(',', $formData[3]['trans_ftm'] ?? '')),
+        ':trans_ftm_text'     => $formData[3]['trans_ftm_text'] ?? null,
+        ':buttocks'           => json_encode(explode(',', $formData[3]['buttocks'] ?? '')),
+        ':buttocks_text'      => $formData[3]['buttocks_text'] ?? null,
+        ':hormone'            => json_encode(explode(',', $formData[3]['hormone'] ?? '')),
+        ':hormone_text'       => $formData[3]['hormone_text'] ?? null,
+        ':hair_chest'         => $formData[4]['hair_chest'] ?? null,
+        ':hair_above'         => $formData[4]['hair_above'] ?? null,
+        ':hair_below'         => $formData[4]['hair_below'] ?? null,
+        ':hair_buttocks'      => $formData[4]['hair_buttocks'] ?? null,
+        ':marks'              => json_encode(explode(',', $formData[4]['marks'] ?? '')),
+        ':marks_text'         => $formData[4]['marks_text'] ?? null,
+        ':pregnancy'          => $formData[4]['pregnancy'] ?? null,
+        ':vaginal_birth'      => $formData[4]['vaginal_birth'] ?? null,
+        ':c_section'          => $formData[4]['c_section'] ?? null,
+        ':breastfeeding'      => $formData[4]['breastfeeding'] ?? null,
+        ':piercings'          => json_encode(explode(',', $formData[4]['piercings'] ?? '')),
+        ':piercings_other_text' => $formData[4]['piercings_other_text'] ?? null,
+        ':tattoos'            => json_encode(explode(',', $formData[4]['tattoos'] ?? '')),
+        ':tattoos_other_text' => $formData[4]['tattoos_other_text'] ?? null,
+        ':hormonal_influence' => $formData[4]['hormonal_influence'] ?? null,
+        ':menstrual_cycle'    => $formData[4]['menstrual_cycle'] ?? null,
+        ':ip' => $ipHashed
+    ];
+
+    pdo_execute($pdo, $sql, $params);
+
+// Get UUID of inserted row
+    $entryId = pdo_get_col($pdo, "SELECT id FROM sou_form_entries WHERE photo_id = :photo_id ORDER BY timestamp DESC LIMIT 1", [
+        ':photo_id' => $photoId
+    ]);
+
+// Helper: insert values into support tables
+    $insertSupportValues = function ($table, $values) use ($pdo, $entryId) {
+        if (is_string($values)) {
+            $values = explode(',', $values);
+        }
+
+        $values = array_filter(array_map('trim', $values));
+
+        if (empty($values)) return;
+
+        $sql = "INSERT INTO `$table` (entry_id, value) VALUES (:entry_id, :value)";
+        foreach ($values as $val) {
+            $params = [
+                ':entry_id' => $entryId,
+                ':value'    => $val
+            ];
+            pdo_execute($pdo, $sql, $params);
+        }
+    };
+
+// Insert into support tables
+    $insertSupportValues('sou_form_anatomy', $formData[2]['anatomy'] ?? '');
+    $insertSupportValues('sou_form_marks', $formData[4]['marks'] ?? '');
+    $insertSupportValues('sou_form_piercings', $formData[4]['piercings'] ?? '');
+    $insertSupportValues('sou_form_tattoos', $formData[4]['tattoos'] ?? '');
+    $insertSupportValues('sou_form_hormone', $formData[3]['hormone'] ?? '');
+    $insertSupportValues('sou_form_buttocks', $formData[3]['buttocks'] ?? '');
+    $insertSupportValues('sou_form_trans_mtf', $formData[3]['trans_mtf'] ?? '');
+    $insertSupportValues('sou_form_trans_ftm', $formData[3]['trans_ftm'] ?? '');
+    $insertSupportValues('sou_form_vulva_vulva', $formData[3]['vulva_vulva'] ?? '');
+    $insertSupportValues('sou_form_vulva_breast', $formData[3]['vulva_breast'] ?? '');
+    $insertSupportValues('sou_form_penis_penis', $formData[3]['penis_penis'] ?? '');
+    $insertSupportValues('sou_form_penis_breast', $formData[3]['penis_breast'] ?? '');
+
+
+}
+
+
 
 // *** Setp 1 form data *******************************************************
 $isMale = $_SESSION["formdata"][1]["male"] ?? false;
@@ -108,7 +281,7 @@ $isFtM = $_SESSION["formdata"][1]["ftm"] ?? false;
                     <!-- Navigation -->
                     <ul class="nav flex-column gap-3" style="--zs-nav-link-font-size: 1.25rem; --zs-nav-link-padding-y: 0; --zs-nav-link-padding-x: 0;">
                         <li class="nav-item">
-                            <a href="<?= get_url("form-step", 1) ?>" class="nav-link align-items-start<?= $curStep <= 1 ? " pe-none" : "" ?><?= $curStep == 1 ? " active" : "" ?>">
+                            <a href="<?= get_url("form-step", 1) ?>" class="nav-link align-items-start<?= ($curStep <= 1 || $curStep == 5) ? " pe-none" : "" ?><?= $curStep == 1 ? " active" : "" ?>">
 <?php if ($curStep <= 1) { ?>
                                 <span class="d-block me-2 pe-1 text-center" style="min-width: 28px;">01</span>
 <?php } else { ?>
@@ -120,7 +293,7 @@ $isFtM = $_SESSION["formdata"][1]["ftm"] ?? false;
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="<?= get_url("form-step", 2) ?>" class="nav-link align-items-start<?= $curStep <= 2 ? " pe-none" : "" ?><?= $curStep == 2 ? " active" : "" ?>">
+                            <a href="<?= get_url("form-step", 2) ?>" class="nav-link align-items-start<?= ($curStep <= 2 || $curStep == 5) ? " pe-none" : "" ?><?= $curStep == 2 ? " active" : "" ?>">
 <?php if ($curStep <= 2) { ?>
                                 <span class="d-block me-2 pe-1 text-center" style="min-width: 28px;">02</span>
 <?php } else { ?>
@@ -132,7 +305,7 @@ $isFtM = $_SESSION["formdata"][1]["ftm"] ?? false;
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="<?= get_url("form-step", 3) ?>" class="nav-link align-items-start<?= $curStep <= 3 ? " pe-none" : "" ?><?= $curStep == 3 ? " active" : "" ?>">
+                            <a href="<?= get_url("form-step", 3) ?>" class="nav-link align-items-start<?= ($curStep <= 3 || $curStep == 5) ? " pe-none" : "" ?><?= $curStep == 3 ? " active" : "" ?>">
 <?php if ($curStep <= 3) { ?>
                                 <span class="d-block me-2 pe-1 text-center" style="min-width: 28px;">03</span>
 <?php } else { ?>
@@ -144,7 +317,8 @@ $isFtM = $_SESSION["formdata"][1]["ftm"] ?? false;
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="<?= get_url("form-step", 4) ?>" class="nav-link align-items-start<?= $curStep <= 4 ? " pe-none" : "" ?><?= $curStep == 4 ? " active" : "" ?>">
+                            <a href="<?= get_url("form-step", 4) ?>" class="nav-link align-items-start<?= ($curStep <= 4 || $curStep == 5) ? " pe-none" : "" ?>
+<?= $curStep == 4 ? " active" : "" ?>">
 <?php if ($curStep <= 4) { ?>
                                 <span class="d-block me-2 pe-1 text-center" style="min-width: 28px;">04</span>
 <?php } else { ?>
@@ -156,7 +330,7 @@ $isFtM = $_SESSION["formdata"][1]["ftm"] ?? false;
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="wizard-05.html" class="nav-link align-items-start<?= $curStep <= 5 ? " pe-none" : "" ?><?= $curStep == 5 ? " active" : "" ?>">
+                            <a href="#" class="nav-link align-items-start<?= $curStep <= 5 ? " pe-none" : "" ?><?= $curStep == 5 ? " active" : "" ?>">
     <?php if ($curStep <= 5) { ?>
                                 <span class="d-block me-2 pe-1 text-center" style="min-width: 28px;">05</span>
 <?php } else { ?>
@@ -164,7 +338,7 @@ $isFtM = $_SESSION["formdata"][1]["ftm"] ?? false;
                                   <svg xmlns="http://www.w3.org/2000/svg" class="d-block mt-1" width="28" height="22" fill="none"><path d="M22.065 5.034c-3.126.938-7.112 3.446-10.787 7.743l-2.172-2.203c-.334-.349-.955-.349-1.289 0L6.219 12.21c-.31.327-.286.807.048 1.091l4.916 4.319c.406.349 1.074.262 1.36-.196 2.625-4.341 5.441-7.569 10.214-11.277.573-.458.048-1.33-.692-1.112z" fill="currentColor"/></svg>
                                 </span>
 <?php } ?>
-                                <?= __("Summary") ?>
+                                <?= __("Ready for picture") ?>
                             </a>
                         </li>
                     </ul>
@@ -1429,313 +1603,297 @@ $hasVulvaText = !empty($vulvaText);
 
 
                         <!-- Stretch Marks or Scars -->
-                            <div class="mb-lg-5 mb-4 pb-lg-0 pb-md-2">
-                                <h2 class="h3 mb-2 fw-semibold">
-                                    <?= __("Stretch Marks or Scars") ?>
-                                </h2>
-                                <p class="text-body-tertiary">
-                                    <?= __("Let us know if your body has visible stretch marks or scars, including on areas such as the breasts, buttocks, or other body parts.") ?>
-                                </p>
-                                <div class="mb-md-4 mb-3">
-                                    <div class="form-check btn btn-lg btn-light rounded-pill w-100 mb-2">
-                                        <input id="marks-none" type="checkbox" class="form-check-input">
-                                        <label for="marks-none" class="form-check-label">
-                                            <?= __("No stretch marks or scars") ?>
-                                        </label>
-                                    </div>
-                                    <div class="form-check btn btn-lg btn-light rounded-pill w-100 mb-2">
-                                        <input id="marks-stretch" type="checkbox" class="form-check-input">
-                                        <label for="marks-stretch" class="form-check-label">
-                                            <?= __("Stretch marks") ?>
-                                        </label>
-                                    </div>
+                        <div class="mb-lg-5 mb-4 pb-lg-0 pb-md-2">
+                            <h2 class="h3 mb-2 fw-semibold">
+                                <?= __("Stretch Marks or Scars") ?>
+                            </h2>
+                            <p class="text-body-tertiary">
+                                <?= __("Let us know if your body has visible stretch marks or scars, including on areas such as the breasts, buttocks, or other body parts.") ?>
+                            </p>
+                            <div class="mb-md-4 mb-3">
+                                <?php
+                                $marks = explode(",", $_SESSION["formdata"][4]["marks"] ?? '');
+                                $marksText = $_SESSION["formdata"][4]["marks_text"] ?? '';
+                                ?>
 
-                                    <!-- Specify collapse toggle -->
-                                    <div class="form-check btn btn-lg btn-light rounded-pill w-100 mb-2" data-bs-toggle="collapse" data-bs-target="#marks-scars-specify">
-                                        <input id="marks-scars" type="checkbox" class="form-check-input">
-                                        <label for="marks-scars" class="form-check-label">
-                                            <?= __("Scars") ?>
-                                        </label>
-                                    </div>
+                                <div class="form-check btn btn-lg btn-light rounded-pill w-100 mb-2">
+                                    <input id="marks-none" type="checkbox" class="form-check-input"
+                                        <?= in_array("marks-none", $marks) ? 'checked' : '' ?>>
+                                    <label for="marks-none" class="form-check-label">
+                                        <?= __("No stretch marks or scars") ?>
+                                    </label>
+                                </div>
 
-                                    <!-- Specify collapse -->
-                                    <div id="marks-scars-specify" class="collapse">
-                                        <div class="border-bottom border-dark">
-                                            <input id="marks-scars-text" type="text" class="form-control form-control-lg bg-transparent border-0 rounded-0 px-0" placeholder="<?= __("Would you like to share the story of your scars?") ?>" data-autofocus="collapse">
-                                        </div>
+                                <div class="form-check btn btn-lg btn-light rounded-pill w-100 mb-2">
+                                    <input id="marks-stretch" type="checkbox" class="form-check-input"
+                                        <?= in_array("marks-stretch", $marks) ? 'checked' : '' ?>>
+                                    <label for="marks-stretch" class="form-check-label">
+                                        <?= __("Stretch marks") ?>
+                                    </label>
+                                </div>
+
+                                <!-- Scars with collapse -->
+                                <div class="form-check btn btn-lg btn-light rounded-pill w-100 mb-2"
+                                     data-bs-toggle="collapse"
+                                     data-bs-target="#marks-scars-specify"
+                                     aria-expanded="<?= in_array("marks-scars", $marks) ? 'true' : 'false' ?>">
+                                    <input id="marks-scars" type="checkbox" class="form-check-input"
+                                        <?= in_array("marks-scars", $marks) ? 'checked' : '' ?>>
+                                    <label for="marks-scars" class="form-check-label">
+                                        <?= __("Scars") ?>
+                                    </label>
+                                </div>
+
+                                <div id="marks-scars-specify" class="collapse <?= in_array("marks-scars", $marks) ? 'show' : '' ?>">
+                                    <div class="border-bottom border-dark">
+                                        <input id="marks-scars-text"
+                                               type="text"
+                                               class="form-control form-control-lg bg-transparent border-0 rounded-0 px-0"
+                                               placeholder="<?= __("Would you like to share the story of your scars?") ?>"
+                                               value="<?= htmlspecialchars($marksText) ?>"
+                                               data-autofocus="collapse">
                                     </div>
                                 </div>
                             </div>
+                        </div>
 
-                            <!-- Pregnancy -->
-                            <div class="mb-lg-5 mb-4 pb-lg-0 pb-md-2">
-                                <h2 class="h3 mb-2 fw-semibold">
-                                    <?= __("Pregnancy") ?>
-                                </h2>
-                                <p class="text-body-tertiary">
-                                    <?= __("Pregnancy may cause changes such as breast growth, stretch marks, and body shape adjustments. Have you been pregnant?") ?>
-                                </p>
-                                <div class="mb-md-4 mb-3 d-flex gap-2">
-                                    <div class="form-check btn btn-lg btn-light rounded-pill mb-2">
-                                        <input id="pregnancy-true" type="radio" name="pregnancy" class="form-check-input">
-                                        <label for="pregnancy-true" class="form-check-label">
-                                            <?= __("Yes") ?>
-                                        </label>
+
+                        <!-- Pregnancy -->
+                        <div class="mb-lg-5 mb-4 pb-lg-0 pb-md-2">
+                            <h2 class="h3 mb-2 fw-semibold"><?= __("Pregnancy") ?></h2>
+                            <p class="text-body-tertiary">
+                                <?= __("Pregnancy may cause changes such as breast growth, stretch marks, and body shape adjustments. Have you been pregnant?") ?>
+                            </p>
+                            <?php $pregnancy = $_SESSION["formdata"][4]["pregnancy"] ?? ''; ?>
+                            <div class="mb-md-4 mb-3 d-flex gap-2">
+                                <div class="form-check btn btn-lg btn-light rounded-pill mb-2">
+                                    <input id="pregnancy-true" type="radio" name="pregnancy" class="form-check-input"
+                                        <?= $pregnancy === 'pregnancy-true' ? 'checked' : '' ?>>
+                                    <label for="pregnancy-true" class="form-check-label"><?= __("Yes") ?></label>
+                                </div>
+                                <div class="form-check btn btn-lg btn-light rounded-pill mb-2">
+                                    <input id="pregnancy-false" type="radio" name="pregnancy" class="form-check-input"
+                                        <?= $pregnancy === 'pregnancy-false' ? 'checked' : '' ?>>
+                                    <label for="pregnancy-false" class="form-check-label"><?= __("No") ?></label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Vaginal Birth -->
+                        <div class="mb-lg-5 mb-4 pb-lg-0 pb-md-2">
+                            <h2 class="h3 mb-2 fw-semibold"><?= __("Vaginal Birth") ?></h2>
+                            <p class="text-body-tertiary">
+                                <?= __("Vaginal birth can impact the body, including perineal scarring, muscle changes, and genital variations. Indicate if you have given birth vaginally.") ?>
+                            </p>
+                            <?php $vaginal = $_SESSION["formdata"][4]["vaginal_birth"] ?? ''; ?>
+                            <div class="mb-md-4 mb-3 d-flex gap-2">
+                                <div class="form-check btn btn-lg btn-light rounded-pill mb-2">
+                                    <input id="vaginal-birth-true" type="radio" name="vaginal-birth" class="form-check-input"
+                                        <?= $vaginal === 'vaginal-birth-true' ? 'checked' : '' ?>>
+                                    <label for="vaginal-birth-true" class="form-check-label"><?= __("Yes") ?></label>
+                                </div>
+                                <div class="form-check btn btn-lg btn-light rounded-pill mb-2">
+                                    <input id="vaginal-birth-false" type="radio" name="vaginal-birth" class="form-check-input"
+                                        <?= $vaginal === 'vaginal-birth-false' ? 'checked' : '' ?>>
+                                    <label for="vaginal-birth-false" class="form-check-label"><?= __("No") ?></label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- C-Section -->
+                        <div class="mb-lg-5 mb-4 pb-lg-0 pb-md-2">
+                            <h2 class="h3 mb-2 fw-semibold"><?= __("C-Section") ?></h2>
+                            <p class="text-body-tertiary">
+                                <?= __("Cesarean birth (C-section) can result in scarring and changes in muscle tone. Indicate if you have had a C-section.") ?>
+                            </p>
+                            <?php $csection = $_SESSION["formdata"][4]["c_section"] ?? ''; ?>
+                            <div class="mb-md-4 mb-3 d-flex gap-2">
+                                <div class="form-check btn btn-lg btn-light rounded-pill mb-2">
+                                    <input id="c-section-true" type="radio" name="c-section" class="form-check-input"
+                                        <?= $csection === 'c-section-true' ? 'checked' : '' ?>>
+                                    <label for="c-section-true" class="form-check-label"><?= __("Yes") ?></label>
+                                </div>
+                                <div class="form-check btn btn-lg btn-light rounded-pill mb-2">
+                                    <input id="c-section-false" type="radio" name="c-section" class="form-check-input"
+                                        <?= $csection === 'c-section-false' ? 'checked' : '' ?>>
+                                    <label for="c-section-false" class="form-check-label"><?= __("No") ?></label>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <?php
+                        $breastfeeding = $_SESSION["formdata"][4]["breastfeeding"] ?? '';
+                        $piercings = explode(',', $_SESSION["formdata"][4]["piercings"] ?? '');
+                        $piercingsText = $_SESSION["formdata"][4]["piercings_other_text"] ?? '';
+                        $tattoos = explode(',', $_SESSION["formdata"][4]["tattoos"] ?? '');
+                        $tattoosText = $_SESSION["formdata"][4]["tattoos_other_text"] ?? '';
+                        $hormonal = $_SESSION["formdata"][4]["hormonal_influence"] ?? '';
+                        $menstrual = $_SESSION["formdata"][4]["menstrual_cycle"] ?? '';
+                        ?>
+
+                        <!-- Breastfeeding -->
+                        <div class="mb-lg-5 mb-4 pb-lg-0 pb-md-2">
+                            <h2 class="h3 mb-2 fw-semibold"><?= __("Breastfeeding") ?></h2>
+                            <p class="text-body-tertiary"><?= __("If relevant, indicate whether you are currently breastfeeding or have breastfed in the past.") ?></p>
+                            <div class="mb-md-4 mb-3">
+                                <div class="form-check btn btn-lg btn-light rounded-pill w-100 mb-2">
+                                    <input id="breastfeeding-current" type="radio" name="breastfeeding" class="form-check-input"
+                                        <?= $breastfeeding === 'breastfeeding-current' ? 'checked' : '' ?>>
+                                    <label for="breastfeeding-current" class="form-check-label"><?= __("Yes, I am currently breastfeeding") ?></label>
+                                </div>
+                                <div class="form-check btn btn-lg btn-light rounded-pill w-100 mb-2">
+                                    <input id="breastfeeding-past" type="radio" name="breastfeeding" class="form-check-input"
+                                        <?= $breastfeeding === 'breastfeeding-past' ? 'checked' : '' ?>>
+                                    <label for="breastfeeding-past" class="form-check-label"><?= __("Yes, I have breastfed in the past") ?></label>
+                                </div>
+                                <div class="form-check btn btn-lg btn-light rounded-pill w-100 mb-2">
+                                    <input id="breastfeeding-false" type="radio" name="breastfeeding" class="form-check-input"
+                                        <?= $breastfeeding === 'breastfeeding-false' ? 'checked' : '' ?>>
+                                    <label for="breastfeeding-false" class="form-check-label"><?= __("No, I have never breastfed") ?></label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Piercings -->
+                        <div class="mb-lg-5 mb-4 pb-lg-0 pb-md-2">
+                            <h2 class="h3 mb-2 fw-semibold"><?= __("Piercings") ?></h2>
+                            <p class="text-body-tertiary"><?= __("Indicate if you have any piercings in the following areas. If your piercing location is not listed, you may specify it under ‘Other’.") ?></p>
+                            <div class="mb-md-4 mb-3">
+                                <?php
+                                $piercingOptions = [
+                                    "piercings-false", "piercings-nipple", "piercings-genital", "piercings-buttocks", "piercings-other"
+                                ];
+                                foreach ($piercingOptions as $id): ?>
+                                    <div class="form-check btn btn-lg btn-light rounded-pill w-100 mb-2" <?= $id === "piercings-other" ? 'data-bs-toggle="collapse" data-bs-target="#piercings-other-specify"' : '' ?>>
+                                        <input id="<?= $id ?>" type="checkbox" class="form-check-input" <?= in_array($id, $piercings) ? 'checked' : '' ?>>
+                                        <label for="<?= $id ?>" class="form-check-label"><?= __(ucwords(str_replace("-", " ", $id))) ?></label>
                                     </div>
-                                    <div class="form-check btn btn-lg btn-light rounded-pill mb-2">
-                                        <input id="pregnancy-false" type="radio" name="pregnancy" class="form-check-input">
-                                        <label for="pregnancy-false" class="form-check-label">
-                                            <?= __("No") ?>
-                                        </label>
+                                <?php endforeach; ?>
+
+                                <div id="piercings-other-specify" class="collapse <?= in_array("piercings-other", $piercings) ? 'show' : '' ?>">
+                                    <div class="border-bottom border-dark">
+                                        <input id="piercings-other-text" type="text" class="form-control form-control-lg bg-transparent border-0 rounded-0 px-0"
+                                               placeholder="<?= __("Would you like to share the story of your piercings?") ?>"
+                                               value="<?= htmlspecialchars($piercingsText) ?>" data-autofocus="collapse">
                                     </div>
                                 </div>
                             </div>
+                        </div>
 
-                            <!-- Vaginal Birth -->
-                            <div class="mb-lg-5 mb-4 pb-lg-0 pb-md-2">
-                                <h2 class="h3 mb-2 fw-semibold">
-                                    <?= __("Vaginal Birth") ?>
-                                </h2>
-                                <p class="text-body-tertiary">
-                                    <?= __("Vaginal birth can impact the body, including perineal scarring, muscle changes, and genital variations. Indicate if you have given birth vaginally.") ?>
-                                </p>
-                                <div class="mb-md-4 mb-3 d-flex gap-2">
-                                    <div class="form-check btn btn-lg btn-light rounded-pill mb-2">
-                                        <input id="vaginal-birth-true" type="radio" name="vaginal-birth" class="form-check-input">
-                                        <label for="vaginal-birth-true" class="form-check-label">
-                                            <?= __("Yes") ?>
-                                        </label>
+                        <!-- Tattoos -->
+                        <div class="mb-lg-5 mb-4 pb-lg-0 pb-md-2">
+                            <h2 class="h3 mb-2 fw-semibold"><?= __("Tattoos") ?></h2>
+                            <p class="text-body-tertiary"><?= __("Indicate if you have any tattoos in the following areas. If your tattoo location is not listed, you may specify it under 'Other'.") ?></p>
+                            <div class="mb-md-4 mb-3">
+                                <?php
+                                $tattooOptions = [
+                                    "tattoos-false", "tattoos-breasts", "tattoos-vulva", "tattoos-penis", "tattoos-buttocks", "tattoos-other"
+                                ];
+                                foreach ($tattooOptions as $id): ?>
+                                    <div class="form-check btn btn-lg btn-light rounded-pill w-100 mb-2" <?= $id === "tattoos-other" ? 'data-bs-toggle="collapse" data-bs-target="#tattoos-other-specify"' : '' ?>>
+                                        <input id="<?= $id ?>" type="checkbox" class="form-check-input" <?= in_array($id, $tattoos) ? 'checked' : '' ?>>
+                                        <label for="<?= $id ?>" class="form-check-label"><?= __(ucwords(str_replace("-", " ", $id))) ?></label>
                                     </div>
-                                    <div class="form-check btn btn-lg btn-light rounded-pill mb-2">
-                                        <input id="vaginal-birth-false" type="radio" name="vaginal-birth" class="form-check-input">
-                                        <label for="vaginal-birth-false" class="form-check-label">
-                                            <?= __("No") ?>
-                                        </label>
+                                <?php endforeach; ?>
+
+                                <div id="tattoos-other-specify" class="collapse <?= in_array("tattoos-other", $tattoos) ? 'show' : '' ?>">
+                                    <div class="border-bottom border-dark">
+                                        <input id="tattoos-other-text" type="text" class="form-control form-control-lg bg-transparent border-0 rounded-0 px-0"
+                                               placeholder="<?= __("Please, specify") ?>"
+                                               value="<?= htmlspecialchars($tattoosText) ?>" data-autofocus="collapse">
                                     </div>
                                 </div>
                             </div>
+                        </div>
 
-                            <!-- C-Section -->
-                            <div class="mb-lg-5 mb-4 pb-lg-0 pb-md-2">
-                                <h2 class="h3 mb-2 fw-semibold">
-                                    <?= __("C-Section") ?>
-                                </h2>
-                                <p class="text-body-tertiary">
-                                    <?= __("Cesarean birth (C-section) can result in scarring and changes in muscle tone. Indicate if you have had a C-section.") ?>
-                                </p>
-                                <div class="mb-md-4 mb-3 d-flex gap-2">
-                                    <div class="form-check btn btn-lg btn-light rounded-pill mb-2">
-                                        <input id="c-section-true" type="radio" name="c-section" class="form-check-input">
-                                        <label for="c-section-true" class="form-check-label">
-                                            <?= __("Yes") ?>
-                                        </label>
-                                    </div>
-                                    <div class="form-check btn btn-lg btn-light rounded-pill mb-2">
-                                        <input id="c-section-false" type="radio" name="c-section" class="form-check-input">
-                                        <label for="c-section-false" class="form-check-label">
-                                            <?= __("No") ?>
-                                        </label>
-                                    </div>
+                        <!-- Hormonal Influence -->
+                        <div class="mb-lg-5 mb-4 pb-lg-0 pb-md-2">
+                            <h2 class="h3 mb-2 fw-semibold"><?= __("Hormonal Influence") ?></h2>
+                            <p class="text-body-tertiary"><?= __("Have hormonal changes (e.g., puberty, menopause, hormone therapy) influenced the photographed area? This helps document natural body developments across different life") ?></p>
+                            <div class="mb-md-4 mb-3 d-flex gap-2">
+                                <div class="form-check btn btn-lg btn-light rounded-pill mb-2">
+                                    <input id="hormonal-influence-true" type="radio" name="hormonal-influence" class="form-check-input"
+                                        <?= $hormonal === 'hormonal-influence-true' ? 'checked' : '' ?>>
+                                    <label for="hormonal-influence-true" class="form-check-label"><?= __("Yes") ?></label>
+                                </div>
+                                <div class="form-check btn btn-lg btn-light rounded-pill mb-2">
+                                    <input id="hormonal-influence-false" type="radio" name="hormonal-influence" class="form-check-input"
+                                        <?= $hormonal === 'hormonal-influence-false' ? 'checked' : '' ?>>
+                                    <label for="hormonal-influence-false" class="form-check-label"><?= __("No") ?></label>
                                 </div>
                             </div>
+                        </div>
 
-                            <!-- Breastfeeding -->
-                            <div class="mb-lg-5 mb-4 pb-lg-0 pb-md-2">
-                                <h2 class="h3 mb-2 fw-semibold">
-                                    <?= __("Breastfeeding") ?>
-                                </h2>
-                                <p class="text-body-tertiary">
-                                    <?= __("If relevant, indicate whether you are currently breastfeeding or have breastfed in the past.") ?>
-                                </p>
-                                <div class="mb-md-4 mb-3">
-                                    <div class="form-check btn btn-lg btn-light rounded-pill w-100 mb-2">
-                                        <input id="breastfeeding-current" type="radio" name="breastfeeding" class="form-check-input">
-                                        <label for="breastfeeding-current" class="form-check-label">
-                                            <?= __("Yes, I am currently breastfeeding") ?>
-                                        </label>
-                                    </div>
-                                    <div class="form-check btn btn-lg btn-light rounded-pill w-100 mb-2">
-                                        <input id="breastfeeding-past" type="radio" name="breastfeeding" class="form-check-input">
-                                        <label for="breastfeeding-past" class="form-check-label">
-                                            <?= __("Yes, I have breastfed in the past") ?>
-                                        </label>
-                                    </div>
-                                    <div class="form-check btn btn-lg btn-light rounded-pill w-100 mb-2">
-                                        <input id="breastfeeding-false" type="radio" name="breastfeeding" class="form-check-input">
-                                        <label for="breastfeeding-false" class="form-check-label">
-                                            <?= __("No, I have never breastfed") ?>
-                                        </label>
-                                    </div>
+                        <!-- Menstrual Cycle -->
+                        <div class="mb-lg-5 mb-4 pb-lg-0 pb-md-2">
+                            <h2 class="h3 mb-2 fw-semibold"><?= __("Menstrual Cycle") ?></h2>
+                            <p class="text-body-tertiary"><?= __("Were you menstruating when this photo was taken? This helps document natural variations during the cycle.") ?></p>
+                            <div class="mb-md-4 mb-3 d-flex gap-2">
+                                <div class="form-check btn btn-lg btn-light rounded-pill mb-2">
+                                    <input id="menstrual-cycle-true" type="radio" name="menstrual-cycle" class="form-check-input"
+                                        <?= $menstrual === 'menstrual-cycle-true' ? 'checked' : '' ?>>
+                                    <label for="menstrual-cycle-true" class="form-check-label"><?= __("Yes") ?></label>
+                                </div>
+                                <div class="form-check btn btn-lg btn-light rounded-pill mb-2">
+                                    <input id="menstrual-cycle-false" type="radio" name="menstrual-cycle" class="form-check-input"
+                                        <?= $menstrual === 'menstrual-cycle-false' ? 'checked' : '' ?>>
+                                    <label for="menstrual-cycle-false" class="form-check-label"><?= __("No") ?></label>
                                 </div>
                             </div>
+                        </div>
 
-                            <!-- Piercings -->
-                            <div class="mb-lg-5 mb-4 pb-lg-0 pb-md-2">
-                                <h2 class="h3 mb-2 fw-semibold">
-                                    <?= __("Piercings") ?>
-                                </h2>
-                                <p class="text-body-tertiary">
-                                    <?= __("Indicate if you have any piercings in the following areas. If your piercing location is not listed, you may specify it under ‘Other’.") ?>
-                                </p>
-                                <div class="mb-md-4 mb-3">
-                                    <div class="form-check btn btn-lg btn-light rounded-pill w-100 mb-2">
-                                        <input id="piercings-false" type="checkbox" class="form-check-input">
-                                        <label for="piercings-false" class="form-check-label">
-                                            <?= __("No piercings") ?>
-                                        </label>
-                                    </div>
-                                    <div class="form-check btn btn-lg btn-light rounded-pill w-100 mb-2">
-                                        <input id="piercings-nipple" type="checkbox" class="form-check-input">
-                                        <label for="piercings-nipple" class="form-check-label">
-                                            <?= __("Nipple piercings") ?>
-                                        </label>
-                                    </div>
-                                    <div class="form-check btn btn-lg btn-light rounded-pill w-100 mb-2">
-                                        <input id="piercings-genital" type="checkbox" class="form-check-input">
-                                        <label for="piercings-genital" class="form-check-label">
-                                            <?= __("Genital piercings (vulva)") ?>
-                                        </label>
-                                    </div>
-                                    <div class="form-check btn btn-lg btn-light rounded-pill w-100 mb-2">
-                                        <input id="piercings-buttocks" type="checkbox" class="form-check-input">
-                                        <label for="piercings-buttocks" class="form-check-label">
-                                            <?= __("Buttocks piercings") ?>
-                                        </label>
-                                    </div>
 
-                                    <!-- Specify collapse toggle -->
-                                    <div class="form-check btn btn-lg btn-light rounded-pill w-100 mb-2" data-bs-toggle="collapse" data-bs-target="#piercings-other-specify">
-                                        <input id="piercings-other" type="checkbox" class="form-check-input">
-                                        <label for="piercings-other" class="form-check-label">
-                                            <?= __("Other piercings in these areas") ?>
-                                        </label>
-                                    </div>
+                        <!-- Submit -->
+                        <div class="d-flex flex-sm-row flex-column pt-2">
+                            <button type="submit" class="btn btn-lg btn-primary rounded-pill py-3">
+                                <?= __("Submit form") ?>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="ms-2" width="16" height="16" fill="none"><path d="M5.628 3.182c-.244.101-.452.272-.599.491s-.225.477-.225.741v7.448c0 .264.078.521.225.741s.355.39.598.491.512.127.77.076.496-.178.683-.365l3.724-3.724c.25-.25.39-.589.39-.943s-.14-.693-.39-.943L7.081 3.472c-.186-.186-.424-.313-.682-.365s-.527-.025-.77.076z" fill="currentColor"/></svg>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
 
-                                    <!-- Specify collapse -->
-                                    <div id="piercings-other-specify" class="collapse">
-                                        <div class="border-bottom border-dark">
-                                            <input id="piercings-other-text" type="text" class="form-control form-control-lg bg-transparent border-0 rounded-0 px-0"
-                                                   placeholder="<?= __("Would you like to share the story of your piercings?") ?>" data-autofocus="collapse">
-                                        </div>
-                                    </div>
-                                </div>
+<?php } elseif ($curStep == 5) { ?>
+
+            <!-- Content -->
+            <div class="col-lg-9 col-sm-8 py-5 px-lg-5 px-sm-4 px-3">
+                <div class="col-xxl-8 col-lg-11 py-lg-5 py-sm-4 py-5 px-xxl-5 px-lg-4">
+
+                    <!-- Back button (mobile) -->
+                    <a href="wizard-04.html" class="btn btn-lg btn-link px-0 mb-3 d-sm-none">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="me-2" width="16" height="16" fill="none"><path d="M10.372 3.182c.244.101.452.272.598.491s.225.477.225.741v7.448c0 .264-.078.521-.225.741s-.355.39-.598.491-.512.127-.77.076-.496-.178-.683-.365L5.195 9.081c-.25-.25-.39-.589-.39-.943s.14-.693.39-.943l3.724-3.724c.186-.186.424-.313.682-.365s.527-.025.77.076z" fill="currentColor"/></svg>
+                        Back
+                    </a>
+
+                    <div class="ff-extra">
+                        <h1 class="fw-semibold">
+                            Thank you for your contribution!
+                        </h1>
+                        <p class="fs-lg">We truly appreciate your participation in the Shape of Us project. Your contribution helps create a more inclusive and representative collection.</p>
+                        <a href="/" class="btn btn-lg btn-light rounded-pill">
+                            Visit Shape of Us Site
+                            <svg xmlns="http://www.w3.org/2000/svg" class="ms-2" width="16" height="16" fill="none"><path d="M5.628 3.182c-.244.101-.452.272-.599.491s-.225.477-.225.741v7.448c0 .264.078.521.225.741s.355.39.598.491.512.127.77.076.496-.178.683-.365l3.724-3.724c.25-.25.39-.589.39-.943s-.14-.693-.39-.943L7.081 3.472c-.186-.186-.424-.313-.682-.365s-.527-.025-.77.076z" fill="currentColor"/></svg>
+                        </a>
+                        <div class="mt-lg-5 mt-4 pt-lg-0 pt-md-2">
+                            <h2 class="h4 fw-semibold">Your ID</h2>
+                            <div class="bg-primary text-white text-center rounded-5 p-3 h1 fw-semibold" style="font-size: 7.5vw;">
+                                <?= $photoId ?>
                             </div>
+                            <p class="my-4 py-md-2 fs-lg">
+                                Please save this number. It will be used when you have your pictures taken to ensure your anonymity. This ID allows us to securely connect your form with your images without collecting any personal information. Thank you for being a part of this important initiative!
+                            </p>
 
-
-                            <!-- Tattoos -->
-                            <div class="mb-lg-5 mb-4 pb-lg-0 pb-md-2">
-                                <h2 class="h3 mb-2 fw-semibold">
-                                    <?= __("Tattoos") ?>
-                                </h2>
-                                <p class="text-body-tertiary">
-                                    <?= __("Indicate if you have any tattoos in the following areas. If your tattoo location is not listed, you may specify it under 'Other'.") ?>
-                                </p>
-                                <div class="mb-md-4 mb-3">
-                                    <div class="form-check btn btn-lg btn-light rounded-pill w-100 mb-2">
-                                        <input id="tattoos-false" type="checkbox" class="form-check-input">
-                                        <label for="tattoos-false" class="form-check-label">
-                                            <?= __("No tattoos") ?>
-                                        </label>
-                                    </div>
-                                    <div class="form-check btn btn-lg btn-light rounded-pill w-100 mb-2">
-                                        <input id="tattoos-breasts" type="checkbox" class="form-check-input">
-                                        <label for="tattoos-breasts" class="form-check-label">
-                                            <?= __("Tattoos on breasts") ?>
-                                        </label>
-                                    </div>
-                                    <div class="form-check btn btn-lg btn-light rounded-pill w-100 mb-2">
-                                        <input id="tattoos-vulva" type="checkbox" class="form-check-input">
-                                        <label for="tattoos-vulva" class="form-check-label">
-                                            <?= __("Tattoos on vulva/genital area") ?>
-                                        </label>
-                                    </div>
-                                    <div class="form-check btn btn-lg btn-light rounded-pill w-100 mb-2">
-                                        <input id="tattoos-penis" type="checkbox" class="form-check-input">
-                                        <label for="tattoos-penis" class="form-check-label">
-                                            <?= __("Tattoos on penis/genital area") ?>
-                                        </label>
-                                    </div>
-                                    <div class="form-check btn btn-lg btn-light rounded-pill w-100 mb-2">
-                                        <input id="tattoos-buttocks" type="checkbox" class="form-check-input">
-                                        <label for="tattoos-buttocks" class="form-check-label">
-                                            <?= __("Tattoos on buttocks") ?>
-                                        </label>
-                                    </div>
-
-                                    <!-- Specify collapse toggle -->
-                                    <div class="form-check btn btn-lg btn-light rounded-pill w-100 mb-2" data-bs-toggle="collapse" data-bs-target="#tattoos-other-specify">
-                                        <input id="tattoos-other" type="checkbox" class="form-check-input">
-                                        <label for="tattoos-other" class="form-check-label">
-                                            <?= __("Other tattoos in these areas") ?>
-                                        </label>
-                                    </div>
-
-                                    <!-- Specify collapse -->
-                                    <div id="tattoos-other-specify" class="collapse">
-                                        <div class="border-bottom border-dark">
-                                            <input id="tattoos-other-text" type="text" class="form-control form-control-lg bg-transparent border-0 rounded-0 px-0"
-                                                   placeholder="<?= __("Please, specify") ?>" data-autofocus="collapse">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Hormonal Influence -->
-                            <div class="mb-lg-5 mb-4 pb-lg-0 pb-md-2">
-                                <h2 class="h3 mb-2 fw-semibold">
-                                    <?= __("Hormonal Influence") ?>
-                                </h2>
-                                <p class="text-body-tertiary">
-                                    <?= __("Have hormonal changes (e.g., puberty, menopause, hormone therapy) influenced the photographed area? This helps document natural body developments across different life") ?>
-                                </p>
-                                <div class="mb-md-4 mb-3 d-flex gap-2">
-                                    <div class="form-check btn btn-lg btn-light rounded-pill mb-2">
-                                        <input id="hormonal-influence-true" type="radio" name="hormonal-influence" class="form-check-input">
-                                        <label for="hormonal-influence-true" class="form-check-label">
-                                            <?= __("Yes") ?>
-                                        </label>
-                                    </div>
-                                    <div class="form-check btn btn-lg btn-light rounded-pill mb-2">
-                                        <input id="hormonal-influence-false" type="radio" name="hormonal-influence" class="form-check-input">
-                                        <label for="hormonal-influence-false" class="form-check-label">
-                                            <?= __("No") ?>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Menstrual Cycle -->
-                            <div class="mb-lg-5 mb-4 pb-lg-0 pb-md-2">
-                                <h2 class="h3 mb-2 fw-semibold">
-                                    <?= __("Menstrual Cycle") ?>
-                                </h2>
-                                <p class="text-body-tertiary">
-                                    <?= __("Were you menstruating when this photo was taken? This helps document natural variations during the cycle.") ?>
-                                </p>
-                                <div class="mb-md-4 mb-3 d-flex gap-2">
-                                    <div class="form-check btn btn-lg btn-light rounded-pill mb-2">
-                                        <input id="menstrual-cycle-true" type="radio" name="menstrual-cycle" class="form-check-input">
-                                        <label for="menstrual-cycle-true" class="form-check-label">
-                                            <?= __("Yes") ?>
-                                        </label>
-                                    </div>
-                                    <div class="form-check btn btn-lg btn-light rounded-pill mb-2">
-                                        <input id="menstrual-cycle-false" type="radio" name="menstrual-cycle" class="form-check-input">
-                                        <label for="menstrual-cycle-false" class="form-check-label">
-                                            <?= __("No") ?>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Submit -->
+                            <!-- Finish -->
                             <div class="d-flex flex-sm-row flex-column pt-2">
-                                <button type="submit" class="btn btn-lg btn-primary rounded-pill py-3">
-                                    <?= __("Submit form") ?>
+                                <a href="#" class="btn btn-lg btn-primary rounded-pill py-3">
+                                    Finish
                                     <svg xmlns="http://www.w3.org/2000/svg" class="ms-2" width="16" height="16" fill="none"><path d="M5.628 3.182c-.244.101-.452.272-.599.491s-.225.477-.225.741v7.448c0 .264.078.521.225.741s.355.39.598.491.512.127.77.076.496-.178.683-.365l3.724-3.724c.25-.25.39-.589.39-.943s-.14-.693-.39-.943L7.081 3.472c-.186-.186-.424-.313-.682-.365s-.527-.025-.77.076z" fill="currentColor"/></svg>
-                                </button>
+                                </a>
                             </div>
-                        </form>
+                        </div>
+                    </div>
                 </div>
             </div>
 

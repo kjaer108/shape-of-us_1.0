@@ -620,7 +620,7 @@ function set_user_session(&$user_info = NULL) {
 
         // User is not logged in
         $_SESSION["loggedin"] = FALSE;
-        $_SESSION["ident"] = "ip:" . user_ip;
+        $_SESSION["ident"] = "ip:" . USER_IP;
 
         // Remove all existing session variables associated with the user id
         unset($_SESSION["user_info"]);

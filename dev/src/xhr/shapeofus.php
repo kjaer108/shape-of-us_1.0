@@ -19,7 +19,7 @@ $success = TRUE;            // Set to FALSE later if a fail happens
 // *** Custom Stuff ***********************************************************
 $user_id = get_user_id();
 //$user_fp = $_SESSION["ufp"] ?? NULL;
-$user_ip = user_ip;
+$USER_IP = USER_IP;
 
 
 /*****************************************************************************
