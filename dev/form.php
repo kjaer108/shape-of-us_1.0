@@ -6,7 +6,6 @@ require_once "src/inc/init.php";
 
 //unset($_SESSION["formdata"]);
 zdebug($_SESSION["formdata"][3] ?? null);
-zdebug(implode(", ", array_keys(array_filter($_SESSION["formdata"][1], fn($value) => $value == 1))));
 zdebug($_SESSION["formdata"][2]["anatomy"] ?? null);
 
 // Get the current step
