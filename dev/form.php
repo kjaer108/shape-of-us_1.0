@@ -195,7 +195,7 @@ INSERT INTO sou_form_entries (
     $insertSupportValues('sou_form_penis_penis', $formData[3]['penis_penis'] ?? '');
     $insertSupportValues('sou_form_penis_breast', $formData[3]['penis_breast'] ?? '');
 
-
+    unset($_SESSION['formdata']);
 }
 
 
@@ -1872,7 +1872,7 @@ $hasVulvaText = !empty($vulvaText);
                             Thank you for your contribution!
                         </h1>
                         <p class="fs-lg">We truly appreciate your participation in the Shape of Us project. Your contribution helps create a more inclusive and representative collection.</p>
-                        <a href="/" class="btn btn-lg btn-light rounded-pill">
+                        <a href="<?= get_url("app") ?>" class="btn btn-lg btn-light rounded-pill">
                             Visit Shape of Us Site
                             <svg xmlns="http://www.w3.org/2000/svg" class="ms-2" width="16" height="16" fill="none"><path d="M5.628 3.182c-.244.101-.452.272-.599.491s-.225.477-.225.741v7.448c0 .264.078.521.225.741s.355.39.598.491.512.127.77.076.496-.178.683-.365l3.724-3.724c.25-.25.39-.589.39-.943s-.14-.693-.39-.943L7.081 3.472c-.186-.186-.424-.313-.682-.365s-.527-.025-.77.076z" fill="currentColor"/></svg>
                         </a>
@@ -1885,13 +1885,13 @@ $hasVulvaText = !empty($vulvaText);
                                 Please save this number. It will be used when you have your pictures taken to ensure your anonymity. This ID allows us to securely connect your form with your images without collecting any personal information. Thank you for being a part of this important initiative!
                             </p>
 
-                            <!-- Finish -->
+                            <!-- Finish
                             <div class="d-flex flex-sm-row flex-column pt-2">
                                 <a href="#" class="btn btn-lg btn-primary rounded-pill py-3">
                                     Finish
                                     <svg xmlns="http://www.w3.org/2000/svg" class="ms-2" width="16" height="16" fill="none"><path d="M5.628 3.182c-.244.101-.452.272-.599.491s-.225.477-.225.741v7.448c0 .264.078.521.225.741s.355.39.598.491.512.127.77.076.496-.178.683-.365l3.724-3.724c.25-.25.39-.589.39-.943s-.14-.693-.39-.943L7.081 3.472c-.186-.186-.424-.313-.682-.365s-.527-.025-.77.076z" fill="currentColor"/></svg>
                                 </a>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                 </div>

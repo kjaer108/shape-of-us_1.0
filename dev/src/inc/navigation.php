@@ -5,6 +5,7 @@ $url_map = [
 
     // Form pages
     "form-step" => ["form.php", "step=#", "form", "?step=#"],  // get_url("form-step", 1)
+    "app" => ["app.php", "", "form", ""],
 ];
 
 
