@@ -120,7 +120,7 @@ $isFtM = $_SESSION["formdata"][1]["ftm"] ?? false;
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="http://localhost:63342/shape-of-us_1.0/dev/form.php?step=2&lang=en" class="nav-link align-items-start<?= $curStep <= 2 ? " pe-none" : "" ?><?= $curStep == 2 ? " active" : "" ?>">
+                            <a href="<?= get_url("form-step", 2) ?>" class="nav-link align-items-start<?= $curStep <= 2 ? " pe-none" : "" ?><?= $curStep == 2 ? " active" : "" ?>">
 <?php if ($curStep <= 2) { ?>
                                 <span class="d-block me-2 pe-1 text-center" style="min-width: 28px;">02</span>
 <?php } else { ?>
@@ -132,7 +132,7 @@ $isFtM = $_SESSION["formdata"][1]["ftm"] ?? false;
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="wizard-03.html" class="nav-link align-items-start<?= $curStep <= 3 ? " pe-none" : "" ?><?= $curStep == 3 ? " active" : "" ?>">
+                            <a href="<?= get_url("form-step", 3) ?>" class="nav-link align-items-start<?= $curStep <= 3 ? " pe-none" : "" ?><?= $curStep == 3 ? " active" : "" ?>">
 <?php if ($curStep <= 3) { ?>
                                 <span class="d-block me-2 pe-1 text-center" style="min-width: 28px;">03</span>
 <?php } else { ?>
@@ -144,7 +144,7 @@ $isFtM = $_SESSION["formdata"][1]["ftm"] ?? false;
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="wizard-04.html" class="nav-link align-items-start<?= $curStep <= 4 ? " pe-none" : "" ?><?= $curStep == 4 ? " active" : "" ?>">
+                            <a href="<?= get_url("form-step", 4) ?>" class="nav-link align-items-start<?= $curStep <= 4 ? " pe-none" : "" ?><?= $curStep == 4 ? " active" : "" ?>">
 <?php if ($curStep <= 4) { ?>
                                 <span class="d-block me-2 pe-1 text-center" style="min-width: 28px;">04</span>
 <?php } else { ?>
@@ -321,7 +321,7 @@ $isFtM = $_SESSION["formdata"][1]["ftm"] ?? false;
                                         $gradient = $gradientColors[$id] ?? "#FFF, #000";
                                         ?>
                                         <div class="col">
-                                            <input id="<?= $id ?>" type="checkbox" class="btn-check" name="skin_tones" value="<?= $id ?>" <?= $checked ?>>
+                                            <input id="<?= $id ?>" type="radio" class="btn-check" name="skin_tones" value="<?= $id ?>" <?= $checked ?>>
                                             <label for="<?= $id ?>" class="form-label d-flex gap-2">
                                                 <span class="btn-swatch" style="background: linear-gradient(180deg, <?= $gradient ?>);">
                                                     <i class="btn-swatch-label zi-check"></i>
@@ -775,6 +775,12 @@ $hasVulvaText = !empty($vulvaText);
                                 </div>
 
                                 <!-- Penis -->
+                                <?php
+                                $penisText = $_SESSION['formdata'][3]['penis_penis_text'] ?? '';
+                                $hasPenisText = !empty($penisText);
+                                $penisArray = explode(',', $_SESSION['formdata'][3]['penis_penis'] ?? '');
+                                ?>
+
                                 <div id="section-penis-penis" class="mb-lg-5 mb-4 pb-lg-0 pb-md-2">
                                     <h2 class="h4 mb-2 fw-semibold">
                                         <?= __("Penis") ?>
@@ -784,68 +790,67 @@ $hasVulvaText = !empty($vulvaText);
                                     </p>
 
                                     <div class="mb-3">
-                                        <div class="form-check btn btn-lg btn-light rounded-4 w-100 mb-2">
-                                            <input id="medical-penis-none" type="checkbox" class="form-check-input">
-                                            <label for="medical-penis-none" class="form-check-label fs-base">
-                                                <?= __("None") ?>
-                                            </label>
-                                        </div>
+                                        <?php
+                                        $penisOptions = [
+                                            'medical-penis-none' => __("None"),
+                                            'medical-penis-circumcision' => __("Circumcision"),
+                                            'medical-penis-implant' => __("Penile implant"),
+                                            'medical-penis-surgery' => __("Penile lengthening or enlargement surgery"),
+                                            'medical-penis-hypospadias' => __("Hypospadias repair"),
+                                        ];
 
-                                        <div class="form-check btn btn-lg btn-light rounded-4 w-100 mb-2">
-                                            <input id="medical-penis-circumcision" type="checkbox" class="form-check-input">
-                                            <label for="medical-penis-circumcision" class="form-check-label fs-base">
-                                                <?= __("Circumcision") ?>
-                                            </label>
-                                        </div>
+                                        $penisDescriptions = [
+                                            'medical-penis-implant' => __("Prosthetic implant for erectile dysfunction or gender-affirming purposes."),
+                                            'medical-penis-surgery' => __("Cosmetic or reconstructive procedure to modify penis size."),
+                                            'medical-penis-hypospadias' => __("Surgical correction of a congenital condition affecting the urethral opening."),
+                                        ];
 
-                                        <div class="form-check btn btn-lg btn-light rounded-4 w-100 mb-2">
-                                            <input id="medical-penis-implant" type="checkbox" class="form-check-input">
-                                            <label for="medical-penis-implant" class="form-check-label fs-base">
-                                                <?= __("Penile implant") ?>
-                                                <span class="mt-1 d-block text-body-secondary">
-                        <?= __("Prosthetic implant for erectile dysfunction or gender-affirming purposes.") ?>
+                                        foreach ($penisOptions as $id => $label) :
+                                            $checked = in_array($id, $penisArray) ? 'checked' : '';
+                                            ?>
+                                            <div class="form-check btn btn-lg btn-light rounded-4 w-100 mb-2">
+                                                <input id="<?= $id ?>" type="checkbox" class="form-check-input" <?= $checked ?>>
+                                                <label for="<?= $id ?>" class="form-check-label fs-base">
+                                                    <?= $label ?>
+                                                    <?php if (isset($penisDescriptions[$id])) : ?>
+                                                        <span class="mt-1 d-block text-body-secondary">
+                        <?= $penisDescriptions[$id] ?>
                     </span>
-                                            </label>
-                                        </div>
-
-                                        <div class="form-check btn btn-lg btn-light rounded-4 w-100 mb-2">
-                                            <input id="medical-penis-surgery" type="checkbox" class="form-check-input">
-                                            <label for="medical-penis-surgery" class="form-check-label fs-base">
-                                                <?= __("Penile lengthening or enlargement surgery") ?>
-                                                <span class="mt-1 d-block text-body-secondary">
-                        <?= __("Cosmetic or reconstructive procedure to modify penis size.") ?>
-                    </span>
-                                            </label>
-                                        </div>
-
-                                        <div class="form-check btn btn-lg btn-light rounded-4 w-100 mb-2">
-                                            <input id="medical-penis-hypospadias" type="checkbox" class="form-check-input">
-                                            <label for="medical-penis-hypospadias" class="form-check-label fs-base">
-                                                <?= __("Hypospadias repair") ?>
-                                                <span class="mt-1 d-block text-body-secondary">
-                        <?= __("Surgical correction of a congenital condition affecting the urethral opening.") ?>
-                    </span>
-                                            </label>
-                                        </div>
+                                                    <?php endif; ?>
+                                                </label>
+                                            </div>
+                                        <?php endforeach; ?>
 
                                         <!-- Specify collapse toggle -->
                                         <div class="form-check btn btn-lg btn-light rounded-4 w-100 mb-2" data-bs-toggle="collapse" data-bs-target="#medical-penis-specify">
-                                            <input id="medical-penis-other-surgical-procedures" type="checkbox" class="form-check-input">
+                                            <input id="medical-penis-other-surgical-procedures" type="checkbox" class="form-check-input"
+                                                <?= in_array('medical-penis-other-surgical-procedures', $penisArray) || $hasPenisText ? 'checked' : '' ?>>
                                             <label for="medical-penis-other-surgical-procedures" class="form-check-label fs-base">
                                                 <?= __("Other surgical procedures") ?>
                                             </label>
                                         </div>
 
                                         <!-- Specify collapse -->
-                                        <div id="medical-penis-specify" class="collapse">
+                                        <div id="medical-penis-specify" class="collapse<?= $hasPenisText ? ' show' : '' ?>">
                                             <div class="border-bottom border-dark">
-                                                <input id="medical-penis-other-surgical-procedures-text" type="text" class="form-control form-control-lg bg-transparent border-0 rounded-0 px-0" placeholder="<?= __("Please specify") ?>" data-autofocus="collapse">
+                                                <input id="medical-penis-other-surgical-procedures-text"
+                                                       type="text"
+                                                       class="form-control form-control-lg bg-transparent border-0 rounded-0 px-0"
+                                                       placeholder="<?= __("Please specify") ?>"
+                                                       value="<?= htmlspecialchars($penisText) ?>"
+                                                       data-autofocus="collapse">
                                             </div>
                                         </div>
                                     </div>
                                 </div>
 
                                 <!-- Breast -->
+                                <?php
+                                $penisBreastText = $_SESSION['formdata'][3]['penis_breast_text'] ?? '';
+                                $hasPenisBreastText = !empty($penisBreastText);
+                                $penisBreastArray = explode(',', $_SESSION['formdata'][3]['penis_breast'] ?? '');
+                                ?>
+
                                 <div id="section-penis-breast" class="mb-lg-5 mb-4 pb-lg-0 pb-md-2">
                                     <h2 class="h4 mb-2 fw-semibold">
                                         <?= __("Breast") ?>
@@ -855,49 +860,57 @@ $hasVulvaText = !empty($vulvaText);
                                     </p>
 
                                     <div class="mb-md-4 mb-3">
-                                        <div class="form-check btn btn-lg btn-light rounded-4 w-100 mb-2">
-                                            <input id="medical-penis-breast-none" type="checkbox" class="form-check-input">
-                                            <label for="medical-penis-breast-none" class="form-check-label fs-base">
-                                                <?= __("None") ?>
-                                            </label>
-                                        </div>
+                                        <?php
+                                        $penisBreastOptions = [
+                                            'medical-penis-breast-none' => __("None"),
+                                            'medical-penis-breast-gynecomastia' => __("Gynecomastia surgery"),
+                                            'medical-penis-breast-nipple' => __("Nipple reconstruction or modification"),
+                                        ];
 
-                                        <div class="form-check btn btn-lg btn-light rounded-4 w-100 mb-2">
-                                            <input id="medical-penis-breast-gynecomastia" type="checkbox" class="form-check-input">
-                                            <label for="medical-penis-breast-gynecomastia" class="form-check-label fs-base">
-                                                <?= __("Gynecomastia surgery") ?>
-                                                <span class="mt-1 d-block text-body-secondary">
-                        <?= __("Surgical reduction of excess breast tissue in men or non-binary individuals due to hormonal or medical factors.") ?>
-                    </span>
-                                            </label>
-                                        </div>
+                                        $penisBreastDescriptions = [
+                                            'medical-penis-breast-gynecomastia' => __("Surgical reduction of excess breast tissue in men or non-binary individuals due to hormonal or medical factors."),
+                                            'medical-penis-breast-nipple' => __("Surgical reshaping or reconstruction of the nipple, often after mastectomy, top surgery, or for aesthetic purposes."),
+                                        ];
 
-                                        <div class="form-check btn btn-lg btn-light rounded-4 w-100 mb-2">
-                                            <input id="medical-penis-breast-nipple" type="checkbox" class="form-check-input">
-                                            <label for="medical-penis-breast-nipple" class="form-check-label fs-base">
-                                                <?= __("Nipple reconstruction or modification") ?>
-                                                <span class="mt-1 d-block text-body-secondary">
-                        <?= __("Surgical reshaping or reconstruction of the nipple, often after mastectomy, top surgery, or for aesthetic purposes.") ?>
+                                        foreach ($penisBreastOptions as $id => $label) :
+                                            $checked = in_array($id, $penisBreastArray) ? 'checked' : '';
+                                            ?>
+                                            <div class="form-check btn btn-lg btn-light rounded-4 w-100 mb-2">
+                                                <input id="<?= $id ?>" type="checkbox" class="form-check-input" <?= $checked ?>>
+                                                <label for="<?= $id ?>" class="form-check-label fs-base">
+                                                    <?= $label ?>
+                                                    <?php if (isset($penisBreastDescriptions[$id])) : ?>
+                                                        <span class="mt-1 d-block text-body-secondary">
+                        <?= $penisBreastDescriptions[$id] ?>
                     </span>
-                                            </label>
-                                        </div>
+                                                    <?php endif; ?>
+                                                </label>
+                                            </div>
+                                        <?php endforeach; ?>
 
                                         <!-- Specify collapse toggle -->
                                         <div class="form-check btn btn-lg btn-light rounded-4 w-100 mb-2" data-bs-toggle="collapse" data-bs-target="#medical-penis-breast-specify">
-                                            <input id="medical-penis-breast-other-surgical-procedures" type="checkbox" class="form-check-input">
+                                            <input id="medical-penis-breast-other-surgical-procedures" type="checkbox" class="form-check-input"
+                                                <?= in_array('medical-penis-breast-other-surgical-procedures', $penisBreastArray) || $hasPenisBreastText ? 'checked' : '' ?>>
                                             <label for="medical-penis-breast-other-surgical-procedures" class="form-check-label fs-base">
                                                 <?= __("Other surgical procedures") ?>
                                             </label>
                                         </div>
 
                                         <!-- Specify collapse -->
-                                        <div id="medical-penis-breast-specify" class="collapse">
+                                        <div id="medical-penis-breast-specify" class="collapse<?= $hasPenisBreastText ? ' show' : '' ?>">
                                             <div class="border-bottom border-dark">
-                                                <input id="medical-penis-breast-other-surgical-procedures-text" type="text" class="form-control form-control-lg bg-transparent border-0 rounded-0 px-0" placeholder="<?= __("Please specify") ?>" data-autofocus="collapse">
+                                                <input id="medical-penis-breast-other-surgical-procedures-text"
+                                                       type="text"
+                                                       class="form-control form-control-lg bg-transparent border-0 rounded-0 px-0"
+                                                       placeholder="<?= __("Please specify") ?>"
+                                                       value="<?= htmlspecialchars($penisBreastText) ?>"
+                                                       data-autofocus="collapse">
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+
                             </div>
 
                             <!-- Transgender -->
@@ -911,7 +924,12 @@ $hasVulvaText = !empty($vulvaText);
                                     </p>
                                 </div>
 
-                                <!-- Male to Female (MtF) -->
+                                <?php
+                                $mtfText = $_SESSION['formdata'][3]['trans_mtf_text'] ?? '';
+                                $hasMtfText = !empty($mtfText);
+                                $mtfArray = explode(',', $_SESSION['formdata'][3]['trans_mtf'] ?? '');
+                                ?>
+
                                 <div id="section-trans-mtf" class="mb-lg-5 mb-4 pb-lg-0 pb-md-2">
                                     <h2 class="h4 mb-2 fw-semibold">
                                         <?= __("Male to Female (MtF)") ?>
@@ -923,7 +941,8 @@ $hasVulvaText = !empty($vulvaText);
                                     <!-- None -->
                                     <div class="mb-3">
                                         <div class="form-check btn btn-lg btn-light rounded-4 w-100 mb-2">
-                                            <input id="trans-mtf-none" type="checkbox" class="form-check-input">
+                                            <input id="trans-mtf-none" type="checkbox" class="form-check-input"
+                                                <?= in_array('trans-mtf-none', $mtfArray) ? 'checked' : '' ?>>
                                             <label for="trans-mtf-none" class="form-check-label fs-base">
                                                 <?= __("None") ?>
                                             </label>
@@ -936,12 +955,13 @@ $hasVulvaText = !empty($vulvaText);
                                             <?= __("Top Surgery (Chest-Related Procedures)") ?>
                                         </h3>
                                         <div class="form-check btn btn-lg btn-light rounded-4 w-100 mb-2">
-                                            <input id="trans-mtf-top-breast-augmentation" type="checkbox" class="form-check-input">
+                                            <input id="trans-mtf-top-breast-augmentation" type="checkbox" class="form-check-input"
+                                                <?= in_array('trans-mtf-top-breast-augmentation', $mtfArray) ? 'checked' : '' ?>>
                                             <label for="trans-mtf-top-breast-augmentation" class="form-check-label fs-base">
                                                 <?= __("Breast augmentation") ?>
                                                 <span class="mt-1 d-block text-body-secondary">
-                                                    <?= __("Surgical enhancement of breast size, typically using implants or fat transfer.") ?>
-                                                </span>
+                    <?= __("Surgical enhancement of breast size, typically using implants or fat transfer.") ?>
+                </span>
                                             </label>
                                         </div>
                                     </div>
@@ -951,48 +971,50 @@ $hasVulvaText = !empty($vulvaText);
                                         <h3 class="mb-2 h6 fw-semibold">
                                             <?= __("Bottom Surgery (Genital-Related Procedures)") ?>
                                         </h3>
-                                        <div class="form-check btn btn-lg btn-light rounded-4 w-100 mb-2">
-                                            <input id="trans-mtf-bottom-vaginoplasty" type="checkbox" class="form-check-input">
-                                            <label for="trans-mtf-bottom-vaginoplasty" class="form-check-label fs-base">
-                                                <?= __("Vaginoplasty") ?>
-                                                <span class="mt-1 d-block text-body-secondary">
-                        <?= __("Surgical construction of a vagina as part of gender-affirming surgery.") ?>
-                    </span>
-                                            </label>
-                                        </div>
 
-                                        <div class="form-check btn btn-lg btn-light rounded-4 w-100 mb-2">
-                                            <input id="trans-mtf-bottom-vulvoplasty" type="checkbox" class="form-check-input">
-                                            <label for="trans-mtf-bottom-vulvoplasty" class="form-check-label fs-base">
-                                                <?= __("Vulvoplasty") ?>
-                                                <span class="mt-1 d-block text-body-secondary">
-                        <?= __("Surgical construction of external vulva structures without a vaginal canal.") ?>
-                    </span>
-                                            </label>
-                                        </div>
+                                        <?php
+                                        $bottomOptions = [
+                                            'trans-mtf-bottom-vaginoplasty' => __("Vaginoplasty"),
+                                            'trans-mtf-bottom-vulvoplasty' => __("Vulvoplasty"),
+                                            'trans-mtf-bottom-orchiectomy' => __("Orchiectomy (Testicle Removal)"),
+                                        ];
 
-                                        <div class="form-check btn btn-lg btn-light rounded-4 w-100 mb-2">
-                                            <input id="trans-mtf-bottom-orchiectomy" type="checkbox" class="form-check-input">
-                                            <label for="trans-mtf-bottom-orchiectomy" class="form-check-label fs-base">
-                                                <?= __("Orchiectomy (Testicle Removal)") ?>
-                                                <span class="mt-1 d-block text-body-secondary">
-                        <?= __("Removal of testicles, often performed before or instead of full vaginoplasty.") ?>
-                    </span>
-                                            </label>
-                                        </div>
+                                        $bottomDescriptions = [
+                                            'trans-mtf-bottom-vaginoplasty' => __("Surgical construction of a vagina as part of gender-affirming surgery."),
+                                            'trans-mtf-bottom-vulvoplasty' => __("Surgical construction of external vulva structures without a vaginal canal."),
+                                            'trans-mtf-bottom-orchiectomy' => __("Removal of testicles, often performed before or instead of full vaginoplasty."),
+                                        ];
+
+                                        foreach ($bottomOptions as $id => $label) :
+                                            $checked = in_array($id, $mtfArray) ? 'checked' : '';
+                                            ?>
+                                            <div class="form-check btn btn-lg btn-light rounded-4 w-100 mb-2">
+                                                <input id="<?= $id ?>" type="checkbox" class="form-check-input" <?= $checked ?>>
+                                                <label for="<?= $id ?>" class="form-check-label fs-base">
+                                                    <?= $label ?>
+                                                    <span class="mt-1 d-block text-body-secondary"><?= $bottomDescriptions[$id] ?></span>
+                                                </label>
+                                            </div>
+                                        <?php endforeach; ?>
 
                                         <!-- Specify collapse toggle -->
                                         <div class="form-check btn btn-lg btn-light rounded-4 w-100 mb-2" data-bs-toggle="collapse" data-bs-target="#mtf-specify">
-                                            <input id="mtf-other-surgical-procedures" type="checkbox" class="form-check-input">
+                                            <input id="mtf-other-surgical-procedures" type="checkbox" class="form-check-input"
+                                                <?= in_array('mtf-other-surgical-procedures', $mtfArray) || $hasMtfText ? 'checked' : '' ?>>
                                             <label for="mtf-other-surgical-procedures" class="form-check-label fs-base">
                                                 <?= __("Other surgical procedures") ?>
                                             </label>
                                         </div>
 
                                         <!-- Specify collapse -->
-                                        <div id="mtf-specify" class="collapse">
+                                        <div id="mtf-specify" class="collapse<?= $hasMtfText ? ' show' : '' ?>">
                                             <div class="border-bottom border-dark">
-                                                <input id="mtf-other-surgical-procedures-text" type="text" class="form-control form-control-lg bg-transparent border-0 rounded-0 px-0" placeholder="<?= __("Please specify") ?>" data-autofocus="collapse">
+                                                <input id="mtf-other-surgical-procedures-text"
+                                                       type="text"
+                                                       class="form-control form-control-lg bg-transparent border-0 rounded-0 px-0"
+                                                       placeholder="<?= __("Please specify") ?>"
+                                                       value="<?= htmlspecialchars($mtfText) ?>"
+                                                       data-autofocus="collapse">
                                             </div>
                                         </div>
                                     </div>
@@ -1010,7 +1032,7 @@ $hasVulvaText = !empty($vulvaText);
                                     <!-- None -->
                                     <div class="mb-3">
                                         <div class="form-check btn btn-lg btn-light rounded-4 w-100 mb-2">
-                                            <input id="trans-ftm-none" type="checkbox" class="form-check-input">
+                                            <input id="trans-ftm-none" type="checkbox" class="form-check-input"<?= in_array('trans-ftm-none', explode(',', $_SESSION['formdata'][3]['trans_ftm'] ?? '')) ? ' checked' : '' ?>>
                                             <label for="trans-ftm-none" class="form-check-label fs-base">
                                                 <?= __("None") ?>
                                             </label>
@@ -1022,58 +1044,61 @@ $hasVulvaText = !empty($vulvaText);
                                         <h3 class="mb-2 h6 fw-semibold">
                                             <?= __("Top Surgery (Chest-Related Procedures)") ?>
                                         </h3>
+                                        <?php
+                                        $transFtM = explode(',', $_SESSION['formdata'][3]['trans_ftm'] ?? '');
+                                        ?>
                                         <div class="form-check btn btn-lg btn-light rounded-4 w-100 mb-2">
-                                            <input id="trans-ftm-top-flatter-chest" type="checkbox" class="form-check-input">
+                                            <input id="trans-ftm-top-flatter-chest" type="checkbox" class="form-check-input"<?= in_array('trans-ftm-top-flatter-chest', $transFtM) ? ' checked' : '' ?>>
                                             <label for="trans-ftm-top-flatter-chest" class="form-check-label fs-base">
                                                 <?= __("Gender-Affirming Chest Surgery") ?>
                                                 <span class="mt-1 d-block text-body-secondary">
-                                                    <?= __("Surgery to create a flatter chest, often chosen by trans men and non-binary individuals.") ?>
-                                                </span>
+                    <?= __("Surgery to create a flatter chest, often chosen by trans men and non-binary individuals.") ?>
+                </span>
                                             </label>
                                         </div>
                                         <div class="form-check btn btn-lg btn-light rounded-4 w-100 mb-2">
-                                            <input id="trans-ftm-top-breast-reduction" type="checkbox" class="form-check-input">
+                                            <input id="trans-ftm-top-breast-reduction" type="checkbox" class="form-check-input"<?= in_array('trans-ftm-top-breast-reduction', $transFtM) ? ' checked' : '' ?>>
                                             <label for="trans-ftm-top-breast-reduction" class="form-check-label fs-base">
-                                                Breast reduction
+                                                <?= __("Breast reduction") ?>
                                                 <span class="mt-1 d-block text-body-secondary">
-                              Surgical removal of excess breast tissue for medical, aesthetic, or gender-affirming reasons.
-                            </span>
+                    <?= __("Surgical removal of excess breast tissue for medical, aesthetic, or gender-affirming reasons.") ?>
+                </span>
                                             </label>
                                         </div>
                                         <div class="form-check btn btn-lg btn-light rounded-4 w-100 mb-2">
-                                            <input id="trans-ftm-top-partial-mastectomy" type="checkbox" class="form-check-input">
+                                            <input id="trans-ftm-top-partial-mastectomy" type="checkbox" class="form-check-input"<?= in_array('trans-ftm-top-partial-mastectomy', $transFtM) ? ' checked' : '' ?>>
                                             <label for="trans-ftm-top-partial-mastectomy" class="form-check-label fs-base">
-                                                Partial mastectomy
+                                                <?= __("Partial mastectomy") ?>
                                                 <span class="mt-1 d-block text-body-secondary">
-                              Surgical removal of part of the breast tissue, often due to medical reasons.
-                            </span>
+                    <?= __("Surgical removal of part of the breast tissue, often due to medical reasons.") ?>
+                </span>
                                             </label>
                                         </div>
                                         <div class="form-check btn btn-lg btn-light rounded-4 w-100 mb-2">
-                                            <input id="trans-ftm-top-full-mastectomy" type="checkbox" class="form-check-input">
+                                            <input id="trans-ftm-top-full-mastectomy" type="checkbox" class="form-check-input"<?= in_array('trans-ftm-top-full-mastectomy', $transFtM) ? ' checked' : '' ?>>
                                             <label for="trans-ftm-top-full-mastectomy" class="form-check-label fs-base">
-                                                Full mastectomy
+                                                <?= __("Full mastectomy") ?>
                                                 <span class="mt-1 d-block text-body-secondary">
-                              Complete removal of breast tissue, commonly for medical or gender-affirming purposes.
-                            </span>
+                    <?= __("Complete removal of breast tissue, commonly for medical or gender-affirming purposes.") ?>
+                </span>
                                             </label>
                                         </div>
                                         <div class="form-check btn btn-lg btn-light rounded-4 w-100 mb-2">
-                                            <input id="trans-ftm-top-breast-reconstruction" type="checkbox" class="form-check-input">
+                                            <input id="trans-ftm-top-breast-reconstruction" type="checkbox" class="form-check-input"<?= in_array('trans-ftm-top-breast-reconstruction', $transFtM) ? ' checked' : '' ?>>
                                             <label for="trans-ftm-top-breast-reconstruction" class="form-check-label fs-base">
-                                                Breast reconstruction
+                                                <?= __("Breast reconstruction") ?>
                                                 <span class="mt-1 d-block text-body-secondary">
-                              Surgical reconstruction post-mastectomy.
-                            </span>
+                    <?= __("Surgical reconstruction post-mastectomy.") ?>
+                </span>
                                             </label>
                                         </div>
                                         <div class="form-check btn btn-lg btn-light rounded-4 w-100 mb-2">
-                                            <input id="trans-ftm-top-nipple-reconstruction" type="checkbox" class="form-check-input">
+                                            <input id="trans-ftm-top-nipple-reconstruction" type="checkbox" class="form-check-input"<?= in_array('trans-ftm-top-nipple-reconstruction', $transFtM) ? ' checked' : '' ?>>
                                             <label for="trans-ftm-top-nipple-reconstruction" class="form-check-label fs-base">
-                                                Nipple reconstruction or modification
+                                                <?= __("Nipple reconstruction or modification") ?>
                                                 <span class="mt-1 d-block text-body-secondary">
-                              Surgical reshaping or reconstruction of the nipple, often after mastectomy, top surgery, or for aesthetic purposes.
-                            </span>
+                    <?= __("Surgical reshaping or reconstruction of the nipple, often after mastectomy, top surgery, or for aesthetic purposes.") ?>
+                </span>
                                             </label>
                                         </div>
                                     </div>
@@ -1084,38 +1109,37 @@ $hasVulvaText = !empty($vulvaText);
                                             <?= __("Bottom Surgery (Genital-Related Procedures)") ?>
                                         </h3>
                                         <div class="form-check btn btn-lg btn-light rounded-4 w-100 mb-2">
-                                            <input id="trans-ftm-bottom-phalloplasty" type="checkbox" class="form-check-input">
+                                            <input id="trans-ftm-bottom-phalloplasty" type="checkbox" class="form-check-input"<?= in_array('trans-ftm-bottom-phalloplasty', $transFtM) ? ' checked' : '' ?>>
                                             <label for="trans-ftm-bottom-phalloplasty" class="form-check-label fs-base">
                                                 <?= __("Phalloplasty") ?>
                                                 <span class="mt-1 d-block text-body-secondary">
-                                                    <?= __("Gender-affirming surgery to construct a penis.") ?>
-                                                </span>
+                    <?= __("Gender-affirming surgery to construct a penis.") ?>
+                </span>
                                             </label>
                                         </div>
 
                                         <div class="form-check btn btn-lg btn-light rounded-4 w-100 mb-2">
-                                            <input id="trans-ftm-bottom-metoidioplasty" type="checkbox" class="form-check-input">
+                                            <input id="trans-ftm-bottom-metoidioplasty" type="checkbox" class="form-check-input"<?= in_array('trans-ftm-bottom-metoidioplasty', $transFtM) ? ' checked' : '' ?>>
                                             <label for="trans-ftm-bottom-metoidioplasty" class="form-check-label fs-base">
                                                 <?= __("Metoidioplasty") ?>
                                                 <span class="mt-1 d-block text-body-secondary">
-                                                    <?= __("Procedure that enhances genital growth caused by testosterone therapy into a small penis.") ?>
-                                                </span>
+                    <?= __("Procedure that enhances genital growth caused by testosterone therapy into a small penis.") ?>
+                </span>
                                             </label>
                                         </div>
 
-
                                         <!-- Specify collapse toggle -->
                                         <div class="form-check btn btn-lg btn-light rounded-4 w-100 mb-2" data-bs-toggle="collapse" data-bs-target="#ftm-specify">
-                                            <input id="trans-ftm-bottom-other-surgical-procedures" type="checkbox" class="form-check-input">
+                                            <input id="trans-ftm-bottom-other-surgical-procedures" type="checkbox" class="form-check-input"<?= !empty($_SESSION['formdata'][3]['trans_ftm_text'] ?? '') ? ' checked' : '' ?>>
                                             <label for="trans-ftm-bottom-other-surgical-procedures" class="form-check-label fs-base">
                                                 <?= __("Other surgical procedures") ?>
                                             </label>
                                         </div>
 
                                         <!-- Specify collapse -->
-                                        <div id="ftm-specify" class="collapse">
+                                        <div id="ftm-specify" class="collapse<?= !empty($_SESSION['formdata'][3]['trans_ftm_text'] ?? '') ? ' show' : '' ?>">
                                             <div class="border-bottom border-dark">
-                                                <input id="trans-ftm-bottom-other-surgical-procedures-text" type="text" class="form-control form-control-lg bg-transparent border-0 rounded-0 px-0" placeholder="<?= __("Please specify") ?>" data-autofocus="collapse">
+                                                <input id="trans-ftm-bottom-other-surgical-procedures-text" type="text" class="form-control form-control-lg bg-transparent border-0 rounded-0 px-0" placeholder="<?= __("Please specify") ?>" data-autofocus="collapse" value="<?= htmlspecialchars($_SESSION['formdata'][3]['trans_ftm_text'] ?? '') ?>">
                                             </div>
                                         </div>
                                     </div>
@@ -1134,59 +1158,65 @@ $hasVulvaText = !empty($vulvaText);
                                 </div>
 
                                 <!-- Buttocks -->
+                                <?php
+                                $buttocksText = $_SESSION['formdata'][3]['buttocks_text'] ?? '';
+                                $hasButtocksText = !empty($buttocksText);
+                                $buttocksArray = explode(',', $_SESSION['formdata'][3]['buttocks'] ?? '');
+                                ?>
+
                                 <div class="mb-lg-5 mb-4 pb-lg-0 pb-md-2">
-                                    <div class="form-check btn btn-lg btn-light rounded-4 w-100 mb-2">
-                                        <input id="buttocks-none" type="checkbox" class="form-check-input">
-                                        <label for="buttocks-none" class="form-check-label fs-base">
-                                            <?= __("None") ?>
-                                        </label>
-                                    </div>
+                                    <?php
+                                    $buttocksOptions = [
+                                        'buttocks-none' => __("None"),
+                                        'buttocks-augmentation' => __("Buttock augmentation"),
+                                        'buttocks-reconstruction' => __("Buttock reconstruction"),
+                                        'buttocks-liposuction' => __("Liposuction on buttocks"),
+                                    ];
 
-                                    <div class="form-check btn btn-lg btn-light rounded-4 w-100 mb-2">
-                                        <input id="buttocks-augmentation" type="checkbox" class="form-check-input">
-                                        <label for="buttocks-augmentation" class="form-check-label fs-base">
-                                            <?= __("Buttock augmentation") ?>
-                                            <span class="mt-1 d-block text-body-secondary">
-                    <?= __("Implants or fat transfer to enhance size and shape.") ?>
-                </span>
-                                        </label>
-                                    </div>
+                                    $buttocksDescriptions = [
+                                        'buttocks-augmentation' => __("Implants or fat transfer to enhance size and shape."),
+                                        'buttocks-reconstruction' => __("Reconstructive surgery after trauma, weight loss, or medical conditions."),
+                                        'buttocks-liposuction' => __("Removal of fat deposits for contouring or reshaping."),
+                                    ];
 
-                                    <div class="form-check btn btn-lg btn-light rounded-4 w-100 mb-2">
-                                        <input id="buttocks-reconstruction" type="checkbox" class="form-check-input">
-                                        <label for="buttocks-reconstruction" class="form-check-label fs-base">
-                                            <?= __("Buttock reconstruction") ?>
-                                            <span class="mt-1 d-block text-body-secondary">
-                    <?= __("Reconstructive surgery after trauma, weight loss, or medical conditions.") ?>
-                </span>
-                                        </label>
-                                    </div>
-
-                                    <div class="form-check btn btn-lg btn-light rounded-4 w-100 mb-2">
-                                        <input id="buttocks-liposuction" type="checkbox" class="form-check-input">
-                                        <label for="buttocks-liposuction" class="form-check-label fs-base">
-                                            <?= __("Liposuction on buttocks") ?>
-                                            <span class="mt-1 d-block text-body-secondary">
-                    <?= __("Removal of fat deposits for contouring or reshaping.") ?>
-                </span>
-                                        </label>
-                                    </div>
+                                    foreach ($buttocksOptions as $id => $label) :
+                                        $checked = in_array($id, $buttocksArray) ? 'checked' : '';
+                                        ?>
+                                        <div class="form-check btn btn-lg btn-light rounded-4 w-100 mb-2">
+                                            <input id="<?= $id ?>" type="checkbox" class="form-check-input" <?= $checked ?>>
+                                            <label for="<?= $id ?>" class="form-check-label fs-base">
+                                                <?= $label ?>
+                                                <?php if (isset($buttocksDescriptions[$id])) : ?>
+                                                    <span class="mt-1 d-block text-body-secondary">
+                        <?= $buttocksDescriptions[$id] ?>
+                    </span>
+                                                <?php endif; ?>
+                                            </label>
+                                        </div>
+                                    <?php endforeach; ?>
 
                                     <!-- Specify collapse toggle -->
                                     <div class="form-check btn btn-lg btn-light rounded-4 w-100 mb-2" data-bs-toggle="collapse" data-bs-target="#buttocks-specify">
-                                        <input id="buttocks-other-surgical-procedures" type="checkbox" class="form-check-input">
+                                        <input id="buttocks-other-surgical-procedures" type="checkbox" class="form-check-input"
+                                            <?= in_array('buttocks-other-surgical-procedures', $buttocksArray) || $hasButtocksText ? 'checked' : '' ?>>
                                         <label for="buttocks-other-surgical-procedures" class="form-check-label fs-base">
                                             <?= __("Other surgical procedures") ?>
                                         </label>
                                     </div>
 
                                     <!-- Specify collapse -->
-                                    <div id="buttocks-specify" class="collapse">
+                                    <div id="buttocks-specify" class="collapse<?= $hasButtocksText ? ' show' : '' ?>">
                                         <div class="border-bottom border-dark">
-                                            <input id="buttocks-other-surgical-procedures-text" type="text" class="form-control form-control-lg bg-transparent border-0 rounded-0 px-0" placeholder="<?= __("Please specify") ?>" data-autofocus="collapse">
+                                            <input id="buttocks-other-surgical-procedures-text"
+                                                   type="text"
+                                                   class="form-control form-control-lg bg-transparent border-0 rounded-0 px-0"
+                                                   placeholder="<?= __("Please specify") ?>"
+                                                   value="<?= htmlspecialchars($buttocksText) ?>"
+                                                   data-autofocus="collapse">
                                         </div>
                                     </div>
                                 </div>
+
                             </div>
 
                             <!-- Hormone Therapy -->
@@ -1201,69 +1231,67 @@ $hasVulvaText = !empty($vulvaText);
                                 </div>
 
                                 <!-- Hormone Therapy -->
+                                <?php
+                                $hormoneText = $_SESSION['formdata'][3]['hormone_text'] ?? '';
+                                $hasHormoneText = !empty($hormoneText);
+                                $hormoneArray = explode(',', $_SESSION['formdata'][3]['hormone'] ?? '');
+                                ?>
+
                                 <div class="mb-lg-5 mb-4 pb-lg-0 pb-md-2">
-                                    <div class="form-check btn btn-lg btn-light rounded-4 w-100 mb-2">
-                                        <input id="hormone-none" type="checkbox" class="form-check-input">
-                                        <label for="hormone-none" class="form-check-label fs-base">
-                                            <?= __("No hormone therapy") ?>
-                                        </label>
-                                    </div>
+                                    <?php
+                                    $hormoneOptions = [
+                                        'hormone-none' => __("No hormone therapy"),
+                                        'hormone-estrogen' => __("Estrogen Therapy"),
+                                        'hormone-testosterone' => __("Testosterone Therapy"),
+                                        'hormone-puberty-blockers' => __("Puberty Blockers"),
+                                        'hormone-hormone-blockers' => __("Hormone Blockers"),
+                                    ];
 
-                                    <div class="form-check btn btn-lg btn-light rounded-4 w-100 mb-2">
-                                        <input id="hormone-estrogen" type="checkbox" class="form-check-input">
-                                        <label for="hormone-estrogen" class="form-check-label fs-base">
-                                            <?= __("Estrogen Therapy") ?>
-                                            <span class="mt-1 d-block text-body-secondary">
-                    <?= __("Used by transgender women (MtF) and some intersex individuals to develop breasts, redistribute fat, and reduce body hair.") ?>
-                </span>
-                                        </label>
-                                    </div>
+                                    $hormoneDescriptions = [
+                                        'hormone-estrogen' => __("Used by transgender women (MtF) and some intersex individuals to develop breasts, redistribute fat, and reduce body hair."),
+                                        'hormone-testosterone' => __("Used by transgender men (FtM) and some intersex individuals to develop muscle mass, facial hair, and alter fat distribution."),
+                                        'hormone-puberty-blockers' => __("Used to delay puberty onset in transgender or intersex individuals."),
+                                        'hormone-hormone-blockers' => __("Used to delay puberty onset in transgender or intersex individuals."),
+                                    ];
 
-                                    <div class="form-check btn btn-lg btn-light rounded-4 w-100 mb-2">
-                                        <input id="hormone-testosterone" type="checkbox" class="form-check-input">
-                                        <label for="hormone-testosterone" class="form-check-label fs-base">
-                                            <?= __("Testosterone Therapy") ?>
-                                            <span class="mt-1 d-block text-body-secondary">
-                    <?= __("Used by transgender men (FtM) and some intersex individuals to develop muscle mass, facial hair, and alter fat distribution.") ?>
+                                    foreach ($hormoneOptions as $id => $label) :
+                                        $checked = in_array($id, $hormoneArray) ? 'checked' : '';
+                                        ?>
+                                        <div class="form-check btn btn-lg btn-light rounded-4 w-100 mb-2">
+                                            <input id="<?= $id ?>" type="checkbox" class="form-check-input" <?= $checked ?>>
+                                            <label for="<?= $id ?>" class="form-check-label fs-base">
+                                                <?= $label ?>
+                                                <?php if (isset($hormoneDescriptions[$id])) : ?>
+                                                    <span class="mt-1 d-block text-body-secondary">
+                    <?= $hormoneDescriptions[$id] ?>
                 </span>
-                                        </label>
-                                    </div>
-
-                                    <div class="form-check btn btn-lg btn-light rounded-4 w-100 mb-2">
-                                        <input id="hormone-puberty-blockers" type="checkbox" class="form-check-input">
-                                        <label for="hormone-puberty-blockers" class="form-check-label fs-base">
-                                            <?= __("Puberty Blockers") ?>
-                                            <span class="mt-1 d-block text-body-secondary">
-                    <?= __("Used to delay puberty onset in transgender or intersex individuals.") ?>
-                </span>
-                                        </label>
-                                    </div>
-
-                                    <div class="form-check btn btn-lg btn-light rounded-4 w-100 mb-2">
-                                        <input id="hormone-hormone-blockers" type="checkbox" class="form-check-input">
-                                        <label for="hormone-hormone-blockers" class="form-check-label fs-base">
-                                            <?= __("Hormone Blockers") ?>
-                                            <span class="mt-1 d-block text-body-secondary">
-                    <?= __("Used to delay puberty onset in transgender or intersex individuals.") ?>
-                </span>
-                                        </label>
-                                    </div>
+                                                <?php endif; ?>
+                                            </label>
+                                        </div>
+                                    <?php endforeach; ?>
 
                                     <!-- Specify collapse toggle -->
                                     <div class="form-check btn btn-lg btn-light rounded-4 w-100 mb-2" data-bs-toggle="collapse" data-bs-target="#hormone-specify">
-                                        <input id="hormone-other-procedures" type="checkbox" class="form-check-input">
+                                        <input id="hormone-other-procedures" type="checkbox" class="form-check-input"
+                                            <?= in_array('hormone-other-procedures', $hormoneArray) || $hasHormoneText ? 'checked' : '' ?>>
                                         <label for="hormone-other-procedures" class="form-check-label fs-base">
                                             <?= __("Other hormone treatments") ?>
                                         </label>
                                     </div>
 
                                     <!-- Specify collapse -->
-                                    <div id="hormone-specify" class="collapse">
+                                    <div id="hormone-specify" class="collapse<?= $hasHormoneText ? ' show' : '' ?>">
                                         <div class="border-bottom border-dark">
-                                            <input id="hormone-other-procedures-text" type="text" class="form-control form-control-lg bg-transparent border-0 rounded-0 px-0" placeholder="<?= __("Please specify") ?>" data-autofocus="collapse">
+                                            <input id="hormone-other-procedures-text"
+                                                   type="text"
+                                                   class="form-control form-control-lg bg-transparent border-0 rounded-0 px-0"
+                                                   placeholder="<?= __("Please specify") ?>"
+                                                   value="<?= htmlspecialchars($hormoneText) ?>"
+                                                   data-autofocus="collapse">
                                         </div>
                                     </div>
                                 </div>
+
                             </div>
 
 

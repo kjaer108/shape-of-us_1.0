@@ -63,6 +63,10 @@ const stepHandlers = {
         const mtfCheckbox = document.getElementById("category-mtf");
         const ftmCheckbox = document.getElementById("category-ftm");
 
+        // Skin tone checkboxes
+        const skinCheckboxes = document.querySelectorAll("input[name='skin_tones']");
+
+        // Submit button
         const submitButton = document.querySelector("button[type='submit']");
 
         /** ---------------- Ensure Only One Selection Between Two Checkboxes ---------------- **/
@@ -81,6 +85,18 @@ const stepHandlers = {
                 validateStep1Form();
             });
         }
+
+        /** ---------------- Ensure Only One Skin Tone Can Be Selected ---------------- **/
+        skinCheckboxes.forEach(cb => {
+            cb.addEventListener("change", function () {
+                if (this.checked) {
+                    skinCheckboxes.forEach(other => {
+                        if (other !== this) other.checked = false;
+                    });
+                }
+                validateStep1Form();
+            });
+        });
 
         /** ---------------- Step 1 Validation ---------------- **/
         function validateStep1Form() {
@@ -119,11 +135,11 @@ const stepHandlers = {
             };
         }
 
-        // Enforce single selection for:
+        // Enforce single selection rules
         enforceSingleSelection(maleCheckbox, femaleCheckbox); // Male vs. Female
-        enforceSingleSelection(mtfCheckbox, ftmCheckbox); // MtF vs. FtM
+        enforceSingleSelection(mtfCheckbox, ftmCheckbox);     // MtF vs. FtM
 
-        // Validate form on any checkbox change
+        // Validate on any checkbox change
         [maleCheckbox, femaleCheckbox, intersexCheckbox, mtfCheckbox, ftmCheckbox].forEach(cb => {
             cb.addEventListener("change", validateStep1Form);
         });
@@ -138,7 +154,7 @@ const stepHandlers = {
         console.log("🚀 Step 2 activated.");
 
         const ageInput = document.getElementById("general-age");
-        const skinCheckboxes = document.querySelectorAll("input[id^='skin-']");
+        const skinRadios = document.querySelectorAll("input[name='skin_tones']");
         const residenceSelect = document.getElementById("general_residence");
         const birthSelect = document.getElementById("general_birth");
         const anatomyCheckboxes = document.querySelectorAll("input[id^='anatomy-']");
@@ -176,19 +192,19 @@ const stepHandlers = {
         /** ---------------- Step 2 Validation ---------------- **/
         function validateStep2Form() {
             let age = ageInput ? ageInput.value.trim() : "";
-            let selectedSkinTones = Array.from(skinCheckboxes).filter(cb => cb.checked).map(cb => cb.id);
+            let selectedSkinTone = document.querySelector("input[name='skin_tones']:checked");
             let residence = residenceSelect && residenceSelect.value ? residenceSelect.value.trim() : "";
             let birth = birthSelect && birthSelect.value ? birthSelect.value.trim() : "";
             let selectedAnatomy = Array.from(anatomyCheckboxes).filter(cb => cb.checked).map(cb => cb.id);
 
             console.log("📌 Age:", age);
-            console.log("📌 Skin tones:", selectedSkinTones);
+            console.log("📌 Skin tone:", selectedSkinTone?.id);
             console.log("📌 Residence select value:", residence);
             console.log("📌 Birth select value:", birth);
             console.log("📌 Selected anatomy:", selectedAnatomy);
 
             let isAgeValid = age !== "" && parseInt(age) >= 18;
-            let isSkinSelected = selectedSkinTones.length > 0;
+            let isSkinSelected = !!selectedSkinTone;
             let isResidenceSelected = residence !== "";
             let isBirthSelected = birth !== "";
             let isAnatomySelected = selectedAnatomy.length > 0;
@@ -198,7 +214,7 @@ const stepHandlers = {
                 submitButton.disabled = false;
                 return {
                     age,
-                    skin_tones: selectedSkinTones.join(","),
+                    skin_tones: selectedSkinTone.id,
                     residence,
                     birth,
                     anatomy: selectedAnatomy.join(",")
@@ -215,8 +231,16 @@ const stepHandlers = {
         preSelectAnatomy();
         validateStep2Form();
 
+        // Re-validate on input change
+        ageInput?.addEventListener("input", validateStep2Form);
+        skinRadios.forEach(radio => radio.addEventListener("change", validateStep2Form));
+        residenceSelect?.addEventListener("change", validateStep2Form);
+        birthSelect?.addEventListener("change", validateStep2Form);
+        anatomyCheckboxes.forEach(cb => cb.addEventListener("change", validateStep2Form));
+
         return validateStep2Form;
     },
+
 
     3: function () {
         console.log("🚀 Step 3 activated.");
