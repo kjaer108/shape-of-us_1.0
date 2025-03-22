@@ -124,4 +124,26 @@ $utilities: map-merge(
   }
 }
 
+
+// Image overlay behavior
+
+.image-overlay {
+  position: relative;
+
+  &:hover .image-overlay-item {
+    opacity: 1;
+  }
+}
+
+.image-overlay-item {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: rgba($primary, .4);
+  opacity: 0;
+  transition: opacity .25s ease-in-out;
+}
+
 /* stylelint-enable @stylistic/value-list-max-empty-lines, @stylistic/function-max-empty-lines */

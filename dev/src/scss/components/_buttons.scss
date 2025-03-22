@@ -219,6 +219,23 @@
 }
 
 
+// Props button
+
+.btn-props {
+  --#{$prefix}btn-padding-y: #{$spacer * .375};
+  --#{$prefix}btn-padding-x: #{$spacer * .75};
+  --#{$prefix}btn-color: #{$dark};
+  --#{$prefix}btn-hover-color: #{$dark};
+  --#{$prefix}btn-active-color: #{$dark};
+  --#{$prefix}btn-bg: #{$light};
+  --#{$prefix}btn-hover-bg: #{$light};
+  --#{$prefix}btn-active-bg: #{$light};
+  --#{$prefix}btn-border-color: #{$light};
+  --#{$prefix}btn-hover-border-color: #{$primary};
+  --#{$prefix}btn-active-border-color: #{$primary};
+}
+
+
 // Dark mode
 
 @if $enable-dark-mode {
