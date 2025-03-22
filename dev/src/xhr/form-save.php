@@ -111,6 +111,54 @@ if ($cmd == "save-step-state") {
             "hormone" => $hormone,
             "hormone_text" => $hormone_text
         ];
+
+    } elseif ($curStep == 4) {
+
+        $hair_chest = get_param("chest_hair");
+        $hair_above = get_param("genital_hair_above");
+        $hair_below = get_param("genital_hair");
+        $hair_buttocks = get_param("buttocks_hair");
+
+        $marks = get_param("marks");
+        $marks_text = get_param("marks-scars-text");
+
+        $pregnancy = get_param("pregnancy");
+        $vaginal_birth = get_param("vaginal_birth");
+        $c_section = get_param("c_section");
+        $breastfeeding = get_param("breastfeeding");
+
+        $piercings = get_param("piercings");
+        $piercings_other_text = get_param("piercings-other-text");
+
+        $tattoos = get_param("tattoos");
+        $tattoos_other_text = get_param("tattoos-other-text");
+
+        $hormonal_influence = get_param("hormonal_influence");
+
+        $menstrual_cycle = get_param("menstrual_cycle");
+
+        $_SESSION["formdata"][4] = [
+            "hair_chest" => $hair_chest,
+            "hair_above" => $hair_above,
+            "hair_below" => $hair_below,
+            "hair_buttocks" => $hair_buttocks,
+            "marks" => $marks,
+            "marks_text" => $marks_text,
+            "pregnancy" => $pregnancy,
+            "vaginal_birth" => $vaginal_birth,
+            "c_section" => $c_section,
+            "breastfeeding" => $breastfeeding,
+            "piercings" => $piercings,
+            "piercings_other_text" => $piercings_other_text,
+            "tattoos" => $tattoos,
+            "tattoos_other_text" => $tattoos_other_text,
+            "hormonal_influence" => $hormonal_influence,
+            "menstrual_cycle" => $menstrual_cycle
+        ];
+
+    } else {
+        $success = FALSE;
+
     }
 
     $result["success"] = true;

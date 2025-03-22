@@ -39,7 +39,7 @@ function submitFormData(formData, step, nextStep) {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                window.location.href = buildStepUrl(nextStep);
+                //window.location.href = buildStepUrl(nextStep);
             } else {
                 console.error("Error saving data:", data.error);
             }
@@ -443,8 +443,203 @@ const stepHandlers = {
             console.log("Step 3 validation triggered.");
             return collectStep3FormData();
         };
-    }
+    },
 
+    4: function () {
+        console.log("🚀 Step 4 activated.");
+
+        const submitButton = document.querySelector("button[type='submit']");
+        submitButton.disabled = true;
+
+        /** ---------------- Utility: Get selected value from radio group ---------------- **/
+        function getSelectedRadioValue(name) {
+            const checked = document.querySelector(`input[name="${name}"]:checked`);
+            return checked ? checked.id : null;
+        }
+
+        /** ---------------- Utility: Get all checked checkbox IDs ---------------- **/
+        function getCheckedCheckboxes(selector) {
+            return Array.from(document.querySelectorAll(selector))
+                .filter(cb => cb.checked)
+                .map(cb => cb.id);
+        }
+
+        /** ---------------- Exclusive Logic: Stretch Marks/Scars ---------------- **/
+        function setupStretchMarksExclusivity() {
+            const none = document.getElementById("marks-none");
+            const stretch = document.getElementById("marks-stretch");
+            const scars = document.getElementById("marks-scars");
+            const scarsCollapse = document.getElementById("marks-scars-specify");
+
+            if (!none || !stretch || !scars || !scarsCollapse) return;
+
+            // Hide scars text if "No stretch marks or scars" is selected
+            none.addEventListener("change", () => {
+                if (none.checked) {
+                    stretch.checked = false;
+                    scars.checked = false;
+
+                    // Hide the text input collapse if visible
+                    const bsCollapse = bootstrap.Collapse.getInstance(scarsCollapse)
+                        || new bootstrap.Collapse(scarsCollapse, { toggle: false });
+                    bsCollapse.hide();
+
+                    validateStep4Form();
+                }
+            });
+
+            [stretch, scars].forEach(cb => {
+                cb.addEventListener("change", () => {
+                    if (cb.checked) {
+                        none.checked = false;
+
+                        // If "scars" was checked, show the collapse
+                        if (cb === scars) {
+                            const bsCollapse = bootstrap.Collapse.getInstance(scarsCollapse)
+                                || new bootstrap.Collapse(scarsCollapse, { toggle: false });
+                            bsCollapse.show();
+                        }
+
+                        validateStep4Form();
+                    }
+
+                    // If "scars" was unchecked manually, also hide the collapse
+                    if (!scars.checked) {
+                        const bsCollapse = bootstrap.Collapse.getInstance(scarsCollapse)
+                            || new bootstrap.Collapse(scarsCollapse, { toggle: false });
+                        bsCollapse.hide();
+                    }
+                });
+            });
+        }
+
+
+        /** ---------------- Generic Mutual Exclusion: "No ..." checkboxes ---------------- **/
+        function setupMutualExclusionGroup(noCheckboxIdPrefix) {
+            const noCheckbox = document.getElementById(`${noCheckboxIdPrefix}-false`);
+            const otherCheckboxes = Array.from(document.querySelectorAll(`input[id^='${noCheckboxIdPrefix}-']:not(#${noCheckboxIdPrefix}-false)`));
+
+            if (!noCheckbox) return;
+
+            noCheckbox.addEventListener("change", () => {
+                if (noCheckbox.checked) {
+                    otherCheckboxes.forEach(cb => cb.checked = false);
+                    validateStep4Form();
+                }
+            });
+
+            otherCheckboxes.forEach(cb => {
+                cb.addEventListener("change", () => {
+                    if (cb.checked) {
+                        noCheckbox.checked = false;
+                        validateStep4Form();
+                    }
+                });
+            });
+        }
+
+        /** ---------------- Validation + Collection ---------------- **/
+        function validateStep4Form() {
+            const formData = {};
+
+            // Hair presence (must all be filled)
+            const chest = getSelectedRadioValue("chest-hair");
+            const genitalAbove = getSelectedRadioValue("genital-hair-above");
+            const genital = getSelectedRadioValue("genital-hair");
+            const buttocks = getSelectedRadioValue("buttocks-hair");
+
+            // Stretch marks / scars
+            const marks = getCheckedCheckboxes("input[id^='marks-']");
+            const scarsText = document.getElementById("marks-scars-text")?.value.trim();
+
+            // Pregnancy / Birth
+            const pregnancy = getSelectedRadioValue("pregnancy");
+            const vaginalBirth = getSelectedRadioValue("vaginal-birth");
+            const cSection = getSelectedRadioValue("c-section");
+            const breastfeeding = getSelectedRadioValue("breastfeeding");
+
+            // Piercings
+            const piercings = getCheckedCheckboxes("input[id^='piercings-']");
+            const piercingsText = document.getElementById("piercings-other-text")?.value.trim();
+
+            // Tattoos
+            const tattoos = getCheckedCheckboxes("input[id^='tattoos-']");
+            const tattoosText = document.getElementById("tattoos-other-text")?.value.trim();
+
+            // Hormonal Influence / Menstrual
+            const hormonal = getSelectedRadioValue("hormonal-influence");
+            const menstrual = getSelectedRadioValue("menstrual-cycle");
+
+            /** ---------------- Required Group Validations ---------------- **/
+            const allValid = [
+                chest, genitalAbove, genital, buttocks,                         // hair
+                marks.length > 0 || scarsText,                                  // stretch/scars
+                pregnancy, vaginalBirth, cSection, breastfeeding,               // birth
+                piercings.length > 0 || piercingsText,                          // piercings
+                tattoos.length > 0 || tattoosText,                              // tattoos
+                hormonal, menstrual                                             // hormones/menstrual
+            ].every(Boolean);
+
+            submitButton.disabled = !allValid;
+
+            if (!allValid) {
+                console.warn("❌ Missing data in required groups.");
+                return false;
+            }
+
+            /** ---------------- Collect Data ---------------- **/
+            formData["chest_hair"] = chest;
+            formData["genital_hair_above"] = genitalAbove;
+            formData["genital_hair"] = genital;
+            formData["buttocks_hair"] = buttocks;
+
+            if (marks.length > 0) {
+                formData["marks"] = marks.join(",");
+            }
+            if (scarsText) {
+                formData["marks-scars-text"] = scarsText;
+            }
+
+            formData["pregnancy"] = pregnancy;
+            formData["vaginal_birth"] = vaginalBirth;
+            formData["c_section"] = cSection;
+            formData["breastfeeding"] = breastfeeding;
+
+            if (piercings.length > 0) {
+                formData["piercings"] = piercings.join(",");
+            }
+            if (piercingsText) {
+                formData["piercings-other-text"] = piercingsText;
+            }
+
+            if (tattoos.length > 0) {
+                formData["tattoos"] = tattoos.join(",");
+            }
+            if (tattoosText) {
+                formData["tattoos-other-text"] = tattoosText;
+            }
+
+            formData["hormonal_influence"] = hormonal;
+            formData["menstrual_cycle"] = menstrual;
+
+            console.log("📤 Step 4 Form Data:", formData);
+            return formData;
+        }
+
+        /** ---------------- Setup Listeners & Logic ---------------- **/
+        document.querySelectorAll("input").forEach(input => {
+            input.addEventListener("change", validateStep4Form);
+            input.addEventListener("input", validateStep4Form);
+        });
+
+        setupStretchMarksExclusivity();
+        setupMutualExclusionGroup("piercings");
+        setupMutualExclusionGroup("tattoos");
+
+        validateStep4Form();
+
+        return validateStep4Form;
+    }
 
 };
 
