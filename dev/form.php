@@ -206,7 +206,6 @@ INSERT INTO sou_form_entries (
 
     unset($_SESSION['formdata']);
 
-
 }
 
 
@@ -541,7 +540,7 @@ $isFtM = $_SESSION["formdata"][1]["ftm"] ?? false;
                                     <option value=""><?= __("Select country...") ?></option>
 
                                     <!-- Favorites Group -->
-                                    <optgroup label="Favorites">
+                                    <optgroup label="<?= __("Favorites") ?>">
                                         <?php foreach ($country_favorites as $langCode): ?>
                                             <?php
                                             $code = strtoupper($langCode);
@@ -549,21 +548,21 @@ $isFtM = $_SESSION["formdata"][1]["ftm"] ?? false;
                                                 $selected = ($selectedResidence === $code) ? 'selected' : '';
                                                 ?>
                                                 <option value="<?= $code ?>" <?= $selected ?>>
-                                                    <?= $country_list[$code] ?>
+                                                    <?= htmlspecialchars($country_list[$code]) ?>
                                                 </option>
                                             <?php endif; ?>
                                         <?php endforeach; ?>
                                     </optgroup>
 
                                     <!-- All Countries Group -->
-                                    <optgroup label="Country">
+                                    <optgroup label="<?= __("All Countries") ?>">
                                         <?php foreach ($country_list as $code => $name): ?>
                                             <?php
-                                            if (!is_null($code) && !in_array(strtolower($code), $country_favorites)):
-                                                $selected = ($selectedResidence === $code) ? 'selected' : '';
+                                            if (!empty($code) && !in_array(strtolower($code), $country_favorites, true)):
+                                                $selected = ($selectedBirth === $code) ? 'selected' : '';
                                                 ?>
-                                                <option value="<?= $code ?>" <?= $selected ?>>
-                                                    <?= $name ?>
+                                                <option value="<?= htmlspecialchars($code) ?>" <?= $selected ?>>
+                                                    <?= htmlspecialchars($name) ?>
                                                 </option>
                                             <?php endif; ?>
                                         <?php endforeach; ?>
@@ -606,11 +605,11 @@ $isFtM = $_SESSION["formdata"][1]["ftm"] ?? false;
                                     <optgroup label="Country">
                                         <?php foreach ($country_list as $code => $name): ?>
                                             <?php
-                                            if (!is_null($code) && !in_array(strtolower($code), $country_favorites)):
+                                            if (!empty($code) && !in_array(strtolower($code), $country_favorites, true)):
                                                 $selected = ($selectedBirth === $code) ? 'selected' : '';
                                                 ?>
-                                                <option value="<?= $code ?>" <?= $selected ?>>
-                                                    <?= $name ?>
+                                                <option value="<?= htmlspecialchars($code) ?>" <?= $selected ?>>
+                                                    <?= htmlspecialchars($name) ?>
                                                 </option>
                                             <?php endif; ?>
                                         <?php endforeach; ?>
@@ -760,7 +759,7 @@ $isFtM = $_SESSION["formdata"][1]["ftm"] ?? false;
                             <div class="form-check btn btn-lg btn-light rounded-4 w-100 mb-2">
                                 <input id="medical-none-to-all" type="checkbox" class="form-check-input">
                                 <label for="medical-none-to-all" class="form-check-label fs-base">
-                                    <?= __("None to all") ?>
+                                    <?= __("No Surgical or Medical History") ?>
                                 </label>
                             </div>
                         </div>
@@ -777,7 +776,7 @@ $isFtM = $_SESSION["formdata"][1]["ftm"] ?? false;
                                         <?= __("Vulva") ?>
                                     </div>
                                     <p class="text-body-secondary">
-                                        <?= __("Missing text...") ?>
+                                        <?= __("This section covers medical or surgical procedures that may affect the vulva or chest area in people with a vulva. Please indicate what applies to you.") ?>
                                     </p>
                                 </div>
 
@@ -823,8 +822,8 @@ $isFtM = $_SESSION["formdata"][1]["ftm"] ?? false;
                                             <label for="medical-vulva-hymenoplasty" class="form-check-label fs-base">
                                                 <?= __("Hymenoplasty") ?>
                                                 <span class="mt-1 d-block text-body-secondary">
-                    <?= __("Surgical reconstruction of the hymen.") ?>
-                </span>
+                                                    <?= __("Surgical reconstruction of the hymen.") ?>
+                                                </span>
                                             </label>
                                         </div>
 
@@ -951,7 +950,7 @@ $hasVulvaText = !empty($vulvaText);
                                         <?= __("Penis") ?>
                                     </div>
                                     <p class="text-body-secondary">
-                                        <?= __("Missing text...") ?>
+                                        <?= __("This section covers medical or surgical procedures that may affect the penis or chest area in people with a penis. Please indicate what applies to you.") ?>
                                     </p>
                                 </div>
 
@@ -1527,22 +1526,40 @@ $hasVulvaText = !empty($vulvaText);
 
                             <!-- Chest/Breasts -->
                             <div class="mb-md-4 mb-3">
-                                <h3 class="mt-md-4 mt-3 h6 fs-lg"><?= __("Chest/Breasts") ?></h3>
+                                <h3 class="mt-md-4 mt-3 h6 fs-lg">
+                                    <?= __("Chest/Breasts") ?>
+                                </h3>
+
                                 <?php $chest = $_SESSION["formdata"][4]["hair_chest"] ?? ''; ?>
-                                <div class="form-check btn btn-lg btn-light rounded-pill w-100 mb-2">
+                                <div class="form-check btn btn-lg btn-light rounded-4 w-100 mb-2">
                                     <input id="chest-hair-natural" type="radio" name="chest-hair" class="form-check-input"
                                         <?= $chest === 'chest-hair-natural' ? 'checked' : '' ?>>
-                                    <label for="chest-hair-natural" class="form-check-label"><?= __("Natural (Not Trimmed or Shaved)") ?></label>
+                                    <label for="chest-hair-natural" class="form-check-label fs-base">
+                                        <?= __("Natural (Not Trimmed or Shaved)") ?>
+                                        <span class="mt-1 d-block text-body-secondary">
+                                            <?= __("Hair is left completely untouched and grows freely.") ?>
+                                        </span>
+                                    </label>
                                 </div>
-                                <div class="form-check btn btn-lg btn-light rounded-pill w-100 mb-2">
+                                <div class="form-check btn btn-lg btn-light rounded-4 w-100 mb-2">
                                     <input id="chest-hair-trimmed" type="radio" name="chest-hair" class="form-check-input"
                                         <?= $chest === 'chest-hair-trimmed' ? 'checked' : '' ?>>
-                                    <label for="chest-hair-trimmed" class="form-check-label"><?= __("Trimmed") ?></label>
+                                    <label for="chest-hair-trimmed" class="form-check-label">
+                                        <?= __("Trimmed") ?>
+                                        <span class="mt-1 d-block text-body-secondary">
+                                            <?= __("Hair is intentionally shortened or shaped (e.g., with scissors or trimmers), but not fully removed.") ?>
+                                        </span>
+                                    </label>
                                 </div>
-                                <div class="form-check btn btn-lg btn-light rounded-pill w-100 mb-2">
+                                <div class="form-check btn btn-lg btn-light rounded-4 w-100 mb-2">
                                     <input id="chest-hair-hairless" type="radio" name="chest-hair" class="form-check-input"
                                         <?= $chest === 'chest-hair-hairless' ? 'checked' : '' ?>>
-                                    <label for="chest-hair-hairless" class="form-check-label"><?= __("Hairless (Shaved/Waxed)") ?></label>
+                                    <label for="chest-hair-hairless" class="form-check-label">
+                                        <?= __("Hairless (Shaved/Waxed)") ?>
+                                        <span class="mt-1 d-block text-body-secondary">
+                                            <?= __("Area is fully or nearly hairless, including shaving, waxing, laser, or similar. Light stubble still counts as hairless.") ?>
+                                        </span>
+                                    </label>
                                 </div>
                             </div>
 
