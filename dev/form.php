@@ -1849,8 +1849,8 @@ $tattooOptions = [
 
                         <!-- Hormonal Influence -->
                         <div class="mb-lg-5 mb-4 pb-lg-0 pb-md-2">
-                            <h2 class="h3 mb-2 fw-semibold"><?= __("Hormonal Influence") ?></h2>
-                            <p class="text-body-tertiary"><?= __("Have hormonal changes (e.g., puberty, menopause, hormone therapy) influenced the photographed area? This helps document natural body developments across different life") ?></p>
+                            <h2 class="h3 mb-2 fw-semibold"><?= __("Hormonal Treatment") ?></h2>
+                            <p class="text-body-tertiary"><?= __("Have you received hormone treatment unrelated to transition (e.g., for menopause or low testosterone) that may have affected the photographed area?") ?></p>
                             <div class="mb-md-4 mb-3 d-flex gap-2">
                                 <div class="form-check btn btn-lg btn-light rounded-pill mb-2">
                                     <input id="hormonal-influence-true" type="radio" name="hormonal-influence" class="form-check-input"
