@@ -4,7 +4,14 @@
   'use strict';
 
   const filtersForm = document.getElementById('offcanvas-filters');
-  const apiUrl = 'http://localhost:8001/get_images.php';
+  const imagePreviewModalEl = document.getElementById('modal-image-props');
+  const imagePreviewModalInstance = new bootstrap.Modal(imagePreviewModalEl);
+  const imageFullscreenModalEl = document.getElementById('modal-image-preview');
+  const imageFullscreenModalInstance = new bootstrap.Modal(imageFullscreenModalEl);
+
+  const apiBaseUrl = 'http://localhost:8001';
+  const apiImagesUrl = `${apiBaseUrl}/get_images.php`;
+  const apiImageUrl = `${apiBaseUrl}/get_image.php`;
   const viewer = OpenSeadragon({
     id: "app",
     prefixUrl: "https://openseadragon.github.io/openseadragon/images/",
@@ -15,16 +22,18 @@
     minZoomLevel: 0.5,
     maxZoomLevel: 5,
     defaultZoomLevel: 1,
+    gestureSettingsMouse: {
+      clickToZoom: false, // disable click to zoom
+      dblClickToZoom: true, // however, double-click to zoom is enabled
+    }
   });
 
   let loadedPositions = new Map(); // Map<row, Set<column>>
+  let imagePositionMap = new Map(); // Map<imageId, {x, y, width, height}>
   let imageSize = 0.1; // Normalized size for OpenSeadragon (100px in grid)
   let padding = 0.005; // Small gap between images
   let isLoading = false; // Flag to prevent concurrent loading operations
   let currentFilters = {}; // Store current filter settings
-  let wasDragging = false;
-  let batchSize = 500;
-  let totalImages = 5000;
 
   console.log('window', window.screen.width, window.screen.height);
   console.log('osViewer', viewer);
@@ -97,6 +106,24 @@
         }
       });
     }
+
+    // Handle fullscreen modal
+    if (imageFullscreenModalEl) {
+      imageFullscreenModalEl.addEventListener('show.bs.modal', function (event) {
+        // Button that triggered the modal
+        const button = event.relatedTarget;
+        console.log('show.bs.modal', button);
+        
+        // Extract info from data-* attributes
+        const imageUrl = button.getAttribute('data-image-url');
+        const imageAlt = button.getAttribute('data-image-alt');
+        
+        // Update the modal's content
+        const modalImage = imageFullscreenModalEl.querySelector('img');
+        modalImage.src = imageUrl;
+        modalImage.alt = imageAlt || 'Image';
+      });
+    }
     
     // Initial load based on viewport
     loadVisibleImages(viewer, currentFilters);
@@ -110,6 +137,11 @@
     viewer.addHandler('zoom', function(event) {
       // todo: this about throttling this to avoid too many calculations
       loadVisibleImages(viewer, currentFilters);
+    });
+
+    // Add this to your initialize function
+    viewer.addHandler('canvas-click', function(event) {
+      handleCanvasClick(event, viewer);
     });
     
     // Handle browser back/forward navigation
@@ -230,7 +262,7 @@
     };
     
     // Send POST request with JSON body
-    const response = await fetch(apiUrl, fetchOptions);
+    const response = await fetch(apiImagesUrl, fetchOptions);
     if (!response.ok) {
       throw new Error(`Network response was not ok: ${response.status}`);
     }
@@ -238,28 +270,64 @@
   }
 
   /**
+   * Fetch full image details from server
+   * @param {string} imageId - ID of the clicked image
+   * @returns {Promise} - Promise resolving to image details
+   */
+  async function fetchImageDetails(imageId) {
+    // Create form data with image ID
+    const formData = new FormData();
+    formData.append('imageId', imageId);
+    
+    // Send request to server
+    const response = await fetch(apiImageUrl, {
+      method: 'POST',
+      body: formData
+    });
+    
+    if (!response.ok) {
+      throw new Error(`Network response was not ok: ${response.status}`);
+    }
+    
+    return await response.json();
+  }
+
+  /**
    * Render images in the viewer
    * @param {OpenSeadragon.Viewer} viewer - The OpenSeadragon viewer
-   * @param {Array} imageUrls - Array of image URLs to render
+   * @param {Array} images - Array of images, each images is an object with keys: id, url.
    * @param {Array} positions - Array of position objects {col, row}
    */
-  function renderImages(viewer, imageUrls, positions) {
-    imageUrls.forEach((url, i) => {
+  function renderImages(viewer, images, positions) {
+    images.forEach((image, i) => {
       if (i >= positions.length) return; // Guard against mismatched arrays
       
       let { col, row } = positions[i];
+      const x = col * (imageSize + padding);
+      const y = row * (imageSize + padding);
       
       viewer.addSimpleImage({
-        url: url,
-        x: col * (imageSize + padding),
-        y: row * (imageSize + padding),
+        url: image.url,
+        x: x,
+        y: y,
         width: imageSize,
-        success: function(event) {
-          // todo: should we do anything here?
+        success: function(tiledImage) {
+          // Note, the type of tiledImage is OpenSeadragon.TiledImage
+          // See https://openseadragon.github.io/docs/OpenSeadragon.TiledImage.html
+          
+          // Store image position information for hit detection
+          imagePositionMap.set(image.id, {
+            x: x,
+            y: y,
+            width: imageSize,
+            height: imageSize
+          });
+          console.log(`Image ${image.url} (#${image.id}) added to viewer at coordinates (${x}, ${y})`, tiledImage);
+          console.log(`Position map updated with ${image.id} = {${x}, ${y}, width: ${imageSize}, height: ${imageSize}}`, imagePositionMap.entries());
         },
         error: function(event) {
           // Handle failed image loads
-          console.error('Failed to load image:', url);
+          console.error('Failed to load image:', image.url);
           // Remove from the Map of Sets structure
           if (loadedPositions.has(row)) {
             loadedPositions.get(row).delete(col);
@@ -295,8 +363,8 @@
     
     // Fetch and render images
     fetchImages(positions.length, filters)
-      .then(imageUrls => {
-        renderImages(viewer, imageUrls, positions);
+      .then(images => {
+        renderImages(viewer, images, positions);
         isLoading = false;
       })
       .catch(error => {
@@ -324,8 +392,9 @@
     // Remove all images from the viewer
     viewer.world.removeAll();
     
-    // Reset tracking of loaded positions
+    // Reset tracking maps
     loadedPositions.clear();
+    imagePositionMap.clear();
   }
 
   /**
@@ -380,6 +449,58 @@
         element.value = value;
       }
     });
+  }
+
+  /**
+   * Find which image was clicked based on viewport coordinates
+   * @param {OpenSeadragon.Point} point - The click point in viewport coordinates
+   * @returns {string|null} - ID of the clicked image or null if none found
+   */
+  function findImageAtPoint(point) {
+    console.log(`Lookup image at point ${point.x}, ${point.y}`);
+    // Check each image position to see if it contains the point
+    for (const [imageId, position] of imagePositionMap.entries()) {
+      console.log(`Checking image id ${imageId} ${point.x} >= ${position.x} && ${point.x} < ${position.x + position.width} && ${point.y} >= ${position.y} && ${point.y} < ${position.y + position.height}`);
+      if (
+        point.x >= position.x && 
+        point.x < position.x + position.width &&
+        point.y >= position.y && 
+        point.y < position.y + position.height
+      ) {
+        console.log(`Image ${imageId} passed the test`);
+        return imageId;
+      }
+    }
+    
+    // No image found at this point
+    console.log('No image found at point', point);
+    return null;
+  }
+
+  /**
+   * Show a popup with image details by clicking on an image.
+   * @param {Event} event 
+   * @param {OpenSeadragon.Viewer} viewer
+   */
+  function handleCanvasClick(event, viewer) {
+    console.log(`Canvas clicked at position`, event.position, event, viewer);
+    // Convert click position to viewport coordinates
+    const viewportPoint = viewer.viewport.pointFromPixel(event.position);
+    console.log(`Viewport point`, viewportPoint);
+    
+    // Find which image was clicked
+    const clickedImageId = findImageAtPoint(viewportPoint);
+    
+    if (clickedImageId) {
+      // Get image data from server
+      fetchImageDetails(clickedImageId)
+        .then(imageData => {
+          showImagePreviewPopup(imageData);
+        })
+        .catch(error => {
+          console.error('Error fetching image details:', error);
+        });
+    }
   }
 
   /**
@@ -766,6 +887,118 @@
     });
 
     return affectedControlsCount;
+  }
+
+  /**
+   * Show image details in a Bootstrap modal
+   * @param {Object} imageData - Data for the selected image
+   */
+  function showImagePreviewPopup(imageData) {
+    if (!imagePreviewModalInstance) {
+      console.error('Modal element not found');
+      return;
+    }
+
+    // Update the img element.
+    const img = imagePreviewModalEl.querySelector('.image-overlay > img');
+    img.src = imageData.url;
+    img.alt = imageData.alt || 'Image';
+
+    // Modify the "fullscreen" toggle.
+    // Need to set the [data-image-url] and [data-image-title] attributes.
+    const fullscreenToggle = imagePreviewModalEl.querySelector('[data-bs-toggle="modal"]');
+    fullscreenToggle.setAttribute('data-image-url', imageData.url);
+    fullscreenToggle.setAttribute('data-image-title', imageData.alt || 'Image');
+
+    // Get the data-image-props-area
+    const imagePropsArea = imagePreviewModalEl.querySelector('[data-image-props-area]');
+
+    // Render properties.
+    // Check if imageData.sections is an array and not empty.
+    // If it is, render the properties.
+    if (imagePropsArea && imageData.sections && Array.isArray(imageData.sections) && imageData.sections.length > 0) {
+      // Clear the imagePropsArea
+      imagePropsArea.innerHTML = '';
+      // Put ul.list-unstyled.gap-4.ms-xl-2 inside the imagePropsArea
+      const ul = document.createElement('ul');
+      ul.className = 'list-unstyled gap-4 ms-xl-2';
+      imagePropsArea.appendChild(ul);
+
+      imageData.sections.forEach(section => {
+        renderImagePreviewSection(section, ul);
+      });
+    }
+
+    
+    
+    // Finally, show the modal.
+    imagePreviewModalInstance.show();
+  }
+
+  /**
+   * Render a section with image properties.
+   * @param {Object} section 
+   * @param {HTMLElement} target 
+   */
+  function renderImagePreviewSection(section, target) {
+    // Create a title. This will be a li.pb-4.border-bottom > h3.h6.fs-lg
+    const sectionContainer = document.createElement('li');
+    sectionContainer.className = 'pb-4 border-bottom';
+    const sectionTitle = document.createElement('h3');
+    sectionTitle.className = 'h6 fs-lg';
+    sectionTitle.textContent = section.title;
+    sectionContainer.appendChild(sectionTitle);
+
+    // If section has fields, render them.
+    if (section.fields && Array.isArray(section.fields) && section.fields.length > 0) {
+      // Create a ul.list-unstyled.gap-xl-2.gap-3 inside the target
+      const fieldsContainer = document.createElement('ul');
+      fieldsContainer.className = 'list-unstyled gap-xl-2 gap-3';
+      section.fields.forEach(field => {
+        renderImagePreviewField(field, fieldsContainer);
+      });
+      sectionContainer.appendChild(fieldsContainer);
+    }
+
+    // Append the section to the target
+    target.appendChild(sectionContainer);
+  }
+
+  /**
+   * Render a field inside a section.
+   * @param {Object} field 
+   * @param {HTMLElement} target 
+   */
+  function renderImagePreviewField(field, target) {
+    // Create a li.d-flex.flex-wrap.align-items-center.gap-1
+    // Inside it, create h4.flex-shrink-0.mb-0.me-lg-2.me-1.fs-sm.text-body-secondary
+    const fieldItem = document.createElement('li');
+    fieldItem.className = 'd-flex flex-wrap align-items-center gap-1';
+    const fieldTitle = document.createElement('h4');
+    fieldTitle.className = 'flex-shrink-0 mb-0 me-lg-2 me-1 fs-sm text-body-secondary';
+    fieldTitle.textContent = field.title;
+    fieldItem.appendChild(fieldTitle);
+
+    // Loop through field.values and create a.btn.btn-sm.btn-props.rounded-pill[href=#],
+    // append them one-by-one to the li.
+    field.values.forEach(value => {
+      const valueButton = document.createElement('a');
+      valueButton.className = 'btn btn-sm btn-props rounded-pill';
+      valueButton.href = '#';
+      valueButton.textContent = value.display_title;
+      fieldItem.appendChild(valueButton);
+    });
+
+    // For the optional `field.note`, create a p.mt-1.mb-0.ff-extra.fs-sm.fst-italic.text-dark.w-100
+    if (field.note) {
+      const fieldNote = document.createElement('p');
+      fieldNote.className = 'mt-1 mb-0 ff-extra fs-sm fst-italic text-dark w-100';
+      fieldNote.textContent = field.note;
+      fieldItem.appendChild(fieldNote);
+    }
+
+    // Append the fieldItem to the target
+    target.appendChild(fieldItem);
   }
 
 })(document, window);
