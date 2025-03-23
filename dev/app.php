@@ -133,6 +133,11 @@
                         Filters
                         <svg xmlns="http://www.w3.org/2000/svg" class="ms-2" width="16" height="16" fill="none"><path d="M12.956 5.766c-.101-.244-.272-.452-.491-.599s-.477-.225-.741-.225H4.276c-.264 0-.521.078-.741.225s-.39.355-.491.598-.127.512-.076.77.178.496.365.683l3.724 3.724c.25.25.589.39.943.39s.693-.14.943-.39l3.724-3.724c.186-.186.313-.424.365-.682s.025-.527-.076-.77z" fill="currentColor"/></svg>
                     </button>
+
+                    <!-- Modal image-props toggle -->
+                    <button type="button" class="btn btn-primary rounded-pill" data-bs-toggle="modal" data-bs-target="#modal-image-props">
+                        Modal
+                    </button>
                 </div>
             </div>
         </div>
@@ -844,6 +849,193 @@
             </button>
         </div>
     </form>
+
+
+
+    <!-- Modals -->
+
+
+    <!-- Modal: Image props -->
+    <div id="modal-image-props" class="modal fade" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-fullscreen">
+            <div class="modal-content">
+
+                <!-- Modal header -->
+                <div class="modal-header py-lg-4 py-3 px-3 border-0">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body pt-0 pb-5 px-xxl-5 px-lg-4 px-3">
+
+                    <!-- Image + properties -->
+                    <div class="row gy-4">
+
+                        <!-- Image -->
+                        <div class="col-lg-8">
+                            <div class="mx-lg-0 mx-n3">
+                                <div class="image-overlay">
+                                    <img src="assets/img/modal.jpg" alt="Image">
+
+                                    <!-- Modal image-preview toggle (desktop) -->
+                                    <div class="image-overlay-item d-lg-flex d-none align-items-start justify-content-end">
+                                        <button type="button" class="btn btn-lg btn-icon btn-light bg-transparent text-white border-0 m-3 stretched-link"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#modal-image-preview"
+                                                data-image-url="assets/img/modal.jpg"
+                                                data-image-alt="Image title"
+                                                aria-label="Toggle fullscreen"
+                                        >
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="none"><path d="M21.067 5.067l1.867 2L20 10c-.533.533-.533 1.333 0 1.867s1.333.533 1.867 0L24.8 8.933l2 1.867c.533.533 1.2.133 1.2-.4V4.667c0-.4-.267-.667-.667-.667H21.6c-.533 0-.933.667-.533 1.067zm-16 5.733l1.867-1.867 2.933 2.933c.533.533 1.333.533 1.867 0s.533-1.333 0-1.867l-2.8-2.933 1.867-2c.533-.4.133-1.067-.4-1.067H4.667c-.4 0-.667.267-.667.667V10.4c0 .533.667.933 1.067.4zm5.733 16l-2-1.867L11.733 22c.533-.533.533-1.333 0-1.867s-1.333-.533-1.867 0l-2.933 2.933-2-1.867c-.267-.533-.933-.133-.933.4v5.733c0 .4.267.667.667.667H10.4c.533 0 .933-.667.4-1.2zm16.133-5.733l-2 1.867L22 20c-.533-.533-1.333-.533-1.867 0s-.533 1.333 0 1.867l2.933 2.933-1.867 2c-.4.4-.133 1.2.533 1.2h5.733c.4 0 .667-.267.667-.667V21.6c-.133-.533-.8-.933-1.2-.533z" fill="currentColor"/></svg>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Properties -->
+                        <div class="col-lg-4" data-image-props-area>
+                            <ul class="list-unstyled gap-4 ms-xl-2">
+
+                                <!-- General Information -->
+                                <li class="pb-4 border-bottom">
+                                    <h3 class="h6 fs-lg">
+                                        General Information
+                                    </h3>
+                                    <ul class="list-unstyled gap-xl-2 gap-3">
+
+                                        <!-- Age -->
+                                        <li class="d-flex flex-wrap align-items-center gap-1">
+                                            <h4 class="flex-shrink-0 mb-0 me-lg-2 me-1 fs-sm text-body-secondary">
+                                                Age
+                                            </h4>
+                                            <a href="#" class="btn btn-sm btn-props rounded-pill">54</a>
+                                        </li>
+
+                                        <!-- Country of Residence -->
+                                        <li class="d-flex flex-wrap align-items-center gap-1">
+                                            <h4 class="flex-shrink-0 mb-0 me-lg-2 me-1 fs-sm text-body-secondary">
+                                                Country of Residence
+                                            </h4>
+                                            <a href="#" class="btn btn-sm btn-props rounded-pill">Denmark</a>
+                                        </li>
+
+                                        <!-- Country of Birth -->
+                                        <li class="d-flex flex-wrap align-items-center gap-1">
+                                            <h4 class="flex-shrink-0 mb-0 me-lg-2 me-1 fs-sm text-body-secondary">
+                                                Country of Birth
+                                            </h4>
+                                            <a href="#" class="btn btn-sm btn-props rounded-pill">Denmark</a>
+                                        </li>
+
+                                        <!-- Current Anatomy -->
+                                        <li class="d-flex flex-wrap align-items-center gap-1">
+                                            <h4 class="flex-shrink-0 mb-0 me-lg-2 me-1 fs-sm text-body-secondary">
+                                                Current Anatomy
+                                            </h4>
+                                            <a href="#" class="btn btn-sm btn-props rounded-pill">Male to Female (MtF)</a>
+                                            <a href="#" class="btn btn-sm btn-props rounded-pill">Post-surgery Transgender Vulva</a>
+                                        </li>
+                                    </ul>
+                                </li>
+
+                                <!-- Surgical or Medical History -->
+                                <li class="pb-4 border-bottom">
+                                    <h3 class="h6 fs-lg">
+                                        Surgical or Medical History
+                                    </h3>
+                                    <ul class="list-unstyled gap-xl-2 gap-3">
+
+                                        <!-- Vulva -->
+                                        <li class="d-flex flex-wrap align-items-center gap-1">
+                                            <h4 class="flex-shrink-0 mb-0 me-lg-2 me-1 fs-sm text-body-secondary">
+                                                Vulva
+                                            </h4>
+                                            <a href="#" class="btn btn-sm btn-props rounded-pill">Clitoral hood reduction</a>
+                                        </li>
+
+                                        <!-- Breast -->
+                                        <li class="d-flex flex-wrap align-items-center gap-1">
+                                            <h4 class="flex-shrink-0 mb-0 me-lg-2 me-1 fs-sm text-body-secondary">
+                                                Breast
+                                            </h4>
+                                            <a href="#" class="btn btn-sm btn-props rounded-pill">Breast augmentation</a>
+                                        </li>
+
+                                        <!-- Hormone Therapy -->
+                                        <li class="d-flex flex-wrap align-items-center gap-1">
+                                            <h4 class="flex-shrink-0 mb-0 me-lg-2 me-1 fs-sm text-body-secondary">
+                                                Hormone Therapy
+                                            </h4>
+                                            <a href="#" class="btn btn-sm btn-props rounded-pill">Puberty Blockers</a>
+                                            <a href="#" class="btn btn-sm btn-props rounded-pill">Hormone Blockers</a>
+                                            <a href="#" class="btn btn-sm btn-props rounded-pill">Testosterone Therapy</a>
+                                            <a href="#" class="btn btn-sm btn-props rounded-pill">Testosterone Therapy</a>
+
+                                            <!-- Specified text -->
+                                            <p class="mt-1 mb-0 ff-extra fs-sm fst-italic text-dark w-100">
+                                                “Used by transgender men (FtM) and some intersex individuals to develop muscle mass, facial hair, and alter fat distribution.”
+                                            </p>
+                                        </li>
+
+                                    </ul>
+                                </li>
+
+                                <!-- Additional Information -->
+                                <li>
+                                    <h3 class="h6 fs-lg">
+                                        Additional Information
+                                    </h3>
+                                    <ul class="list-unstyled gap-xl-2 gap-3">
+
+                                        <!-- Stretch Marks or Scars -->
+                                        <li class="d-flex flex-wrap align-items-center gap-1">
+                                            <h4 class="flex-shrink-0 mb-0 me-lg-2 me-1 fs-sm text-body-secondary">
+                                                Stretch Marks or Scars
+                                            </h4>
+                                            <a href="#" class="btn btn-sm btn-props rounded-pill">Scars</a>
+
+                                            <!-- Specified text -->
+                                            <p class="mt-1 mb-0 ff-extra fs-sm fst-italic text-dark w-100">
+                                                “I got the scar from fighting a bear on a vacation in Canada”
+                                            </p>
+                                        </li>
+
+                                        <!-- Pregnancy -->
+                                        <li class="d-flex flex-wrap align-items-center gap-1">
+                                            <h4 class="flex-shrink-0 mb-0 me-lg-2 me-1 fs-sm text-body-secondary">
+                                                Pregnancy
+                                            </h4>
+                                            <a href="#" class="btn btn-sm btn-props rounded-pill">Yes</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Modal: Image props -->
+    <div id="modal-image-preview" class="modal fade" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-fullscreen">
+            <div class="modal-content">
+                <div class="modal-body d-flex align-items-center justify-content-center p-0">
+
+                    <!-- Modal close -->
+                    <button type="button" class="btn-close position-absolute top-0 end-0 p-3 m-2" data-bs-dismiss="modal" aria-label="Close"></button>
+
+                    <!-- Modal image -->
+                    <div>
+                        <img src="assets/img/modal-fullwidth.jpg" alt="Image">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </main>
 
 
