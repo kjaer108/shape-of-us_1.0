@@ -1511,7 +1511,7 @@ $hasVulvaText = !empty($vulvaText);
 
 
                     <!-- Form -->
-                    <form class="mt-lg-5 mt-4 pt-lg-0 pt-md-2" data-step="4">
+                    <form class="mt-lg-5 mt-4 pt-lg-0 pt-md-2 ff-extra" data-step="4">
                         <input type="hidden" id="category" value="<?= $curCategory ?>">
                         <input type="hidden" id="anatomy" value="<?= $_SESSION["formdata"][2]["anatomy"] ?? null ?>">
 
@@ -1570,17 +1570,32 @@ $hasVulvaText = !empty($vulvaText);
                                 <div class="form-check btn btn-lg btn-light rounded-pill w-100 mb-2">
                                     <input id="genital-hair-above-natural" type="radio" name="genital-hair-above" class="form-check-input"
                                         <?= $above === 'genital-hair-above-natural' ? 'checked' : '' ?>>
-                                    <label for="genital-hair-above-natural" class="form-check-label"><?= __("Natural (Not Trimmed or Shaved)") ?></label>
+                                    <label for="genital-hair-above-natural" class="form-check-label fs-base">
+                                        <?= __("Natural (Not Trimmed or Shaved)") ?>
+                                        <span class="mt-1 d-block text-body-secondary">
+                                            <?= __("Hair is left completely untouched and grows freely.") ?>
+                                        </span>
+                                    </label>
                                 </div>
                                 <div class="form-check btn btn-lg btn-light rounded-pill w-100 mb-2">
                                     <input id="genital-hair-above-trimmed" type="radio" name="genital-hair-above" class="form-check-input"
                                         <?= $above === 'genital-hair-above-trimmed' ? 'checked' : '' ?>>
-                                    <label for="genital-hair-above-trimmed" class="form-check-label"><?= __("Trimmed") ?></label>
+                                    <label for="genital-hair-above-trimmed" class="form-check-label fs-base">
+                                        <?= __("Trimmed") ?>
+                                        <span class="mt-1 d-block text-body-secondary">
+                                            <?= __("Hair is intentionally shortened or shaped (e.g., with scissors or trimmers), but not fully removed.") ?>
+                                        </span>
+                                    </label>
                                 </div>
                                 <div class="form-check btn btn-lg btn-light rounded-pill w-100 mb-2">
                                     <input id="genital-hair-above-hairless" type="radio" name="genital-hair-above" class="form-check-input"
                                         <?= $above === 'genital-hair-above-hairless' ? 'checked' : '' ?>>
-                                    <label for="genital-hair-above-hairless" class="form-check-label"><?= __("Hairless (Shaved/Waxed)") ?></label>
+                                    <label for="genital-hair-above-hairless" class="form-check-label fs-base">
+                                        <?= __("Hairless (Shaved/Waxed)") ?>
+                                        <span class="mt-1 d-block text-body-secondary">
+                                            <?= __("Area is fully or nearly hairless, including shaving, waxing, laser, or similar. Light stubble still counts as hairless.") ?>
+                                        </span>
+                                    </label>
                                 </div>
                             </div>
 
@@ -1591,17 +1606,33 @@ $hasVulvaText = !empty($vulvaText);
                                 <div class="form-check btn btn-lg btn-light rounded-pill w-100 mb-2">
                                     <input id="genital-hair-natural" type="radio" name="genital-hair" class="form-check-input"
                                         <?= $below === 'genital-hair-natural' ? 'checked' : '' ?>>
-                                    <label for="genital-hair-natural" class="form-check-label"><?= __("Natural (Not Trimmed or Shaved)") ?></label>
+                                    <label for="genital-hair-natural" class="form-check-label fs-base">
+                                        <?= __("Natural (Not Trimmed or Shaved)") ?>
+                                        <span class="mt-1 d-block text-body-secondary">
+                                            <?= __("Hair is left completely untouched and grows freely.") ?>
+                                        </span>
+                                    </label>
+                                    </label>
                                 </div>
                                 <div class="form-check btn btn-lg btn-light rounded-pill w-100 mb-2">
                                     <input id="genital-hair-trimmed" type="radio" name="genital-hair" class="form-check-input"
                                         <?= $below === 'genital-hair-trimmed' ? 'checked' : '' ?>>
-                                    <label for="genital-hair-trimmed" class="form-check-label"><?= __("Trimmed") ?></label>
+                                    <label for="genital-hair-trimmed" class="form-check-label fs-base">
+                                        <?= __("Trimmed") ?>
+                                        <span class="mt-1 d-block text-body-secondary">
+                                            <?= __("Hair is intentionally shortened or shaped (e.g., with scissors or trimmers), but not fully removed.") ?>
+                                        </span>
+                                    </label>
                                 </div>
                                 <div class="form-check btn btn-lg btn-light rounded-pill w-100 mb-2">
                                     <input id="genital-hair-hairless" type="radio" name="genital-hair" class="form-check-input"
                                         <?= $below === 'genital-hair-hairless' ? 'checked' : '' ?>>
-                                    <label for="genital-hair-hairless" class="form-check-label"><?= __("Hairless (Shaved/Waxed)") ?></label>
+                                    <label for="genital-hair-hairless" class="form-check-label fs-base">
+                                        <?= __("Hairless (Shaved/Waxed)") ?>
+                                        <span class="mt-1 d-block text-body-secondary">
+                                            <?= __("Area is fully or nearly hairless, including shaving, waxing, laser, or similar. Light stubble still counts as hairless.") ?>
+                                        </span>
+                                    </label>
                                 </div>
                             </div>
 
@@ -1612,17 +1643,33 @@ $hasVulvaText = !empty($vulvaText);
                                 <div class="form-check btn btn-lg btn-light rounded-pill w-100 mb-2">
                                     <input id="buttocks-hair-natural" type="radio" name="buttocks-hair" class="form-check-input"
                                         <?= $buttocks === 'buttocks-hair-natural' ? 'checked' : '' ?>>
-                                    <label for="buttocks-hair-natural" class="form-check-label"><?= __("Natural (Not Trimmed or Shaved)") ?></label>
+                                    <label for="buttocks-hair-natural" class="form-check-label fs-base">
+                                        <?= __("Natural (Not Trimmed or Shaved)") ?>
+                                        <span class="mt-1 d-block text-body-secondary">
+                                            <?= __("Hair is left completely untouched and grows freely.") ?>
+                                        </span>
+                                    </label>
                                 </div>
                                 <div class="form-check btn btn-lg btn-light rounded-pill w-100 mb-2">
                                     <input id="buttocks-hair-trimmed" type="radio" name="buttocks-hair" class="form-check-input"
                                         <?= $buttocks === 'buttocks-hair-trimmed' ? 'checked' : '' ?>>
-                                    <label for="buttocks-hair-trimmed" class="form-check-label"><?= __("Trimmed") ?></label>
+                                    <label for="buttocks-hair-trimmed" class="form-check-label fs-base">
+                                        <?= __("Trimmed") ?>
+                                        <span class="mt-1 d-block text-body-secondary">
+                                            <?= __("Hair is intentionally shortened or shaped (e.g., with scissors or trimmers), but not fully removed.") ?>
+                                        </span>
+                                    </label>
                                 </div>
                                 <div class="form-check btn btn-lg btn-light rounded-pill w-100 mb-2">
                                     <input id="buttocks-hair-hairless" type="radio" name="buttocks-hair" class="form-check-input"
                                         <?= $buttocks === 'buttocks-hair-hairless' ? 'checked' : '' ?>>
-                                    <label for="buttocks-hair-hairless" class="form-check-label"><?= __("Hairless (Shaved/Waxed)") ?></label>
+                                    <label for="buttocks-hair-hairless" class="form-check-label fs-base">
+                                        <?= __("Hairless (Shaved/Waxed)") ?>
+                                        <span class="mt-1 d-block text-body-secondary">
+                                            <?= __("Area is fully or nearly hairless, including shaving, waxing, laser, or similar. Light stubble still counts as hairless.") ?>
+                                        </span>
+                                    </label>
+                                    </label>
                                 </div>
                             </div>
                         </div>

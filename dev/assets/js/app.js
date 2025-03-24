@@ -9,15 +9,14 @@
   const imageFullscreenModalEl = document.getElementById('modal-image-preview');
   const imageFullscreenModalInstance = new bootstrap.Modal(imageFullscreenModalEl);
 
-  //const apiBaseUrl = 'http://localhost:8001';
-  const apiBaseUrl = 'src/xhr';
-  const apiImagesUrl = `${apiBaseUrl}/get-images.php`;
-  const apiImageUrl = `${apiBaseUrl}/get-image-info.php`;
+  const apiBaseUrl = 'http://localhost:8001';
+  const apiImagesUrl = `${apiBaseUrl}/get_images.php`;
+  const apiImageUrl = `${apiBaseUrl}/get_image.php`;
   const viewer = OpenSeadragon({
     id: "app",
     prefixUrl: "https://openseadragon.github.io/openseadragon/images/",
     immediateRender: true,
-    showNavigator: false,
+    showNavigator: true,
     collectionMode: false,
     visibilityRatio: 1,
     minZoomLevel: 0.5,

@@ -11181,6 +11181,9 @@ h4 a, .h4 a, h5 a, .h5 a, h6 a, .h6 a {
   text-align: left;
   text-wrap: initial;
 }
+.btn.form-check .form-check-label {
+  font-size: var(--zs-btn-font-size);
+}
 .btn.form-check .form-check-label::before {
   position: absolute;
   top: 0;
