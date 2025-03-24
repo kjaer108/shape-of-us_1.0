@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__."/../inc/init.php";
 
-$useTestImages = true; // Set this to true for testing mode
+$useTestImages = false; // Set this to true for testing mode
 
 if ($useTestImages) {
 
@@ -24,6 +24,7 @@ if ($useTestImages) {
     $batchSize = isset($_POST['count']) ? (int)$_POST['count'] : 500;
 
     try {
+        /*
         // Fetch all photo_ids
         $stmt = $pdo->query("SELECT `photo_id` FROM `sou_form_entries` WHERE `photo_id` IS NOT NULL");
         $photoIds = $stmt->fetchAll(PDO::FETCH_COLUMN);
@@ -45,6 +46,52 @@ if ($useTestImages) {
                 'url' => $url
             ];
         }
+*/
+
+        $sql = "SELECT `entry_id`, `breast_thumb` AS `filename`, 'breast' AS `type`
+                FROM `sou_form_images`
+                WHERE `breast_thumb` IS NOT NULL
+            
+                UNION ALL
+            
+                SELECT `entry_id`, `genital_thumb` AS `filename`, 'genitals' AS `type`
+                FROM `sou_form_images`
+                WHERE `genital_thumb` IS NOT NULL
+            
+                UNION ALL
+            
+                SELECT `entry_id`, `buttocks_thumb` AS `filename`, 'buttocks' AS `type`
+                FROM `sou_form_images`
+                WHERE `buttocks_thumb` IS NOT NULL
+            
+                ORDER BY `entry_id` ASC";
+
+        $stmt = $pdo->query($sql);
+        $imageRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $numAvailable = count($imageRows);
+
+        if ($numAvailable === 0) {
+            throw new Exception("No image filenames found in database.");
+        }
+
+        $images = [];
+        for ($i = 0; $i < $batchSize; $i++) {
+            $row = $imageRows[random_int(0, $numAvailable - 1)];
+            $filename = $row['filename']; // This is the actual filename like SahbYFA8dkw9DhECK1S6-1.jpg
+            $url = "https://shapeofus.eu/files/{$filename}";
+
+            $id = pathinfo($filename, PATHINFO_FILENAME); // e.g., SahbYFA8dkw9DhECK1S6-1t
+            $id = preg_replace('/-\d+t?$/', '', $id);
+            //$id = 1234;
+            $id = pathinfo($filename, PATHINFO_FILENAME);
+
+            $images[] = [
+                'id' => $id,
+                'url' => $url
+            ];
+        }
+
 
     } catch (Exception $e) {
         http_response_code(500);
