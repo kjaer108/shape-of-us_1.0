@@ -56,11 +56,11 @@ if ($cmd == "newsletter-signup") {
 
         $contactExists = ($httpCode === 200); // Contact exists if status is 200
 
-        // ✅ STEP 2: Create or Update Contact
+        // STEP 2: Create or Update Contact
         $contactData = [
             "email" => $email,
             "attributes" => [
-                "SOON" => true // Set boolean attribute
+                "SOU_COMING_SOON" => true // Set boolean attribute
             ],
             "listIds" => [$listId] // Add contact to the list
         ];

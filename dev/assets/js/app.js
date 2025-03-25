@@ -9,14 +9,15 @@
   const imageFullscreenModalEl = document.getElementById('modal-image-preview');
   const imageFullscreenModalInstance = new bootstrap.Modal(imageFullscreenModalEl);
 
-  const apiBaseUrl = 'http://localhost:8001';
-  const apiImagesUrl = `${apiBaseUrl}/get_images.php`;
-  const apiImageUrl = `${apiBaseUrl}/get_image.php`;
+  //const apiBaseUrl = 'http://localhost:8001';
+  const apiBaseUrl = 'src/xhr';
+  const apiImagesUrl = `${apiBaseUrl}/get-images.php`;
+  const apiImageUrl = `${apiBaseUrl}/get-image-info.php`;
   const viewer = OpenSeadragon({
     id: "app",
     prefixUrl: "https://openseadragon.github.io/openseadragon/images/",
     immediateRender: true,
-    showNavigator: true,
+    showNavigator: false,
     collectionMode: false,
     visibilityRatio: 1,
     minZoomLevel: 0.5,
@@ -29,7 +30,7 @@
   });
 
   let loadedPositions = new Map(); // Map<row, Set<column>>
-  let imagePositionMap = new Map(); // Map<imageId, {x, y, width, height}>
+  let loadedImages = new Map(); // Map<uniqueKey, {bounds, imageId}>
   let imageSize = 0.1; // Normalized size for OpenSeadragon (100px in grid)
   let padding = 0.005; // Small gap between images
   let isLoading = false; // Flag to prevent concurrent loading operations
@@ -64,7 +65,7 @@
     
     // Populate form with URL parameters
     if (filtersForm) {
-      populateFIlterFormFromUrl(filtersForm, urlParams);
+      populateFilterFormFromUrl(filtersForm, urlParams);
       
       // Set up form submission handler
       filtersForm.addEventListener('submit', (event) => {
@@ -129,13 +130,14 @@
     loadVisibleImages(viewer, currentFilters);
     
     // Load more images when viewport changes
-    viewer.addHandler('animation-finish', function() {
+    viewer.addHandler('animation-finish', function(event) {
+      console.log('Dispatched animation-finish event', event);
       loadVisibleImages(viewer, currentFilters);
     });
     
     // Add handler for zoom change
     viewer.addHandler('zoom', function(event) {
-      // todo: this about throttling this to avoid too many calculations
+      console.log('Dispatched zoom event', event);
       loadVisibleImages(viewer, currentFilters);
     });
 
@@ -153,7 +155,7 @@
         
         // Update form fields
         if (filtersForm) {
-          populateFIlterFormFromUrl(filtersForm, currentFilters);
+          populateFilterFormFromUrl(filtersForm, currentFilters);
         }
         
         // Reload images with new filters
@@ -236,7 +238,9 @@
    * @returns {Promise} - Promise resolving to image URLs
    */
   async function fetchImages(limit, filters = {}) {
-    console.log(['fetchImages', limit, filters]);
+    // Count number of filters in the object
+    console.log(`Fetching ${limit} images with ${filters ? Object.keys(filters).length : 0} active filter(s)`, filters);
+    
     // Create request body including limit and all filters
     // Send POST request as form data
     const requestBody = {
@@ -311,19 +315,22 @@
         x: x,
         y: y,
         width: imageSize,
-        success: function(tiledImage) {
-          // Note, the type of tiledImage is OpenSeadragon.TiledImage
+        success: function(event) {
+          // Note, the type of event.item is OpenSeadragon.TiledImage
           // See https://openseadragon.github.io/docs/OpenSeadragon.TiledImage.html
+          const tiledImage = event.item;
+          const bounds = tiledImage.getBounds();
+          const uniqueKey = crypto.randomUUID();
+          console.log(`Image ${image.id} added to viewer at coordinates x=${x}, y=${y}`, tiledImage);
+          console.log(`Image bounds:`, bounds);
           
           // Store image position information for hit detection
-          imagePositionMap.set(image.id, {
-            x: x,
-            y: y,
-            width: imageSize,
-            height: imageSize
+          loadedImages.set(uniqueKey, {
+            bounds: bounds,
+            imageId: image.id,
           });
-          console.log(`Image ${image.url} (#${image.id}) added to viewer at coordinates (${x}, ${y})`, tiledImage);
-          console.log(`Position map updated with ${image.id} = {${x}, ${y}, width: ${imageSize}, height: ${imageSize}}`, imagePositionMap.entries());
+          
+          console.log(`Bounds stored into position map under ${uniqueKey}`, loadedImages.get(uniqueKey));
         },
         error: function(event) {
           // Handle failed image loads
@@ -394,7 +401,7 @@
     
     // Reset tracking maps
     loadedPositions.clear();
-    imagePositionMap.clear();
+    loadedImages.clear();
   }
 
   /**
@@ -417,8 +424,6 @@
         params.append(key, value);
       }
     });
-
-    console.log('updateUrlWithFilters.params', params);
     
     // Update URL without reloading the page
     const newUrl = `${window.location.pathname}?${params.toString()}`;
@@ -430,11 +435,9 @@
    * @param {HTMLFormElement} form - The filter form element
    * @param {Object} params - URL parameters
    */
-  function populateFIlterFormFromUrl(form, params) {
-    console.log('populateFormFromUrl', form, params);
+  function populateFilterFormFromUrl(form, params) {
     Object.entries(params).forEach(([key, value]) => {
       const element = form.elements[key];
-      console.log(['populateFormFromUrl.element', element, key, value]);
       if (!element) return;
       
       // Handle different input types
@@ -459,16 +462,11 @@
   function findImageAtPoint(point) {
     console.log(`Lookup image at point ${point.x}, ${point.y}`);
     // Check each image position to see if it contains the point
-    for (const [imageId, position] of imagePositionMap.entries()) {
-      console.log(`Checking image id ${imageId} ${point.x} >= ${position.x} && ${point.x} < ${position.x + position.width} && ${point.y} >= ${position.y} && ${point.y} < ${position.y + position.height}`);
-      if (
-        point.x >= position.x && 
-        point.x < position.x + position.width &&
-        point.y >= position.y && 
-        point.y < position.y + position.height
-      ) {
-        console.log(`Image ${imageId} passed the test`);
-        return imageId;
+    for (const [uniqueKey, image] of loadedImages.entries()) {
+      console.log(`Checking image with id=${image.imageId} at position`, image.bounds);
+      if (image.bounds.containsPoint(point)) {
+        console.log(`Found image at point ${point.x}, ${point.y} with id=${image.imageId}`);
+        return image.imageId;
       }
     }
     

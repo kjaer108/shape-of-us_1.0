@@ -22,23 +22,23 @@ RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 # Disable directory listing
 Options -Indexes
 
-# Allow static file extensions through
+# Allow access to static files
 RewriteCond %{REQUEST_URI} \.(php|html?|jpg|jpeg|png|gif|svg|css|js|json|webp|mp3|mp4|pdf|zip|woff|woff2|eot|ttf|otf|ico|txt|xml)$ [NC]
 RewriteRule ^ - [L]
 
-# Allow access to real files and folders (e.g. index.php, app.php)
+# Allow access to existing files and directories
 RewriteCond %{REQUEST_FILENAME} -f [OR]
 RewriteCond %{REQUEST_FILENAME} -d
 RewriteRule ^ - [L]
 
-# ✅ Rewrite /coming-soon to coming-soon.php
+# Rewrite /coming-soon and localized versions
 RewriteRule ^coming-soon/?$ coming-soon.php [L]
 RewriteRule ^(en|da|de|es|fr|it|pl)/coming-soon/?$ coming-soon.php?lang=$1 [L]
 
-# ✅ Rewrite /coming-soon to coming-soon.php
+# Rewrite /form and localized versions
 RewriteRule ^form/?$ form.php [L,QSA]
 RewriteRule ^(en|da|de|es|fr|it|pl)/form/?$ form.php?lang=$1 [L,QSA]
 
-# ✅ Rewrite /coming-soon to coming-soon.php
+# Rewrite /app and localized versions
 RewriteRule ^app/?$ app.php [L]
-RewriteRule ^(en|da|de|es|fr|it|pl)/coming-soon/?$ app.php?lang=$1 [L]
+RewriteRule ^(en|da|de|es|fr|it|pl)/app/?$ app.php?lang=$1 [L]

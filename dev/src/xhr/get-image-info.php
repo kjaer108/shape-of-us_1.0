@@ -1,21 +1,49 @@
 <?php
 require_once __DIR__."/../inc/init.php";
 
-/*
-$allowedRequestMethods = ['OPTIONS', 'POST'];
-if (in_array($_SERVER['REQUEST_METHOD'], $allowedRequestMethods, true)) {
-    if (!empty($_POST)) {
-        file_put_contents(__DIR__ . '/get_image.log', 'POST: ' . var_export($_POST, true) . PHP_EOL, FILE_APPEND);
-    }
-    // Log the request body
-    $requestBody = file_get_contents('php://input');
-    file_put_contents(__DIR__ . '/get_image.log', 'BODY: ' . $requestBody . PHP_EOL, FILE_APPEND);
+$imageId = get_param("imageId");
+
+$imageType = explode("-", $imageId)[1];
+$imageId = explode("-", $imageId)[0];
+
+//zdebug($imageType);
+//zdebug($imageId);
+
+switch ($imageType) {
+
+    case "1t":
+        $dbCol = "breast";
+        break;
+
+    case "2t":
+        $dbCol = "genital";
+        break;
+
+    case "3t":
+        $dbCol = "buttocks";
+        break;
+
 }
-*/
+
+$sql = "SELECT sfi.*
+        FROM `sou_form_images` sfi
+        JOIN `sou_form_entries` sfe ON sfi.`entry_id` = sfe.`id`
+        WHERE sfe.`image_token` = :token";
+$params = [':token' => $imageId];
+$images = pdo_get_row($pdo, $sql, $params);
+//zdebug($images[$dbCol]);
+
+$sql = "SELECT * FROM `sou_form_entries` WHERE `image_token` LIKE :token";
+$params = [':token' => $imageId];
+$imageData = pdo_get_row($pdo, $sql, $params);
+
+$url = "https://shapeofus.eu/files/{$images[$dbCol]}";
+//zdebug($url);
+
 $image = [
     'id' => $_POST['imageId'] ?? 0,
     'alt' => 'Test image',
-    'url' => 'https://shapeofus.eu/files/9288-1.JPG',
+    'url' => $url,
     'sections' => [
         [
             'key' => 'general',
@@ -25,7 +53,7 @@ $image = [
                     'title' => 'Age',
                     'values' => [
                         [
-                            'display_title' => '25',
+                            'display_title' => $imageData["age"],
                         ],
                     ],
                 ],
@@ -33,7 +61,7 @@ $image = [
                     'title' => 'Country of Residence',
                     'values' => [
                         [
-                            'display_title' => 'Denmark',
+                            'display_title' => $country_list[$imageData["residence"]],
                         ]
                     ],
                 ],
@@ -41,7 +69,7 @@ $image = [
                     'title' => 'Country of Birth',
                     'values' => [
                         [
-                            'display_title' => 'Denmark',
+                            'display_title' => $country_list[$imageData["birth"]],
                         ],
                     ],
                 ],
