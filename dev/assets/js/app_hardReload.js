@@ -87,7 +87,7 @@
     // Parse URL parameters for initial filters
     const urlParams = parseUrlParameters();
     currentFilters = urlParams;
-
+    
     // Populate form with URL parameters
     if (filtersForm) {
       populateFilterFormFromUrl(filtersForm, urlParams);
@@ -124,7 +124,7 @@
       document.addEventListener('click', function(event) {
         // Check if clicked element is a reset button
         if (
-          event.target.hasAttribute('data-sou-reset-filter-group') ||
+          event.target.hasAttribute('data-sou-reset-filter-group') || 
           event.target.closest('[data-sou-reset-filter-group]')
         ) {
           console.log(['document.click.data-sou-reset-filter-group', event]);
@@ -139,28 +139,28 @@
         // Button that triggered the modal
         const button = event.relatedTarget;
         console.log('show.bs.modal', button);
-
+        
         // Extract info from data-* attributes
         const imageUrl = button.getAttribute('data-image-url');
         const imageAlt = button.getAttribute('data-image-alt');
-
+        
         // Update the modal's content
         const modalImage = imageFullscreenModalEl.querySelector('img');
         modalImage.src = imageUrl;
         modalImage.alt = imageAlt || 'Image';
       });
     }
-
+    
     // Initial load based on viewport
     loadVisibleImages(viewer, currentFilters);
-
+    
     // Load more images when viewport changes
     viewer.addHandler('animation-finish', function (event) {
       console.log('Dispatched animation-finish event', event);
       throttledLoadImages();
     });
 
-
+    
     // Add handler for zoom change
     viewer.addHandler('zoom', function (event) {
       console.log('Dispatched zoom event', event);
@@ -199,19 +199,19 @@
 
       handleCanvasClick(event, viewer);
     });
-
+    
     // Handle browser back/forward navigation
     window.addEventListener('popstate', function(event) {
       console.log('popstate', event);
       if (event.state && event.state.filters) {
         // Update current filters from history state
         currentFilters = event.state.filters;
-
+        
         // Update form fields
         if (filtersForm) {
           populateFilterFormFromUrl(filtersForm, currentFilters);
         }
-
+        
         // Reload images with new filters
         clearAllImages(viewer);
         loadVisibleImages(viewer, currentFilters);
@@ -239,11 +239,11 @@
   function parseUrlParameters() {
     const searchParams = new URLSearchParams(window.location.search);
     const params = {};
-
+    
     for (const [key, value] of searchParams.entries()) {
       params[key] = value;
     }
-
+    
     return params;
   }
 
@@ -257,7 +257,7 @@
     const viewportBounds = viewer.viewport.getBounds();
     const viewportWidth = viewportBounds.width;
     const viewportHeight = viewportBounds.height;
-
+    
     // Calculate how many images can fit in the viewport
     const itemWidth = imageSize + padding;
     const itemHeight = imageSize + padding;
@@ -276,17 +276,17 @@
       if (!loadedPositions.has(row)) {
         loadedPositions.set(row, new Set());
       }
-
+      
       for (let col = startX; col < startX + numCols; col++) {
         // Check if this position is already loaded
         if (loadedPositions.get(row).has(col)) continue;
-
+        
         // Mark position as loaded
         loadedPositions.get(row).add(col);
         positions.push({ col, row });
       }
     }
-
+    
     return {
       positions,
       numCols,
@@ -305,7 +305,7 @@
   async function fetchImages(limit, filters = {}) {
     // Count number of filters in the object
     console.log(`Fetching ${limit} images with ${filters ? Object.keys(filters).length : 0} active filter(s)`, filters);
-
+    
     // Create request body including limit and all filters
     // Send POST request as form data
     const requestBody = {
@@ -329,7 +329,7 @@
 //      },
       body: formData
     };
-
+    
     // Send POST request with JSON body
     const response = await fetch(apiImagesUrl, fetchOptions);
     if (!response.ok) {
@@ -347,17 +347,17 @@
     // Create form data with image ID
     const formData = new FormData();
     formData.append('imageId', imageId);
-
+    
     // Send request to server
     const response = await fetch(apiImageUrl, {
       method: 'POST',
       body: formData
     });
-
+    
     if (!response.ok) {
       throw new Error(`Network response was not ok: ${response.status}`);
     }
-
+    
     return await response.json();
   }
 
@@ -370,11 +370,11 @@
   function renderImages(viewer, images, positions) {
     images.forEach((image, i) => {
       if (i >= positions.length) return; // Guard against mismatched arrays
-
+      
       let { col, row } = positions[i];
       const x = col * (imageSize + padding);
       const y = row * (imageSize + padding);
-
+      
       viewer.addSimpleImage({
         url: image.url,
         x: x,
@@ -388,13 +388,13 @@
           const uniqueKey = crypto.randomUUID();
           //console.log(`Image ${image.id} added to viewer at coordinates x=${x}, y=${y}`, tiledImage);
           //console.log(`Image bounds:`, bounds);
-
+          
           // Store image position information for hit detection
           loadedImages.set(uniqueKey, {
             bounds: bounds,
             imageId: image.id,
           });
-
+          
           //console.log(`Bounds stored into position map under ${uniqueKey}`, loadedImages.get(uniqueKey));
         },
         error: function(event) {
@@ -421,15 +421,15 @@
   function loadVisibleImages(viewer, filters = {}) {
     if (isLoading) return; // Prevent concurrent loading
     isLoading = true;
-
+    
     // Calculate which positions need to be loaded
     const { positions, numCols, numRows } = calculatePositionsToLoad(viewer);
-
+    
     if (positions.length === 0) {
       isLoading = false;
       return;
     }
-
+    
     // Log the batch size for debugging
     console.log(`Loading batch: ${positions.length} images (${numCols}x${numRows} grid)`);
 
@@ -464,7 +464,7 @@
   function clearAllImages(viewer) {
     // Remove all images from the viewer
     viewer.world.removeAll();
-
+    
     // Reset tracking maps
     loadedPositions.clear();
     loadedImages.clear();
@@ -483,14 +483,14 @@
     const params = new URLSearchParams();
     Object.entries(filters).forEach(([key, value]) => {
       if (value === null || value === undefined) return;
-
+      
       if (Array.isArray(value)) {
         params.append(key, value.join(','));
       } else {
         params.append(key, value);
       }
     });
-
+    
     // Update URL without reloading the page
     const newUrl = `${window.location.pathname}?${params.toString()}`;
     window.history.pushState({ filters }, '', newUrl);
@@ -505,7 +505,7 @@
     Object.entries(params).forEach(([key, value]) => {
       const element = form.elements[key];
       if (!element) return;
-
+      
       // Handle different input types
       if (element.type === 'checkbox') {
         element.checked = value === 'true' || value === '1';
@@ -535,7 +535,7 @@
         return image.imageId;
       }
     }
-
+    
     // No image found at this point
     console.log('No image found at point', point);
     return null;
@@ -543,7 +543,7 @@
 
   /**
    * Show a popup with image details by clicking on an image.
-   * @param {Event} event
+   * @param {Event} event 
    * @param {OpenSeadragon.Viewer} viewer
    */
   function handleCanvasClick(event, viewer) {
@@ -551,10 +551,10 @@
     // Convert click position to viewport coordinates
     const viewportPoint = viewer.viewport.pointFromPixel(event.position);
     console.log(`Viewport point`, viewportPoint);
-
+    
     // Find which image was clicked
     const clickedImageId = findImageAtPoint(viewportPoint);
-
+    
     if (clickedImageId) {
       // Get image data from server
       fetchImageDetails(clickedImageId)
@@ -603,17 +603,19 @@
 
     console.log('handleFilterFormSubmit.filters', filters);
 
-    // Update URL with new filters
-    updateUrlWithFilters(filters);
+// Create a new URL with the filters as query parameters
+    const params = new URLSearchParams();
+    Object.entries(filters).forEach(([key, value]) => {
+      if (Array.isArray(value)) {
+        params.append(key, value.join(','));
+      } else {
+        params.append(key, value);
+      }
+    });
 
-    // Clear all existing images
-    clearAllImages(viewer);
-
-    // Reset viewer to initial position if needed
-    viewer.viewport.goHome();
-
-    // Load new images with filters
-    loadVisibleImages(viewer, filters);
+// Redirect to the same page with the new filters in the query string
+    const newUrl = `${window.location.pathname}?${params.toString()}`;
+    window.location.href = newUrl;
   }
 
   /**
@@ -631,7 +633,7 @@
     // Reset form controls
     const controls = form.querySelectorAll('input[type="checkbox"], input[type="radio"], select');
     resetFilterControls(controls);
-
+    
     // Reset current filters
     updateUrlWithFilters({});
 
@@ -652,11 +654,11 @@
   function handleFilterGroupResetClick(event) {
     event.preventDefault();
     event.stopPropagation();
-
-    const resetButton = event.target.hasAttribute('data-sou-reset-filter-group') ?
-                        event.target :
+    
+    const resetButton = event.target.hasAttribute('data-sou-reset-filter-group') ? 
+                        event.target : 
                         event.target.closest('[data-sou-reset-filter-group]');
-
+    
     const accordionItemId = resetButton.getAttribute('data-sou-reset-filter-group').slice(1);
     const accordionItem = document.getElementById(accordionItemId);
     const accordionHeader = accordionItem?.querySelector('.accordion-header');
@@ -670,7 +672,7 @@
 
     // Reset all form controls in this section
     const controls = accordionBody.querySelectorAll('input[type="checkbox"], input[type="radio"], select');
-
+    
     resetFilterControls(controls, resetButton);
 
     // Remove the reset button
@@ -692,7 +694,7 @@
       console.warn('Control is not inside an .accordion-item', control);
       return;
     }
-
+    
     const accordionItemId = accordionItem.id;
 
     // Find the child element of accordionItem with selector [data-sou-selected-filter-area="#{accordionItemId}"]
@@ -704,7 +706,7 @@
       selectedFiltersArea = createSelectedFilterArea(accordionItemId);
       accordionHeader.appendChild(selectedFiltersArea);
     }
-
+    
     updateFilterCount(selectedFiltersArea, accordionBody);
   }
 
@@ -757,10 +759,10 @@
 
   /**
    * Handle changes to form controls in the header navigation.
-   *
+   * 
    * On change of a control in the header navigation we need to sync the same control
    * in the filter .nav-tabs.
-   *
+   * 
    * @param {HTMLFormElement} filtersForm - The filter form element.
    * @param {Event} event - Change event on a form control.
    */
@@ -794,8 +796,8 @@
 
   /**
    * Create a selected filter area element.
-   * @param {string} targetId
-   * @returns
+   * @param {string} targetId 
+   * @returns 
    */
   function createSelectedFilterArea(targetId) {
     let element = document.createElement('span');
@@ -806,9 +808,9 @@
 
   /**
    * Create a reset filter group button element.
-   * @param {string} targetId
+   * @param {string} targetId 
    * @param {string} buttonText
-   * @returns
+   * @returns 
    */
   function createResetFilterGroupButton(targetId, buttonText = 'Clear filters') {
     let button = document.createElement('button');
@@ -835,7 +837,7 @@
     const controls = accordionBody.querySelectorAll('input, select');
     let affectedControlsCount = countAffectedControls(controls);
     console.log(['updateFilterCount.affectedControlsCount', affectedControlsCount]);
-
+    
     // Update or remove the reset button based on filter count
     const targetId = selectedFilterArea.getAttribute('data-sou-selected-filter-area').slice(1);
     const buttonText = `${affectedControlsCount} filter${affectedControlsCount > 1 ? 's' : ''}`;
@@ -890,7 +892,7 @@
         choicesInstance.removeActiveItems();
       }
     });
-
+    
     // Dispatch change event to update any other UI elements that depend on form state
     const changeEvent = new Event('change', { bubbles: true });
     if (controls.length > 0) {
@@ -900,7 +902,7 @@
 
   /**
    * Count number of affected controls in a given NodeList.
-   * @param {NodeList} controls
+   * @param {NodeList} controls 
    * @returns {Number} Number of affected controls
    */
   function countAffectedControls(controls) {
@@ -918,12 +920,12 @@
     console.log('found the form closest to given controls', controls, form);
 
     let affectedControlsCount = 0;
-
+    
     // Count affected controls
     controlNames.forEach(name => {
       const namedControls = form.querySelectorAll(`[name="${name}"], [name="${name}[]"]`);
       console.log(`found controls with name "${name}`, namedControls);
-
+      
       if (namedControls.length === 1 && namedControls[0].tagName === 'SELECT') {
         // For a single or multi-select, count selected options
         const selectedOptions = namedControls[0].selectedOptions;
@@ -993,16 +995,16 @@
       });
     }
 
-
-
+    
+    
     // Finally, show the modal.
     imagePreviewModalInstance.show();
   }
 
   /**
    * Render a section with image properties.
-   * @param {Object} section
-   * @param {HTMLElement} target
+   * @param {Object} section 
+   * @param {HTMLElement} target 
    */
   function renderImagePreviewSection(section, target) {
     // Create a title. This will be a li.pb-4.border-bottom > h3.h6.fs-lg
@@ -1030,8 +1032,8 @@
 
   /**
    * Render a field inside a section.
-   * @param {Object} field
-   * @param {HTMLElement} target
+   * @param {Object} field 
+   * @param {HTMLElement} target 
    */
   function renderImagePreviewField(field, target) {
     // Create a li.d-flex.flex-wrap.align-items-center.gap-1

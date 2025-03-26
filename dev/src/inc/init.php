@@ -52,7 +52,8 @@ else {
     define("USER_IP", $_SERVER['REMOTE_ADDR']);
 }
 
-
+$userAgent = $_SERVER['HTTP_USER_AGENT'] ?? '';
+$isMobile = preg_match('/Mobile|Android|iPhone|iPad|iPod/i', $userAgent);
 
 
 /* *************************************************************************
