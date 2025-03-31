@@ -1,40 +1,12 @@
-<!DOCTYPE html>
-<html lang="da">
-<head>
-    <meta charset="utf-8">
+<?php
+$page = ["name"=>"mainapp", "translate"=>true, "sourcelang" => "en"];
+require_once "src/inc/init.php";
 
-    <!-- Viewport -->
-    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover">
-
-    <!-- SEO Meta Tags -->
-    <title>Zandora | Shape of Us</title>
-    <meta name="description" content="Zandora envisions a world where everyone is equipped with the knowledge and resources to understand, explore, and embrace their sexuality.">
-
-    <!-- Webmanifest + Favicon / App icons -->
-    <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <link rel="manifest" href="manifest.json">
-    <link rel="icon" type="image/png" href="assets/app-icons/icon-32x32.png" sizes="32x32">
-    <link rel="apple-touch-icon" href="assets/app-icons/icon-180x180.png">
-
-    <!-- Preloaded local web font (Clash Display) -->
-    <link rel="preload" href="assets/fonts/clash-display-variable.woff2" as="font" type="font/woff2" crossorigin>
-
-    <!-- Font icons -->
-    <link rel="preload" href="assets/icons/zandora-icons.woff2" as="font" type="font/woff2" crossorigin>
-    <link rel="stylesheet" href="assets/icons/zandora-icons.min.css">
-
-    <!-- Vendor styles -->
-    <link rel="stylesheet" href="assets/vendor/choices.js/public/assets/styles/choices.min.css">
-
-    <!-- Bootstrap + Site styles -->
-    <link rel="preload" href="assets/css/styles.min.css" as="style">
-    <link rel="stylesheet" href="assets/css/styles.min.css">
-</head>
-
+//*** HERE WE GO! Let's render the page ***************************************?>
+<?php include "src/html/html-begin.php"; ?>
 
 <!-- Body -->
 <body>
-
 
 <!-- Navigation bar (Page header) -->
 <header class="px-xl-4 px-lg-3 p-2 bg-body position-absolute top-0 start-0 end-0" style="z-index: 999;">
@@ -95,38 +67,20 @@
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none"><g clip-path="url(#A)" fill="currentColor"><path d="M12.84 14.317c-.079-.095-.197-.15-.32-.15H7.479c-.124 0-.241.055-.32.15a.42.42 0 0 0-.09.342C7.668 17.904 8.819 20 10 20s2.331-2.096 2.93-5.341c.022-.122-.01-.247-.09-.342zm6.685-7.361c-.055-.173-.215-.29-.397-.29h-4.692a.42.42 0 0 0-.309.137c-.079.087-.118.204-.106.321A28.78 28.78 0 0 1 14.167 10c0 .95-.049 1.918-.145 2.875-.012.117.027.234.106.321s.191.137.309.137h4.692c.181 0 .342-.117.397-.29a10 10 0 0 0 .475-3.044 9.99 9.99 0 0 0-.475-3.044zM13.8 5.486c.034.201.207.348.411.348h4.206a.42.42 0 0 0 .359-.204c.075-.127.078-.283.007-.412-1.251-2.292-3.4-4.038-5.896-4.79-.161-.05-.338.005-.445.138s-.122.316-.039.464c.607 1.088 1.09 2.629 1.398 4.457zm-1.037 1.181H7.238c-.213 0-.391.16-.414.372A27.73 27.73 0 0 0 6.667 10a27.73 27.73 0 0 0 .157 2.961c.023.212.201.372.414.372h5.525c.213 0 .391-.16.414-.372A27.66 27.66 0 0 0 13.334 10a27.66 27.66 0 0 0-.157-2.961c-.023-.212-.201-.372-.414-.372zm-11.18-.834h4.206c.203 0 .377-.147.411-.347.307-1.828.791-3.369 1.398-4.457.083-.148.067-.332-.039-.464S7.275.377 7.113.427a10.08 10.08 0 0 0-5.896 4.79c-.07.129-.068.286.007.412a.42.42 0 0 0 .358.204zm4.29 7.363c.079-.087.118-.204.106-.321A28.8 28.8 0 0 1 5.833 10c0-.95.049-1.918.145-2.875a.41.41 0 0 0-.106-.321.42.42 0 0 0-.309-.137H.872c-.181 0-.342.117-.397.29a9.99 9.99 0 0 0 0 6.087c.055.173.215.29.397.29h4.692c.118 0 .23-.05.309-.137zm.326 1.318c-.034-.201-.208-.348-.411-.348H1.583a.42.42 0 0 0-.358.204c-.075.127-.078.283-.007.412 1.251 2.292 3.4 4.038 5.896 4.79a.41.41 0 0 0 .12.018.42.42 0 0 0 .325-.155c.106-.133.122-.316.039-.464-.607-1.088-1.091-2.629-1.398-4.457zm12.218-.347h-4.206c-.203 0-.377.147-.411.348-.307 1.828-.791 3.369-1.398 4.457-.083.148-.067.332.039.464.081.1.201.155.325.155a.41.41 0 0 0 .12-.018 10.08 10.08 0 0 0 5.896-4.79c.07-.129.068-.286-.007-.412a.42.42 0 0 0-.359-.204zM7.16 5.683c.079.095.197.15.32.15h5.041c.124 0 .241-.055.32-.15s.112-.221.089-.342C12.332 2.096 11.181 0 10.001 0S7.669 2.096 7.07 5.341c-.022.122.01.247.089.342z"/></g><defs><clipPath id="A"><path fill="#fff" d="M0 0h20v20H0z"/></clipPath></defs></svg>
                         </button>
                         <ul class="dropdown-menu p-4">
+                        <?php foreach ($language_support as $lang): ?>
                             <li>
                                 <div class="form-check mb-3">
-                                    <input id="navbar-lang-english" type="radio" name="site-language" class="form-check-input border" checked>
-                                    <label for="navbar-lang-english" class="form-check-label">
-                                        English
+                                    <input id="lang-<?php echo $lang; ?>" type="radio" name="site-language"
+                                           class="form-check-input border"
+                                           value="<?php echo $lang; ?>"
+                                        <?php echo ($lang === $selectedLang) ? 'checked' : ''; ?>
+                                           onchange="setLanguage('<?php echo $lang; ?>')">
+                                    <label for="lang-<?php echo $lang; ?>" class="form-check-label">
+                                        <?php echo $language_data['name'][$lang]; ?>
                                     </label>
                                 </div>
                             </li>
-                            <li>
-                                <div class="form-check mb-3">
-                                    <input id="navbar-lang-français" type="radio" name="site-language" class="form-check-input border">
-                                    <label for="navbar-lang-français" class="form-check-label">
-                                        Français
-                                    </label>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="form-check mb-3">
-                                    <input id="navbar-lang-deutsch" type="radio" name="site-language" class="form-check-input border">
-                                    <label for="navbar-lang-deutsch" class="form-check-label">
-                                        Deutsch
-                                    </label>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="form-check mb-0">
-                                    <input id="navbar-lang-español" type="radio" name="site-language" class="form-check-input border">
-                                    <label for="navbar-lang-español" class="form-check-label">
-                                        Español
-                                    </label>
-                                </div>
-                            </li>
+                        <?php endforeach; ?>
                         </ul>
                     </div>
                     <button type="button" class="btn btn-light rounded-pill" data-bs-toggle="offcanvas" data-bs-target="#offcanvas-filters" style="--zs-btn-padding-y: .75rem;">
@@ -134,20 +88,18 @@
                         <svg xmlns="http://www.w3.org/2000/svg" class="ms-2" width="16" height="16" fill="none"><path d="M12.956 5.766c-.101-.244-.272-.452-.491-.599s-.477-.225-.741-.225H4.276c-.264 0-.521.078-.741.225s-.39.355-.491.598-.127.512-.076.77.178.496.365.683l3.724 3.724c.25.25.589.39.943.39s.693-.14.943-.39l3.724-3.724c.186-.186.313-.424.365-.682s.025-.527-.076-.77z" fill="currentColor"/></svg>
                     </button>
 
-                    <!-- Modal image-props toggle -->
+                    <!-- Modal image-props toggle
                     <button type="button" class="btn btn-primary rounded-pill" data-bs-toggle="modal" data-bs-target="#modal-image-props">
                         Modal
-                    </button>
+                    </button> -->
                 </div>
             </div>
         </div>
     </div>
 </header>
 
-
 <!-- Page content -->
 <main class="content-wrapper">
-
 
     <!-- Image library wrapper -->
     <div class="w-100 h-100 position-relative min-vh-100">
@@ -161,7 +113,6 @@
             </button>
         </div>
     </div>
-
 
     <!-- Offcanvas filters -->
     <form class="offcanvas offcanvas-end" tabindex="-1" id="offcanvas-filters" aria-labelledby="offcanvasFilters">
@@ -179,38 +130,20 @@
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none"><g clip-path="url(#A)" fill="currentColor"><path d="M12.84 14.317c-.079-.095-.197-.15-.32-.15H7.479c-.124 0-.241.055-.32.15a.42.42 0 0 0-.09.342C7.668 17.904 8.819 20 10 20s2.331-2.096 2.93-5.341c.022-.122-.01-.247-.09-.342zm6.685-7.361c-.055-.173-.215-.29-.397-.29h-4.692a.42.42 0 0 0-.309.137c-.079.087-.118.204-.106.321A28.78 28.78 0 0 1 14.167 10c0 .95-.049 1.918-.145 2.875-.012.117.027.234.106.321s.191.137.309.137h4.692c.181 0 .342-.117.397-.29a10 10 0 0 0 .475-3.044 9.99 9.99 0 0 0-.475-3.044zM13.8 5.486c.034.201.207.348.411.348h4.206a.42.42 0 0 0 .359-.204c.075-.127.078-.283.007-.412-1.251-2.292-3.4-4.038-5.896-4.79-.161-.05-.338.005-.445.138s-.122.316-.039.464c.607 1.088 1.09 2.629 1.398 4.457zm-1.037 1.181H7.238c-.213 0-.391.16-.414.372A27.73 27.73 0 0 0 6.667 10a27.73 27.73 0 0 0 .157 2.961c.023.212.201.372.414.372h5.525c.213 0 .391-.16.414-.372A27.66 27.66 0 0 0 13.334 10a27.66 27.66 0 0 0-.157-2.961c-.023-.212-.201-.372-.414-.372zm-11.18-.834h4.206c.203 0 .377-.147.411-.347.307-1.828.791-3.369 1.398-4.457.083-.148.067-.332-.039-.464S7.275.377 7.113.427a10.08 10.08 0 0 0-5.896 4.79c-.07.129-.068.286.007.412a.42.42 0 0 0 .358.204zm4.29 7.363c.079-.087.118-.204.106-.321A28.8 28.8 0 0 1 5.833 10c0-.95.049-1.918.145-2.875a.41.41 0 0 0-.106-.321.42.42 0 0 0-.309-.137H.872c-.181 0-.342.117-.397.29a9.99 9.99 0 0 0 0 6.087c.055.173.215.29.397.29h4.692c.118 0 .23-.05.309-.137zm.326 1.318c-.034-.201-.208-.348-.411-.348H1.583a.42.42 0 0 0-.358.204c-.075.127-.078.283-.007.412 1.251 2.292 3.4 4.038 5.896 4.79a.41.41 0 0 0 .12.018.42.42 0 0 0 .325-.155c.106-.133.122-.316.039-.464-.607-1.088-1.091-2.629-1.398-4.457zm12.218-.347h-4.206c-.203 0-.377.147-.411.348-.307 1.828-.791 3.369-1.398 4.457-.083.148-.067.332.039.464.081.1.201.155.325.155a.41.41 0 0 0 .12-.018 10.08 10.08 0 0 0 5.896-4.79c.07-.129.068-.286-.007-.412a.42.42 0 0 0-.359-.204zM7.16 5.683c.079.095.197.15.32.15h5.041c.124 0 .241-.055.32-.15s.112-.221.089-.342C12.332 2.096 11.181 0 10.001 0S7.669 2.096 7.07 5.341c-.022.122.01.247.089.342z"/></g><defs><clipPath id="A"><path fill="#fff" d="M0 0h20v20H0z"/></clipPath></defs></svg>
                     </button>
                     <ul class="dropdown-menu p-4">
+                    <?php foreach ($language_support as $lang): ?>
                         <li>
                             <div class="form-check mb-3">
-                                <input id="lang-english" type="radio" name="site-language" class="form-check-input border" checked>
-                                <label for="lang-english" class="form-check-label">
-                                    English
+                                <input id="lang-<?php echo $lang; ?>" type="radio" name="site-language"
+                                       class="form-check-input border"
+                                       value="<?php echo $lang; ?>"
+                                    <?php echo ($lang === $selectedLang) ? 'checked' : ''; ?>
+                                       onchange="setLanguage('<?php echo $lang; ?>')">
+                                <label for="lang-<?php echo $lang; ?>" class="form-check-label">
+                                    <?php echo $language_data['name'][$lang]; ?>
                                 </label>
                             </div>
                         </li>
-                        <li>
-                            <div class="form-check mb-3">
-                                <input id="lang-français" type="radio" name="site-language" class="form-check-input border">
-                                <label for="lang-français" class="form-check-label">
-                                    Français
-                                </label>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="form-check mb-3">
-                                <input id="lang-deutsch" type="radio" name="site-language" class="form-check-input border">
-                                <label for="lang-deutsch" class="form-check-label">
-                                    Deutsch
-                                </label>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="form-check mb-0">
-                                <input id="lang-español" type="radio" name="site-language" class="form-check-input border">
-                                <label for="lang-español" class="form-check-label">
-                                    Español
-                                </label>
-                            </div>
-                        </li>
+                    <?php endforeach; ?>
                     </ul>
                 </div>
                 <button type="button" class="btn btn-lg btn-link px-0" data-bs-dismiss="offcanvas">
@@ -340,7 +273,7 @@
                     </div>
                 </div>
 
-                <!-- Skin Tone -->
+                <!-- Skin Tone
                 <div id="offcanvas-accordion-filter-skin" class="accordion-item border-bottom">
                     <h3 class="accordion-header position-relative">
                         <button class="accordion-button fs-5 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#offcanvas-accordion-filter-skin-collapse" aria-expanded="false" aria-controls="offcanvas-accordion-filter-skin-collapse">
@@ -465,9 +398,9 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
 
-                <!-- Anatomy -->
+                <!-- Anatomy
                 <div id="offcanvas-accordion-filter-anatomy" class="accordion-item border-bottom">
                     <h3 class="accordion-header position-relative">
                         <button class="accordion-button fs-5 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#offcanvas-accordion-filter-anatomy-collapse" aria-expanded="false" aria-controls="offcanvas-accordion-filter-anatomy-collapse">
@@ -480,7 +413,7 @@
                         <div class="accordion-body">
                             <div class="row gx-2">
 
-                                <!-- Anatomy at birth -->
+                                <!-- Anatomy at birth --
                                 <div class="col-12">
                                     <div class="mb-2 py-1 text-body-secondary">
                                         Anatomy at birth
@@ -505,7 +438,7 @@
                                     </div>
                                 </div>
 
-                                <!-- Current anatomy -->
+                                <!-- Current anatomy --
                                 <div class="col-12">
                                     <div class="mb-2 py-1 text-body-secondary">
                                         Current anatomy
@@ -550,9 +483,9 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
 
-                <!-- Country -->
+                <!-- Country
                 <div id="offcanvas-accordion-filter-country" class="accordion-item border-bottom">
                     <h3 class="accordion-header position-relative">
                         <button class="accordion-button fs-5 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#offcanvas-accordion-filter-country-collapse" aria-expanded="false" aria-controls="offcanvas-accordion-filter-country-collapse">
@@ -677,9 +610,9 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
 
-                <!-- Medical History -->
+                <!-- Medical History
                 <div id="offcanvas-accordion-filter-medhist" class="accordion-item border-bottom">
                     <h3 class="accordion-header position-relative">
                         <button class="accordion-button fs-5 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#offcanvas-accordion-filter-medhist-collapse" aria-expanded="false" aria-controls="offcanvas-accordion-filter-medhist-collapse">
@@ -691,7 +624,7 @@
                     <div id="offcanvas-accordion-filter-medhist-collapse" class="accordion-collapse collapse" data-bs-parent="#offcanvas-accordion-filters">
                         <div class="accordion-body">
 
-                            <!-- Vulva -->
+                            <!-- Vulva --
                             <div class="mb-3">
                                 <div class="form-label">
                                     Vulva
@@ -708,7 +641,7 @@
                                 </select>
                             </div>
 
-                            <!-- Breasts -->
+                            <!-- Breasts --
                             <div class="mb-3">
                                 <div class="form-label">
                                     Breasts
@@ -725,7 +658,7 @@
                                 </select>
                             </div>
 
-                            <!-- Penises -->
+                            <!-- Penises --
                             <div>
                                 <div class="form-label">
                                     Penises
@@ -743,9 +676,9 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
 
-                <!-- Other filters -->
+                <!-- Other filters
                 <div id="offcanvas-accordion-filter-other" class="accordion-item border-bottom">
                     <h3 class="accordion-header position-relative">
                         <button class="accordion-button fs-5 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#offcanvas-accordion-filter-other-collapse" aria-expanded="false" aria-controls="offcanvas-accordion-filter-other-collapse">
@@ -758,7 +691,7 @@
                         <div class="accordion-body">
                             <div class="row gx-2">
 
-                                <!-- Gender Identity -->
+                                <!-- Gender Identity --
                                 <div class="col-12">
                                     <div class="mb-2 py-1 text-body-secondary">
                                         Gender Identity
@@ -783,7 +716,7 @@
                                     </div>
                                 </div>
 
-                                <!-- Presence of Hair -->
+                                <!-- Presence of Hair --
                                 <div class="col-12">
                                     <div class="mb-2 py-1 text-body-secondary">
                                         Presence of Hair
@@ -808,7 +741,7 @@
                                     </div>
                                 </div>
 
-                                <!-- Stretch Marks or Scars -->
+                                <!-- Stretch Marks or Scars --
                                 <div class="col-12">
                                     <div class="mb-2 py-1 text-body-secondary">
                                         Stretch Marks or Scars
@@ -835,7 +768,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
 
@@ -1039,6 +972,15 @@
 </main>
 
 
+<?php include "src/html/html_modals.php"; ?>
+    <script id="translations" type="application/json">
+        {
+        }
+    </script>
+<?php include "src/html/html-scripts.php"; ?>
+<?php include "src/html/html-end.php"; ?>
+
+<?php /*
 <!-- Vendor scripts -->
 <script src="assets/vendor/choices.js/public/assets/scripts/choices.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/openseadragon/4.0.0/openseadragon.min.js"></script>
@@ -1050,3 +992,4 @@
 <script src="assets/js/app.js"></script>
 </body>
 </html>
+*/ ?>

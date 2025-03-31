@@ -1987,7 +1987,6 @@ $tattooOptions = [
 </main>
 
 <?php include "src/html/html_modals.php"; ?>
-
 <script id="translations" type="application/json">
     {
     }

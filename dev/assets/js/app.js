@@ -156,14 +156,14 @@
 
     // Load more images when viewport changes
     viewer.addHandler('animation-finish', function (event) {
-      console.log('Dispatched animation-finish event', event);
+      //console.log('Dispatched animation-finish event', event);
       throttledLoadImages();
     });
 
 
     // Add handler for zoom change
     viewer.addHandler('zoom', function (event) {
-      console.log('Dispatched zoom event', event);
+      //console.log('Dispatched zoom event', event);
       throttledLoadImages();
     });
 
@@ -322,16 +322,28 @@
       }
     });
 
-    const fetchOptions = {
-      method: 'POST',
-//      headers: {
-//        'Content-Type': 'application/x-www-form-urlencoded'
-//      },
-      body: formData
-    };
+    // const fetchOptions = {
+    //   method: 'POST',
+    //   body: formData
+    // };
+    //
+    // // Send POST request with JSON body
+    // const response = await fetch(apiImagesUrl, fetchOptions);
 
-    // Send POST request with JSON body
-    const response = await fetch(apiImagesUrl, fetchOptions);
+    // Convert filters into URL query params
+    const urlParams = new URLSearchParams();
+    urlParams.set('limit', limit);
+
+    Object.entries(filters).forEach(([key, value]) => {
+      if (Array.isArray(value)) {
+        value.forEach(v => urlParams.append(`${key}[]`, v));
+      } else {
+        urlParams.append(key, value);
+      }
+    });
+
+    const response = await fetch(`${apiImagesUrl}?${urlParams.toString()}`);
+
     if (!response.ok) {
       throw new Error(`Network response was not ok: ${response.status}`);
     }
@@ -343,15 +355,28 @@
    * @param {string} imageId - ID of the clicked image
    * @returns {Promise} - Promise resolving to image details
    */
-  async function fetchImageDetails(imageId) {
-    // Create form data with image ID
-    const formData = new FormData();
-    formData.append('imageId', imageId);
+  async function fetchImages(limit, filters = {}) {
+    const requestBody = {
+      limit,
+      ...filters
+    };
 
-    // Send request to server
-    const response = await fetch(apiImageUrl, {
+    // Flatten into a query string
+    const params = new URLSearchParams();
+    Object.entries(requestBody).forEach(([key, value]) => {
+      if (Array.isArray(value)) {
+        value.forEach(v => params.append(`${key}[]`, v));
+      } else {
+        params.append(key, value);
+      }
+    });
+
+    const response = await fetch(apiImagesUrl, {
       method: 'POST',
-      body: formData
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: params.toString()
     });
 
     if (!response.ok) {
@@ -360,6 +385,7 @@
 
     return await response.json();
   }
+
 
   /**
    * Render images in the viewer
@@ -609,11 +635,11 @@
     // Clear all existing images
     clearAllImages(viewer);
 
-    // Reset viewer to initial position if needed
-    viewer.viewport.goHome();
+    viewer.viewport.goHome(true); // Animate instantly
 
-    // Load new images with filters
-    loadVisibleImages(viewer, filters);
+    viewer.addOnceHandler('animation-finish', function () {
+      loadVisibleImages(viewer, filters);
+    });
   }
 
   /**
