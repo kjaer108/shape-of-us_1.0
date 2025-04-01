@@ -123,10 +123,12 @@ $totalSelectedFilters = $bodyPartCount + $ageCount;
         <div id="app" class="position-absolute zindex-2 top-0 end-0 bottom-0 start-0"></div>
 
         <!-- Offcanvas toggle (mobile) -->
-        <div class="position-absolute bottom-0 end-0 p-sm-4 p-3 d-md-none d-block">
+        <div class="position-fixed bottom-0 end-0 p-sm-4 p-3 d-block d-md-none z-3">
             <button type="button" class="btn btn-light rounded-pill" data-bs-toggle="offcanvas" data-bs-target="#offcanvas-filters" style="--zs-btn-padding-y: .75rem;">
                 <?= __("Filters") ?><?= $totalSelectedFilters > 0 ? " ($totalSelectedFilters)" : "" ?>
-                <svg xmlns="http://www.w3.org/2000/svg" class="ms-2" width="16" height="16" fill="none"><path d="M12.956 5.766c-.101-.244-.272-.452-.491-.599s-.477-.225-.741-.225H4.276c-.264 0-.521.078-.741.225s-.39.355-.491.598-.127.512-.076.77.178.496.365.683l3.724 3.724c.25.25.589.39.943.39s.693-.14.943-.39l3.724-3.724c.186-.186.313-.424.365-.682s.025-.527-.076-.77z" fill="currentColor"/></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" class="ms-2" width="16" height="16" fill="none">
+                    <path d="M12.956 5.766c-.101-.244-.272-.452-.491-.599s-.477-.225-.741-.225H4.276c-.264 0-.521.078-.741.225s-.39.355-.491.598-.127.512-.076.77.178.496.365.683l3.724 3.724c.25.25.589.39.943.39s.693-.14.943-.39l3.724-3.724c.186-.186.313-.424.365-.682s.025-.527-.076-.77z" fill="currentColor"/>
+                </svg>
             </button>
         </div>
     </div>
