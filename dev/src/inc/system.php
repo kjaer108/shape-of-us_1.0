@@ -480,7 +480,7 @@ function string_to_slug($str, $delimiter = '-') {
 /*****************************************************************************
   URL functions
  *****************************************************************************/
-
+/*
 function get_param($param, $default = NULL, $convert_string_null = true) {
     if (is_null($param)) {
         $data = (isset($_POST) && count($_POST) > 0) ? $_POST : ((isset($_GET) && count($_GET) > 0) ? $_GET : NULL);
@@ -507,6 +507,44 @@ function get_param($param, $default = NULL, $convert_string_null = true) {
             return $data;
         }
     }
+}
+*/
+
+function get_param($param = null, $default = null, $convert_string_null = true) {
+    $source = !empty($_POST) ? $_POST : $_GET;
+
+    if (is_null($param)) {
+        // Apply processing to all parameters
+        foreach ($source as $key => $value) {
+            $source[$key] = process_param_value($value, $convert_string_null);
+        }
+        return $source;
+    }
+
+    if (isset($source[$param])) {
+        return process_param_value($source[$param], $convert_string_null);
+    }
+
+    return $default;
+}
+
+function process_param_value($value, $convert_string_null) {
+    if (is_array($value)) {
+        foreach ($value as $k => $v) {
+            $value[$k] = process_param_value($v, $convert_string_null);
+        }
+        return $value;
+    }
+
+    if ($convert_string_null && $value === "null") {
+        return null;
+    }
+
+    if (strempty($value)) {
+        return null;
+    }
+
+    return $value;
 }
 
 
@@ -1415,5 +1453,20 @@ function hasPermission($permissionName) {
 
     // If either query returns 1, the user has permission
     return (bool) array_sum($stmt->fetchAll(PDO::FETCH_COLUMN));
+}
+
+function in_comma_list(string $needle, $list, bool $case_insensitive = true): bool {
+    if (!is_string($list) || trim($list) === '') {
+        return false;
+    }
+
+    $items = explode(",", $list);
+
+    if ($case_insensitive) {
+        $needle = strtolower($needle);
+        $items = array_map('strtolower', $items);
+    }
+
+    return in_array($needle, $items);
 }
 

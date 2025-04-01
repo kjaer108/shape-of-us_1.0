@@ -2,6 +2,22 @@
 $page = ["name"=>"mainapp", "translate"=>true, "sourcelang" => "en"];
 require_once "src/inc/init.php";
 
+
+// Get filters
+$selectedBodyParts = get_param("body-parts");
+$selectedAges = get_param("age");
+
+$bodyPartCount = $selectedBodyParts ? count(array_filter(explode(",", $selectedBodyParts))) : 0;
+$ageCount = $selectedAges ? count(array_filter(explode(",", $selectedAges))) : 0;
+
+$totalSelectedFilters = $bodyPartCount + $ageCount;
+
+
+//zdebug("body-parts:");
+//zdebug($selectedBodyParts);
+//zdebug("age:");
+//zdebug($selectedAges);
+
 //*** HERE WE GO! Let's render the page ***************************************?>
 <?php include "src/html/html-begin.php"; ?>
 
@@ -29,28 +45,28 @@ require_once "src/inc/init.php";
             <div class="col-xl-4 d-xl-block d-none">
                 <ul class="nav navbar-nav justify-content-center gap-1 flex-nowrap">
                     <li class="nav-item">
-                        <input id="header-filter-penis" type="checkbox" name="body-parts[]" value="penis" class="btn-check">
+                        <input id="header-filter-penis" type="checkbox" name="body-parts[]" value="penis" class="btn-check"<?= (in_comma_list("penis", $selectedBodyParts) ? " checked" : "") ?>>
                         <label for="header-filter-penis" class="nav-link rounded-pill" style="cursor: pointer;">
                             <i class="zi-close-circle-fill btn-check-label"></i>
                             Penis
                         </label>
                     </li>
                     <li class="nav-item">
-                        <input id="header-filter-vulva" type="checkbox" name="body-parts[]" value="vulva" class="btn-check">
+                        <input id="header-filter-vulva" type="checkbox" name="body-parts[]" value="vulva" class="btn-check"<?= (in_comma_list("vulva", $selectedBodyParts) ? " checked" : "") ?>>
                         <label for="header-filter-vulva" class="nav-link rounded-pill" style="cursor: pointer;">
                             <i class="zi-close-circle-fill btn-check-label"></i>
                             Vulva
                         </label>
                     </li>
                     <li class="nav-item">
-                        <input id="header-filter-breast" type="checkbox" name="body-parts[]" value="breast" class="btn-check">
+                        <input id="header-filter-breast" type="checkbox" name="body-parts[]" value="breast" class="btn-check"<?= (in_comma_list("breast", $selectedBodyParts) ? " checked" : "") ?>>
                         <label for="header-filter-breast" class="nav-link rounded-pill" style="cursor: pointer;">
                             <i class="zi-close-circle-fill btn-check-label"></i>
                             Breast
                         </label>
                     </li>
                     <li class="nav-item">
-                        <input id="header-filter-buttocks" type="checkbox" name="body-parts[]" value="buttocks" class="btn-check">
+                        <input id="header-filter-buttocks" type="checkbox" name="body-parts[]" value="buttocks" class="btn-check"<?= (in_comma_list("buttocks", $selectedBodyParts) ? " checked" : "") ?>>
                         <label for="header-filter-buttocks" class="nav-link rounded-pill" style="cursor: pointer;">
                             <i class="zi-close-circle-fill btn-check-label"></i>
                             Buttocks
@@ -84,7 +100,7 @@ require_once "src/inc/init.php";
                         </ul>
                     </div>
                     <button type="button" class="btn btn-light rounded-pill" data-bs-toggle="offcanvas" data-bs-target="#offcanvas-filters" style="--zs-btn-padding-y: .75rem;">
-                        Filters
+                        Filters<?= $totalSelectedFilters > 0 ? " ($totalSelectedFilters)" : "" ?>
                         <svg xmlns="http://www.w3.org/2000/svg" class="ms-2" width="16" height="16" fill="none"><path d="M12.956 5.766c-.101-.244-.272-.452-.491-.599s-.477-.225-.741-.225H4.276c-.264 0-.521.078-.741.225s-.39.355-.491.598-.127.512-.076.77.178.496.365.683l3.724 3.724c.25.25.589.39.943.39s.693-.14.943-.39l3.724-3.724c.186-.186.313-.424.365-.682s.025-.527-.076-.77z" fill="currentColor"/></svg>
                     </button>
 
@@ -108,7 +124,7 @@ require_once "src/inc/init.php";
         <!-- Offcanvas toggle (mobile) -->
         <div class="position-absolute bottom-0 end-0 p-sm-4 p-3 d-md-none d-block">
             <button type="button" class="btn btn-light rounded-pill" data-bs-toggle="offcanvas" data-bs-target="#offcanvas-filters" style="--zs-btn-padding-y: .75rem;">
-                Filters (7)
+                Filters<?= $totalSelectedFilters > 0 ? " ($totalSelectedFilters)" : "" ?>
                 <svg xmlns="http://www.w3.org/2000/svg" class="ms-2" width="16" height="16" fill="none"><path d="M12.956 5.766c-.101-.244-.272-.452-.491-.599s-.477-.225-.741-.225H4.276c-.264 0-.521.078-.741.225s-.39.355-.491.598-.127.512-.076.77.178.496.365.683l3.724 3.724c.25.25.589.39.943.39s.693-.14.943-.39l3.724-3.724c.186-.186.313-.424.365-.682s.025-.527-.076-.77z" fill="currentColor"/></svg>
             </button>
         </div>
@@ -161,28 +177,28 @@ require_once "src/inc/init.php";
                     <div class="px-4" style="min-width: 512px;">
                         <ul class="nav nav-tabs navbar-nav rounded-pill flex-nowrap text-nowrap">
                             <li class="nav-item">
-                                <input id="filter-penis" type="checkbox" name="body-parts[]" value="penis" class="btn-check">
+                                <input id="filter-penis" type="checkbox" name="body-parts[]" value="penis" class="btn-check"<?= (in_comma_list("penis", $selectedBodyParts) ? " checked" : "") ?>>
                                 <label for="filter-penis" class="nav-link rounded-pill">
                                     <i class="zi-close-circle-fill btn-check-label"></i>
                                     Penis
                                 </label>
                             </li>
                             <li class="nav-item">
-                                <input id="filter-vulva" type="checkbox" name="body-parts[]" value="vulva" class="btn-check">
+                                <input id="filter-vulva" type="checkbox" name="body-parts[]" value="vulva" class="btn-check"<?= (in_comma_list("vulva", $selectedBodyParts) ? " checked" : "") ?>>
                                 <label for="filter-vulva" class="nav-link rounded-pill">
                                     <i class="zi-close-circle-fill btn-check-label"></i>
                                     Vulva
                                 </label>
                             </li>
                             <li class="nav-item">
-                                <input id="filter-breast" type="checkbox" name="body-parts[]" value="breast" class="btn-check">
+                                <input id="filter-breast" type="checkbox" name="body-parts[]" value="breast" class="btn-check"<?= (in_comma_list("breast", $selectedBodyParts) ? " checked" : "") ?>>
                                 <label for="filter-breast" class="nav-link rounded-pill">
                                     <i class="zi-close-circle-fill btn-check-label"></i>
                                     Breast
                                 </label>
                             </li>
                             <li class="nav-item">
-                                <input id="filter-buttocks" type="checkbox" name="body-parts[]" value="buttocks" class="btn-check">
+                                <input id="filter-buttocks" type="checkbox" name="body-parts[]" value="buttocks" class="btn-check"<?= (in_comma_list("buttocks", $selectedBodyParts) ? " checked" : "") ?>>
                                 <label for="filter-buttocks" class="nav-link rounded-pill">
                                     <i class="zi-close-circle-fill btn-check-label"></i>
                                     Buttocks
@@ -222,7 +238,7 @@ require_once "src/inc/init.php";
                             <div class="row row-cols-2 gx-2 pt-2">
                                 <div class="col">
                                     <div class="form-check">
-                                        <input id="age-18-29" type="checkbox" name="age[]" value="18-29" class="form-check-input">
+                                        <input id="age-18-29" type="checkbox" name="age[]" value="18-29" class="form-check-input"<?= (in_comma_list("18-29", $selectedAges) ? " checked" : "") ?>>
                                         <label for="age-18-29" class="form-check-label">
                                             18-29
                                         </label>
@@ -230,7 +246,7 @@ require_once "src/inc/init.php";
                                 </div>
                                 <div class="col">
                                     <div class="form-check">
-                                        <input id="age-30-39" type="checkbox" name="age[]" value="30-39" class="form-check-input">
+                                        <input id="age-30-39" type="checkbox" name="age[]" value="30-39" class="form-check-input"<?= (in_comma_list("30-39", $selectedAges) ? " checked" : "") ?>>
                                         <label for="age-30-39" class="form-check-label">
                                             30-39
                                         </label>
@@ -238,7 +254,7 @@ require_once "src/inc/init.php";
                                 </div>
                                 <div class="col">
                                     <div class="form-check">
-                                        <input id="age-40-49" type="checkbox" name="age[]" value="40-49" class="form-check-input">
+                                        <input id="age-40-49" type="checkbox" name="age[]" value="40-49" class="form-check-input"<?= (in_comma_list("40-49", $selectedAges) ? " checked" : "") ?>>
                                         <label for="age-40-49" class="form-check-label">
                                             40-49
                                         </label>
@@ -246,7 +262,7 @@ require_once "src/inc/init.php";
                                 </div>
                                 <div class="col">
                                     <div class="form-check">
-                                        <input id="age-50-59" type="checkbox" name="age[]" value="50-59" class="form-check-input">
+                                        <input id="age-50-59" type="checkbox" name="age[]" value="50-59" class="form-check-input"<?= (in_comma_list("50-59", $selectedAges) ? " checked" : "") ?>>
                                         <label for="age-50-59" class="form-check-label">
                                             50-59
                                         </label>
@@ -254,7 +270,7 @@ require_once "src/inc/init.php";
                                 </div>
                                 <div class="col">
                                     <div class="form-check">
-                                        <input id="age-60-69" type="checkbox" name="age[]" value="60-69" class="form-check-input">
+                                        <input id="age-60-69" type="checkbox" name="age[]" value="60-69" class="form-check-input"<?= (in_comma_list("60-69", $selectedAges) ? " checked" : "") ?>>
                                         <label for="age-60-69" class="form-check-label">
                                             60-69
                                         </label>
@@ -262,7 +278,7 @@ require_once "src/inc/init.php";
                                 </div>
                                 <div class="col">
                                     <div class="form-check">
-                                        <input id="age-70" type="checkbox" name="age[]" value="70" class="form-check-input">
+                                        <input id="age-70" type="checkbox" name="age[]" value="70" class="form-check-input"<?= (in_comma_list("70", $selectedAges) ? " checked" : "") ?>>
                                         <label for="age-70" class="form-check-label">
                                             70+
                                         </label>
