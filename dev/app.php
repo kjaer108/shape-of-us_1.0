@@ -2,7 +2,6 @@
 $page = ["name"=>"mainapp", "translate"=>true, "sourcelang" => "en"];
 require_once "src/inc/init.php";
 
-
 // Get filters
 $selectedBodyParts = get_param("body-parts");
 $selectedAges = get_param("age");
@@ -33,9 +32,11 @@ $totalSelectedFilters = $bodyPartCount + $ageCount;
             <div class="col-xl-4 col-md-8">
                 <div class="d-flex justify-content-md-start justify-content-between align-items-center gap-xxl-4 gap-md-3 gap-4">
                     <div>
-                        <img src="assets/img/shape-of-us.png" width="283" alt="Shape of Us">
+                        <a href="https://shapeofus.eu/app" rel="noopener" class="d-block ms-sm-2">
+                            <img src="assets/img/shape-of-us.png" width="283" alt="Shape of Us">
+                        </a>
                     </div>
-                    <a href="#" target="_blank" rel="noopener" class="d-block ms-sm-2">
+                    <a href="https://zandora.net/" target="_blank" rel="noopener" class="d-block ms-sm-2">
                         <img src="assets/img/zandora.png" width="125" alt="by Zandora">
                     </a>
                 </div>
@@ -48,28 +49,28 @@ $totalSelectedFilters = $bodyPartCount + $ageCount;
                         <input id="header-filter-penis" type="checkbox" name="body-parts[]" value="penis" class="btn-check"<?= (in_comma_list("penis", $selectedBodyParts) ? " checked" : "") ?>>
                         <label for="header-filter-penis" class="nav-link rounded-pill" style="cursor: pointer;">
                             <i class="zi-close-circle-fill btn-check-label"></i>
-                            Penis
+                            <?= __("Penis") ?>
                         </label>
                     </li>
                     <li class="nav-item">
                         <input id="header-filter-vulva" type="checkbox" name="body-parts[]" value="vulva" class="btn-check"<?= (in_comma_list("vulva", $selectedBodyParts) ? " checked" : "") ?>>
                         <label for="header-filter-vulva" class="nav-link rounded-pill" style="cursor: pointer;">
                             <i class="zi-close-circle-fill btn-check-label"></i>
-                            Vulva
+                            <?= __("Vulva") ?>
                         </label>
                     </li>
                     <li class="nav-item">
                         <input id="header-filter-breast" type="checkbox" name="body-parts[]" value="breast" class="btn-check"<?= (in_comma_list("breast", $selectedBodyParts) ? " checked" : "") ?>>
                         <label for="header-filter-breast" class="nav-link rounded-pill" style="cursor: pointer;">
                             <i class="zi-close-circle-fill btn-check-label"></i>
-                            Breast
+                            <?= __("Breast") ?>
                         </label>
                     </li>
                     <li class="nav-item">
                         <input id="header-filter-buttocks" type="checkbox" name="body-parts[]" value="buttocks" class="btn-check"<?= (in_comma_list("buttocks", $selectedBodyParts) ? " checked" : "") ?>>
                         <label for="header-filter-buttocks" class="nav-link rounded-pill" style="cursor: pointer;">
                             <i class="zi-close-circle-fill btn-check-label"></i>
-                            Buttocks
+                            <?= __("Buttocks") ?>
                         </label>
                     </li>
                 </ul>
@@ -100,7 +101,7 @@ $totalSelectedFilters = $bodyPartCount + $ageCount;
                         </ul>
                     </div>
                     <button type="button" class="btn btn-light rounded-pill" data-bs-toggle="offcanvas" data-bs-target="#offcanvas-filters" style="--zs-btn-padding-y: .75rem;">
-                        Filters<?= $totalSelectedFilters > 0 ? " ($totalSelectedFilters)" : "" ?>
+                        <?= __("Filters") ?><?= $totalSelectedFilters > 0 ? " ($totalSelectedFilters)" : "" ?>
                         <svg xmlns="http://www.w3.org/2000/svg" class="ms-2" width="16" height="16" fill="none"><path d="M12.956 5.766c-.101-.244-.272-.452-.491-.599s-.477-.225-.741-.225H4.276c-.264 0-.521.078-.741.225s-.39.355-.491.598-.127.512-.076.77.178.496.365.683l3.724 3.724c.25.25.589.39.943.39s.693-.14.943-.39l3.724-3.724c.186-.186.313-.424.365-.682s.025-.527-.076-.77z" fill="currentColor"/></svg>
                     </button>
 
@@ -124,7 +125,7 @@ $totalSelectedFilters = $bodyPartCount + $ageCount;
         <!-- Offcanvas toggle (mobile) -->
         <div class="position-absolute bottom-0 end-0 p-sm-4 p-3 d-md-none d-block">
             <button type="button" class="btn btn-light rounded-pill" data-bs-toggle="offcanvas" data-bs-target="#offcanvas-filters" style="--zs-btn-padding-y: .75rem;">
-                Filters<?= $totalSelectedFilters > 0 ? " ($totalSelectedFilters)" : "" ?>
+                <?= __("Filters") ?><?= $totalSelectedFilters > 0 ? " ($totalSelectedFilters)" : "" ?>
                 <svg xmlns="http://www.w3.org/2000/svg" class="ms-2" width="16" height="16" fill="none"><path d="M12.956 5.766c-.101-.244-.272-.452-.491-.599s-.477-.225-.741-.225H4.276c-.264 0-.521.078-.741.225s-.39.355-.491.598-.127.512-.076.77.178.496.365.683l3.724 3.724c.25.25.589.39.943.39s.693-.14.943-.39l3.724-3.724c.186-.186.313-.424.365-.682s.025-.527-.076-.77z" fill="currentColor"/></svg>
             </button>
         </div>
@@ -136,7 +137,7 @@ $totalSelectedFilters = $bodyPartCount + $ageCount;
         <!-- Offcanvas header -->
         <div class="offcanvas-header justify-content-between pb-0">
             <h2 class="offcanvas-title text-primary" id="offcanvasFilters">
-                Filters
+                <?= __("Filters") ?>
             </h2>
 
             <!-- Lang switcher + close btn -->
@@ -163,7 +164,7 @@ $totalSelectedFilters = $bodyPartCount + $ageCount;
                     </ul>
                 </div>
                 <button type="button" class="btn btn-lg btn-link px-0" data-bs-dismiss="offcanvas">
-                    close
+                    <?= __("close") ?>
                 </button>
             </div>
         </div>
@@ -180,28 +181,28 @@ $totalSelectedFilters = $bodyPartCount + $ageCount;
                                 <input id="filter-penis" type="checkbox" name="body-parts[]" value="penis" class="btn-check"<?= (in_comma_list("penis", $selectedBodyParts) ? " checked" : "") ?>>
                                 <label for="filter-penis" class="nav-link rounded-pill">
                                     <i class="zi-close-circle-fill btn-check-label"></i>
-                                    Penis
+                                    <?= __("Penis") ?>
                                 </label>
                             </li>
                             <li class="nav-item">
                                 <input id="filter-vulva" type="checkbox" name="body-parts[]" value="vulva" class="btn-check"<?= (in_comma_list("vulva", $selectedBodyParts) ? " checked" : "") ?>>
                                 <label for="filter-vulva" class="nav-link rounded-pill">
                                     <i class="zi-close-circle-fill btn-check-label"></i>
-                                    Vulva
+                                    <?= __("Vulva") ?>
                                 </label>
                             </li>
                             <li class="nav-item">
                                 <input id="filter-breast" type="checkbox" name="body-parts[]" value="breast" class="btn-check"<?= (in_comma_list("breast", $selectedBodyParts) ? " checked" : "") ?>>
                                 <label for="filter-breast" class="nav-link rounded-pill">
                                     <i class="zi-close-circle-fill btn-check-label"></i>
-                                    Breast
+                                    <?= __("Breast") ?>
                                 </label>
                             </li>
                             <li class="nav-item">
                                 <input id="filter-buttocks" type="checkbox" name="body-parts[]" value="buttocks" class="btn-check"<?= (in_comma_list("buttocks", $selectedBodyParts) ? " checked" : "") ?>>
                                 <label for="filter-buttocks" class="nav-link rounded-pill">
                                     <i class="zi-close-circle-fill btn-check-label"></i>
-                                    Buttocks
+                                    <?= __("Buttocks") ?>
                                 </label>
                             </li>
                         </ul>
@@ -217,7 +218,7 @@ $totalSelectedFilters = $bodyPartCount + $ageCount;
                     <h3 class="accordion-header position-relative">
                         <button class="accordion-button fs-5" type="button" data-bs-toggle="collapse" data-bs-target="#offcanvas-accordion-filter-age-collapse" aria-expanded="true" aria-controls="offcanvas-accordion-filter-age-collapse">
                   <span class="d-block" style="margin-right: 196px;">
-                    Age
+                    <?= __("Age") ?>
                   </span>
                         </button>
 
@@ -791,10 +792,10 @@ $totalSelectedFilters = $bodyPartCount + $ageCount;
         <!-- Offcanvas footer -->
         <div class="offcanvas-header flex-column gap-2">
             <button type="reset" class="btn btn-lg btn-link w-100">
-                Reset all filters
+                <?= __("Reset all filters") ?>
             </button>
             <button type="submit" class="btn btn-lg btn-primary w-100 rounded-pill">
-                Apply filters
+                <?= __("Apply filters") ?>
             </button>
         </div>
     </form>

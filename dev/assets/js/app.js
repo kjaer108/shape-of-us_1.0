@@ -297,6 +297,20 @@
   }
 
   /**
+   * Fetch full image details from server
+   * @param {string} imageId - ID of the clicked image
+   * @returns {Promise} - Promise resolving to image details
+   */
+  async function fetchImageDetails(imageId) {
+    const response = await fetch(`${apiImageUrl}?imageId=${encodeURIComponent(imageId)}`);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch image details for ID: ${imageId}`);
+    }
+    return await response.json();
+  }
+
+
+  /**
    * Fetch images from the server using POST
    * @param {number} limit - Number of images to fetch
    * @param {Object} filters - Filter criteria to apply
@@ -640,6 +654,13 @@
     viewer.addOnceHandler('animation-finish', function () {
       loadVisibleImages(viewer, filters);
     });
+
+    // Hide the offcanvas after applying filters
+    const offcanvasEl = document.getElementById('offcanvas-filters');
+    const bsOffcanvas = bootstrap.Offcanvas.getInstance(offcanvasEl);
+    if (bsOffcanvas) {
+      bsOffcanvas.hide();
+    }
   }
 
   /**
