@@ -1,4 +1,44 @@
 <?php
+
+$current_anatomy = [
+    "anatomy-female-vulva" => [
+        "label" => "Vulva",
+        "description" => null
+    ],
+    "anatomy-male-penis" => [
+        "label" => "Penis",
+        "description" => null
+    ],
+    "anatomy-mtf-1" => [
+        "label" => "Post-surgery Transgender Vulva",
+        "description" => "Surgically constructed vulva after gender-affirming surgery."
+    ],
+    "anatomy-mtf-2" => [
+        "label" => "Hormone Therapy / No Surgery",
+        "description" => "Individuals undergoing hormone therapy but have not had surgery."
+        ],
+    "anatomy-mtf-3" => [
+        "label" => "Orchiectomy (Testicle Removal)",
+        "description" => "Surgical removal of testicles without full vaginoplasty."
+    ],
+    "anatomy-mtf-4" => [
+        "label" => "Chest with Breasts",
+        "description" => "Developed breasts from hormone therapy or augmentation."
+    ],
+    "anatomy-ftm-1" => [
+        "label" => "Post-surgery Transgender Penis",
+        "description" => "Surgically constructed penis after gender-affirming surgery."
+    ],
+    "anatomy-ftm-2" => [
+        "label" => "Hormone Therapy / No Surgery",
+        "description" => "Individuals undergoing hormone therapy but have not had surgery."
+    ],
+    "anatomy-ftm-3" => [
+        "label" => "Flat Chest (Post-Surgery)",
+        "description" => "Surgically flattened chest after top surgery."
+    ],
+];
+
 // All countries
 $country_list = array(
     NULL => '',

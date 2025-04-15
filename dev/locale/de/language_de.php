@@ -1,4 +1,44 @@
 <?php
+
+$current_anatomy = [
+    "anatomy-female-vulva" => [
+        "label" => "Vulva",
+        "description" => null
+    ],
+    "anatomy-male-penis" => [
+        "label" => "Penis",
+        "description" => null
+    ],
+    "anatomy-mtf-1" => [
+        "label" => "Transgender-Vulva nach Operation",
+        "description" => "Chirurgisch konstruierte Vulva nach geschlechtsangleichender Operation."
+    ],
+    "anatomy-mtf-2" => [
+        "label" => "Hormontherapie / Keine Operation",
+        "description" => "Personen in Hormontherapie ohne Operation."
+    ],
+    "anatomy-mtf-3" => [
+        "label" => "Orchiektomie (Entfernung der Hoden)",
+        "description" => "Chirurgische Entfernung der Hoden ohne vollständige Vaginoplastik."
+    ],
+    "anatomy-mtf-4" => [
+        "label" => "Brust mit Brüsten",
+        "description" => "Durch Hormontherapie oder Brustvergrößerung entwickelte Brüste."
+    ],
+    "anatomy-ftm-1" => [
+        "label" => "Transgender-Penis nach Operation",
+        "description" => "Chirurgisch konstruierter Penis nach geschlechtsangleichender Operation."
+    ],
+    "anatomy-ftm-2" => [
+        "label" => "Hormontherapie / Keine Operation",
+        "description" => "Personen in Hormontherapie ohne Operation."
+    ],
+    "anatomy-ftm-3" => [
+        "label" => "Flache Brust (nach Operation)",
+        "description" => "Chirurgisch abgeflachte Brust nach Top-Surgery."
+    ],
+];
+
 // All countries
 $country_list = array(
     NULL => '',

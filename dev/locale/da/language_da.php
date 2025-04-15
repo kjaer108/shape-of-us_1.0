@@ -1,4 +1,44 @@
 <?php
+
+$current_anatomy = [
+    "anatomy-female-vulva" => [
+        "label" => "Vulva",
+        "description" => null
+    ],
+    "anatomy-male-penis" => [
+        "label" => "Penis",
+        "description" => null
+    ],
+    "anatomy-mtf-1" => [
+        "label" => "Transkønnet vulva (efter operation)",
+        "description" => "Kirurgisk konstrueret vulva efter kønsbekræftende operation."
+    ],
+    "anatomy-mtf-2" => [
+        "label" => "Hormonbehandling / Ingen operation",
+        "description" => "Personer i hormonbehandling uden operation."
+    ],
+    "anatomy-mtf-3" => [
+        "label" => "Orkiektomi (fjernelse af testikler)",
+        "description" => "Fjernelse af testikler uden fuld vaginoplastik."
+    ],
+    "anatomy-mtf-4" => [
+        "label" => "Brystkasse med bryster",
+        "description" => "Udviklede bryster via hormonbehandling eller brystforstørrelse."
+    ],
+    "anatomy-ftm-1" => [
+        "label" => "Transkønnet penis (efter operation)",
+        "description" => "Kirurgisk konstrueret penis efter kønsbekræftende operation."
+    ],
+    "anatomy-ftm-2" => [
+        "label" => "Hormonbehandling / Ingen operation",
+        "description" => "Personer i hormonbehandling uden operation."
+    ],
+    "anatomy-ftm-3" => [
+        "label" => "Flad brystkasse (efter operation)",
+        "description" => "Kirurgisk fladet brystkasse efter topoperation."
+    ],
+];
+
 // All countries
 $country_list = array(
     NULL => '',

@@ -1,4 +1,44 @@
 <?php
+
+$current_anatomy = [
+    "anatomy-female-vulva" => [
+        "label" => "Vulve",
+        "description" => null
+    ],
+    "anatomy-male-penis" => [
+        "label" => "Pénis",
+        "description" => null
+    ],
+    "anatomy-mtf-1" => [
+        "label" => "Vulve transgenre (post-opératoire)",
+        "description" => "Vulve construite chirurgicalement après une chirurgie d’affirmation de genre."
+    ],
+    "anatomy-mtf-2" => [
+        "label" => "Traitement hormonal / Sans chirurgie",
+        "description" => "Personnes en traitement hormonal sans chirurgie."
+    ],
+    "anatomy-mtf-3" => [
+        "label" => "Orchidectomie (ablation des testicules)",
+        "description" => "Ablation chirurgicale des testicules sans vaginoplastie complète."
+    ],
+    "anatomy-mtf-4" => [
+        "label" => "Poitrine avec seins",
+        "description" => "Seins développés par traitement hormonal ou augmentation mammaire."
+    ],
+    "anatomy-ftm-1" => [
+        "label" => "Pénis transgenre (post-opératoire)",
+        "description" => "Pénis construit chirurgicalement après une chirurgie d’affirmation de genre."
+    ],
+    "anatomy-ftm-2" => [
+        "label" => "Traitement hormonal / Sans chirurgie",
+        "description" => "Personnes en traitement hormonal sans chirurgie."
+    ],
+    "anatomy-ftm-3" => [
+        "label" => "Poitrine plate (post-opératoire)",
+        "description" => "Poitrine aplatie chirurgicalement après une chirurgie supérieure."
+    ],
+];
+
 // All countries
 $country_list = array(
     NULL => '',

@@ -40,6 +40,31 @@ $imageData = pdo_get_row($pdo, $sql, $params);
 $url = "https://shapeofus.eu/files/{$images[$dbCol]}";
 //zdebug($url);
 
+
+// Prepare data for Current Anatomy
+$anatomyValues = [];
+
+if (!empty($imageData["anatomy"])) {
+    // Handle encoded JSON array input
+    if (is_string($imageData["anatomy"])) {
+        $decoded = json_decode(html_entity_decode($imageData["anatomy"]), true);
+        $imageData["anatomy"] = is_array($decoded) ? $decoded : [];
+    }
+
+    // Build values from anatomy array
+    if (is_array($imageData["anatomy"])) {
+        foreach ($imageData["anatomy"] as $anatomyItem) {
+            $key = trim($anatomyItem); // Safety trimming
+            $label = $current_anatomy[$key]["label"] ?? $key; // Fallback to key if label not found
+
+            $anatomyValues[] = [
+                'display_title' => $label,
+            ];
+        }
+    }
+}
+
+
 $image = [
     'id' => $_POST['imageId'] ?? 0,
     'alt' => 'Test image',
@@ -75,14 +100,7 @@ $image = [
                 ],
                 [
                     'title' => 'Current Anatomy',
-                    'values' => [
-                        [
-                            'display_title' => 'Male to Female (MtF)',
-                        ],
-                        [
-                            'display_title' => 'Post-surgery Transgender Vulva',
-                        ],
-                    ],
+                    'values' => $anatomyValues
                 ],
             ],
         ],

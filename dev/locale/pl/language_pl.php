@@ -1,4 +1,44 @@
 <?php
+
+$current_anatomy = [
+    "anatomy-female-vulva" => [
+        "label" => "Srom",
+        "description" => null
+    ],
+    "anatomy-male-penis" => [
+        "label" => "Penis",
+        "description" => null
+    ],
+    "anatomy-mtf-1" => [
+        "label" => "Srom transpłciowy (po operacji)",
+        "description" => "Chirurgicznie skonstruowany srom po operacji uzgodnienia płci."
+    ],
+    "anatomy-mtf-2" => [
+        "label" => "Hormony / Bez operacji",
+        "description" => "Osoby w trakcie terapii hormonalnej, które nie przeszły operacji."
+    ],
+    "anatomy-mtf-3" => [
+        "label" => "Orchidektomia (usunięcie jąder)",
+        "description" => "Chirurgiczne usunięcie jąder bez pełnej waginoplastyki."
+    ],
+    "anatomy-mtf-4" => [
+        "label" => "Klatka piersiowa z piersiami",
+        "description" => "Piersi rozwinięte dzięki hormonom lub operacji powiększenia piersi."
+    ],
+    "anatomy-ftm-1" => [
+        "label" => "Penis transpłciowy (po operacji)",
+        "description" => "Chirurgicznie skonstruowany penis po operacji uzgodnienia płci."
+    ],
+    "anatomy-ftm-2" => [
+        "label" => "Hormony / Bez operacji",
+        "description" => "Osoby w trakcie terapii hormonalnej, które nie przeszły operacji."
+    ],
+    "anatomy-ftm-3" => [
+        "label" => "Płaska klatka piersiowa (po operacji)",
+        "description" => "Klatka piersiowa chirurgicznie spłaszczona po mastektomii."
+    ],
+];
+
 // All countries
 $country_list = array(
     NULL => '',

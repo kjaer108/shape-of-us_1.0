@@ -26,6 +26,7 @@ require_once __DIR__."/lang.php";
 require_once __DIR__."/../classes/DeepL.php";
 $DeepL = new DeepL(getLanguage(),false);
 $selectedLang = getLanguage();
+//$selectedLang = "en"; // TODO: Remove this line when the language selection is implemented
 
 // Include arrays with translations
 require_once __DIR__."/../../locale/".$selectedLang."/language_".$selectedLang.".php";

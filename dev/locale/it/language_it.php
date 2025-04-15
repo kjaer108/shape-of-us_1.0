@@ -1,4 +1,44 @@
 <?php
+
+$current_anatomy = [
+    "anatomy-female-vulva" => [
+        "label" => "Vulva",
+        "description" => null
+    ],
+    "anatomy-male-penis" => [
+        "label" => "Pene",
+        "description" => null
+    ],
+    "anatomy-mtf-1" => [
+        "label" => "Vulva transgender (post-operatoria)",
+        "description" => "Vulva costruita chirurgicamente dopo intervento di affermazione di genere."
+    ],
+    "anatomy-mtf-2" => [
+        "label" => "Terapia ormonale / Nessun intervento",
+        "description" => "Persone in terapia ormonale che non hanno subito interventi chirurgici."
+    ],
+    "anatomy-mtf-3" => [
+        "label" => "Orchiectomia (rimozione dei testicoli)",
+        "description" => "Rimozione chirurgica dei testicoli senza vaginoplastica completa."
+    ],
+    "anatomy-mtf-4" => [
+        "label" => "Torace con seni",
+        "description" => "Seni sviluppati tramite terapia ormonale o intervento di aumento."
+    ],
+    "anatomy-ftm-1" => [
+        "label" => "Pene transgender (post-operatorio)",
+        "description" => "Pene costruito chirurgicamente dopo intervento di affermazione di genere."
+    ],
+    "anatomy-ftm-2" => [
+        "label" => "Terapia ormonale / Nessun intervento",
+        "description" => "Persone in terapia ormonale che non hanno subito interventi chirurgici."
+    ],
+    "anatomy-ftm-3" => [
+        "label" => "Torace piatto (post-operatorio)",
+        "description" => "Torace appiattito chirurgicamente dopo top surgery."
+    ],
+];
+
 // All countries
 $country_list = array(
     NULL => '',
