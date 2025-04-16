@@ -39,6 +39,165 @@ $current_anatomy = [
     ],
 ];
 
+$additional_information = [
+    "chest-hair-natural" => [
+        "label" => "Natürlich",
+        "description" => "Die Haare sind völlig unberührt und wachsen frei."
+    ],
+    "chest-hair-trimmed" => [
+        "label" => "Gestutzt",
+        "description" => "Die Haare wurden bewusst gekürzt oder geformt (z. B. mit Schere oder Trimmer), aber nicht vollständig entfernt."
+    ],
+    "chest-hair-hairless" => [
+        "label" => "Haarlos",
+        "description" => "Der Bereich ist vollständig oder nahezu haarlos – z. B. durch Rasur, Wachs, Laser oder Ähnliches. Leichter Stoppelwuchs zählt ebenfalls als haarlos."
+    ],
+    "genital-hair-above-natural" => [
+        "label" => "Natürlich",
+        "description" => "Die Haare sind völlig unberührt und wachsen frei."
+    ],
+    "genital-hair-above-trimmed" => [
+        "label" => "Gestutzt",
+        "description" => "Die Haare wurden bewusst gekürzt oder geformt (z. B. mit Schere oder Trimmer), aber nicht vollständig entfernt."
+    ],
+    "genital-hair-above-hairless" => [
+        "label" => "Haarlos",
+        "description" => "Der Bereich ist vollständig oder nahezu haarlos – z. B. durch Rasur, Wachs, Laser oder Ähnliches. Leichter Stoppelwuchs zählt ebenfalls als haarlos."
+    ],
+    "genital-hair-natural" => [
+        "label" => "Natürlich",
+        "description" => "Die Haare sind völlig unberührt und wachsen frei."
+    ],
+    "genital-hair-trimmed" => [
+        "label" => "Gestutzt",
+        "description" => "Die Haare wurden bewusst gekürzt oder geformt (z. B. mit Schere oder Trimmer), aber nicht vollständig entfernt."
+    ],
+    "genital-hair-hairless" => [
+        "label" => "Haarlos",
+        "description" => "Der Bereich ist vollständig oder nahezu haarlos – z. B. durch Rasur, Wachs, Laser oder Ähnliches. Leichter Stoppelwuchs zählt ebenfalls als haarlos."
+    ],
+    "buttocks-hair-natural" => [
+        "label" => "Natürlich",
+        "description" => "Die Haare sind völlig unberührt und wachsen frei."
+    ],
+    "buttocks-hair-trimmed" => [
+        "label" => "Gestutzt",
+        "description" => "Die Haare wurden bewusst gekürzt oder geformt (z. B. mit Schere oder Trimmer), aber nicht vollständig entfernt."
+    ],
+    "buttocks-hair-hairless" => [
+        "label" => "Haarlos",
+        "description" => "Der Bereich ist vollständig oder nahezu haarlos – z. B. durch Rasur, Wachs, Laser oder Ähnliches. Leichter Stoppelwuchs zählt ebenfalls als haarlos."
+    ],
+    "marks-none" => [
+        "label" => "Keine Dehnungsstreifen oder Narben",
+        "description" => null
+    ],
+    "marks-stretch" => [
+        "label" => "Dehnungsstreifen",
+        "description" => null
+    ],
+    "marks-scars" => [
+        "label" => "Narben",
+        "description" => null
+    ],
+    "pregnancy-true" => [
+        "label" => "Ja",
+        "description" => null
+    ],
+    "pregnancy-false" => [
+        "label" => "Nein",
+        "description" => null
+    ],
+    "vaginal-birth-true" => [
+        "label" => "Ja",
+        "description" => null
+    ],
+    "vaginal-birth-false" => [
+        "label" => "Nein",
+        "description" => null
+    ],
+    "c-section-true" => [
+        "label" => "Ja",
+        "description" => null
+    ],
+    "c-section-false" => [
+        "label" => "Nein",
+        "description" => null
+    ],
+    "breastfeeding-current" => [
+        "label" => "Aktuell",
+        "description" => null
+    ],
+    "breastfeeding-past" => [
+        "label" => "Früher",
+        "description" => null
+    ],
+    "breastfeeding-false" => [
+        "label" => "Nein",
+        "description" => null
+    ],
+    "piercings-false" => [
+        "label" => "Keine Piercings",
+        "description" => null
+    ],
+    "piercings-nipple" => [
+        "label" => "Brustwarze",
+        "description" => null
+    ],
+    "piercings-genital" => [
+        "label" => "Genitalbereich",
+        "description" => null
+    ],
+    "piercings-buttocks" => [
+        "label" => "Gesäß",
+        "description" => null
+    ],
+    "piercings-other" => [
+        "label" => "Andere",
+        "description" => null
+    ],
+    "tattoos-false" => [
+        "label" => "Keine Tattoos",
+        "description" => null
+    ],
+    "tattoos-breasts" => [
+        "label" => "Tätowierungen auf der Brust",
+        "description" => null
+    ],
+    "tattoos-vulva" => [
+        "label" => "Tätowierungen an der Vulva",
+        "description" => null
+    ],
+    "tattoos-penis" => [
+        "label" => "Tätowierungen am Penis",
+        "description" => null
+    ],
+    "tattoos-buttocks" => [
+        "label" => "Tätowierungen am Gesäß",
+        "description" => null
+    ],
+    "tattoos-other" => [
+        "label" => "Andere Tattoos",
+        "description" => null
+    ],
+    "hormonal-influence-true" => [
+        "label" => "Ja",
+        "description" => null
+    ],
+    "hormonal-influence-false" => [
+        "label" => "Nein",
+        "description" => null
+    ],
+    "menstrual-cycle-true" => [
+        "label" => "Ja",
+        "description" => null
+    ],
+    "menstrual-cycle-false" => [
+        "label" => "Nein",
+        "description" => null
+    ],
+];
+
 // All countries
 $country_list = array(
     NULL => '',

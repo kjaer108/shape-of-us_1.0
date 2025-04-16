@@ -39,6 +39,165 @@ $current_anatomy = [
     ],
 ];
 
+$additional_information = [
+    "chest-hair-natural" => [
+        "label" => "Naturalne",
+        "description" => "Włosy są całkowicie naturalne i rosną swobodnie."
+    ],
+    "chest-hair-trimmed" => [
+        "label" => "Przycięte",
+        "description" => "Włosy zostały celowo przycięte lub uformowane (np. nożyczkami lub trymerem), ale nie całkowicie usunięte."
+    ],
+    "chest-hair-hairless" => [
+        "label" => "Bez owłosienia",
+        "description" => "Obszar jest całkowicie lub prawie całkowicie pozbawiony owłosienia – np. po goleniu, depilacji woskiem, laserze itp. Lekki zarost nadal uważa się za brak owłosienia."
+    ],
+    "genital-hair-above-natural" => [
+        "label" => "Naturalne",
+        "description" => "Włosy są całkowicie naturalne i rosną swobodnie."
+    ],
+    "genital-hair-above-trimmed" => [
+        "label" => "Przycięte",
+        "description" => "Włosy zostały celowo przycięte lub uformowane (np. nożyczkami lub trymerem), ale nie całkowicie usunięte."
+    ],
+    "genital-hair-above-hairless" => [
+        "label" => "Bez owłosienia",
+        "description" => "Obszar jest całkowicie lub prawie całkowicie pozbawiony owłosienia – np. po goleniu, depilacji woskiem, laserze itp. Lekki zarost nadal uważa się za brak owłosienia."
+    ],
+    "genital-hair-natural" => [
+        "label" => "Naturalne",
+        "description" => "Włosy są całkowicie naturalne i rosną swobodnie."
+    ],
+    "genital-hair-trimmed" => [
+        "label" => "Przycięte",
+        "description" => "Włosy zostały celowo przycięte lub uformowane (np. nożyczkami lub trymerem), ale nie całkowicie usunięte."
+    ],
+    "genital-hair-hairless" => [
+        "label" => "Bez owłosienia",
+        "description" => "Obszar jest całkowicie lub prawie całkowicie pozbawiony owłosienia – np. po goleniu, depilacji woskiem, laserze itp. Lekki zarost nadal uważa się za brak owłosienia."
+    ],
+    "buttocks-hair-natural" => [
+        "label" => "Naturalne",
+        "description" => "Włosy są całkowicie naturalne i rosną swobodnie."
+    ],
+    "buttocks-hair-trimmed" => [
+        "label" => "Przycięte",
+        "description" => "Włosy zostały celowo przycięte lub uformowane (np. nożyczkami lub trymerem), ale nie całkowicie usunięte."
+    ],
+    "buttocks-hair-hairless" => [
+        "label" => "Bez owłosienia",
+        "description" => "Obszar jest całkowicie lub prawie całkowicie pozbawiony owłosienia – np. po goleniu, depilacji woskiem, laserze itp. Lekki zarost nadal uważa się za brak owłosienia."
+    ],
+    "marks-none" => [
+        "label" => "Brak rozstępów lub blizn",
+        "description" => null
+    ],
+    "marks-stretch" => [
+        "label" => "Rozstępy",
+        "description" => null
+    ],
+    "marks-scars" => [
+        "label" => "Blizny",
+        "description" => null
+    ],
+    "pregnancy-true" => [
+        "label" => "Tak",
+        "description" => null
+    ],
+    "pregnancy-false" => [
+        "label" => "Nie",
+        "description" => null
+    ],
+    "vaginal-birth-true" => [
+        "label" => "Tak",
+        "description" => null
+    ],
+    "vaginal-birth-false" => [
+        "label" => "Nie",
+        "description" => null
+    ],
+    "c-section-true" => [
+        "label" => "Tak",
+        "description" => null
+    ],
+    "c-section-false" => [
+        "label" => "Nie",
+        "description" => null
+    ],
+    "breastfeeding-current" => [
+        "label" => "Obecnie",
+        "description" => null
+    ],
+    "breastfeeding-past" => [
+        "label" => "W przeszłości",
+        "description" => null
+    ],
+    "breastfeeding-false" => [
+        "label" => "Nie",
+        "description" => null
+    ],
+    "piercings-false" => [
+        "label" => "Brak piercingu",
+        "description" => null
+    ],
+    "piercings-nipple" => [
+        "label" => "Brodawka",
+        "description" => null
+    ],
+    "piercings-genital" => [
+        "label" => "Genitalia",
+        "description" => null
+    ],
+    "piercings-buttocks" => [
+        "label" => "Pośladki",
+        "description" => null
+    ],
+    "piercings-other" => [
+        "label" => "Inne",
+        "description" => null
+    ],
+    "tattoos-false" => [
+        "label" => "Brak tatuaży",
+        "description" => null
+    ],
+    "tattoos-breasts" => [
+        "label" => "Tatuaże na piersiach",
+        "description" => null
+    ],
+    "tattoos-vulva" => [
+        "label" => "Tatuaże na sromie",
+        "description" => null
+    ],
+    "tattoos-penis" => [
+        "label" => "Tatuaże na penisie",
+        "description" => null
+    ],
+    "tattoos-buttocks" => [
+        "label" => "Tatuaże na pośladkach",
+        "description" => null
+    ],
+    "tattoos-other" => [
+        "label" => "Inne tatuaże",
+        "description" => null
+    ],
+    "hormonal-influence-true" => [
+        "label" => "Tak",
+        "description" => null
+    ],
+    "hormonal-influence-false" => [
+        "label" => "Nie",
+        "description" => null
+    ],
+    "menstrual-cycle-true" => [
+        "label" => "Tak",
+        "description" => null
+    ],
+    "menstrual-cycle-false" => [
+        "label" => "Nie",
+        "description" => null
+    ],
+];
+
 // All countries
 $country_list = array(
     NULL => '',

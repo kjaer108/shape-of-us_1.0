@@ -47,6 +47,6 @@ return [
     ],
     'deepL' => [
         'apiKey' => getenv('DEEPL_API_KEY'),
-        'endpoint' => 'https://api-free.deepl.com/'
+        'endpoint' => 'https://api.deepl.com/'
     ]
 ];

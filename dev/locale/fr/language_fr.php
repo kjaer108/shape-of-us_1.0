@@ -39,6 +39,165 @@ $current_anatomy = [
     ],
 ];
 
+$additional_information = [
+    "chest-hair-natural" => [
+        "label" => "Naturel",
+        "description" => "Les poils sont complètement naturels et poussent librement."
+    ],
+    "chest-hair-trimmed" => [
+        "label" => "Taillé",
+        "description" => "Les poils sont intentionnellement raccourcis ou modelés (par exemple avec des ciseaux ou une tondeuse), mais pas complètement enlevés."
+    ],
+    "chest-hair-hairless" => [
+        "label" => "Imberbe",
+        "description" => "La zone est complètement ou presque sans poils – par exemple après rasage, cire, laser ou autre. Un léger duvet est toujours considéré comme imberbe."
+    ],
+    "genital-hair-above-natural" => [
+        "label" => "Naturel",
+        "description" => "Les poils sont complètement naturels et poussent librement."
+    ],
+    "genital-hair-above-trimmed" => [
+        "label" => "Taillé",
+        "description" => "Les poils sont intentionnellement raccourcis ou modelés (par exemple avec des ciseaux ou une tondeuse), mais pas complètement enlevés."
+    ],
+    "genital-hair-above-hairless" => [
+        "label" => "Imberbe",
+        "description" => "La zone est complètement ou presque sans poils – par exemple après rasage, cire, laser ou autre. Un léger duvet est toujours considéré comme imberbe."
+    ],
+    "genital-hair-natural" => [
+        "label" => "Naturel",
+        "description" => "Les poils sont complètement naturels et poussent librement."
+    ],
+    "genital-hair-trimmed" => [
+        "label" => "Taillé",
+        "description" => "Les poils sont intentionnellement raccourcis ou modelés (par exemple avec des ciseaux ou une tondeuse), mais pas complètement enlevés."
+    ],
+    "genital-hair-hairless" => [
+        "label" => "Imberbe",
+        "description" => "La zone est complètement ou presque sans poils – par exemple après rasage, cire, laser ou autre. Un léger duvet est toujours considéré comme imberbe."
+    ],
+    "buttocks-hair-natural" => [
+        "label" => "Naturel",
+        "description" => "Les poils sont complètement naturels et poussent librement."
+    ],
+    "buttocks-hair-trimmed" => [
+        "label" => "Taillé",
+        "description" => "Les poils sont intentionnellement raccourcis ou modelés (par exemple avec des ciseaux ou une tondeuse), mais pas complètement enlevés."
+    ],
+    "buttocks-hair-hairless" => [
+        "label" => "Imberbe",
+        "description" => "La zone est complètement ou presque sans poils – par exemple après rasage, cire, laser ou autre. Un léger duvet est toujours considéré comme imberbe."
+    ],
+    "marks-none" => [
+        "label" => "Pas de vergetures ni de cicatrices",
+        "description" => null
+    ],
+    "marks-stretch" => [
+        "label" => "Vergetures",
+        "description" => null
+    ],
+    "marks-scars" => [
+        "label" => "Cicatrices",
+        "description" => null
+    ],
+    "pregnancy-true" => [
+        "label" => "Oui",
+        "description" => null
+    ],
+    "pregnancy-false" => [
+        "label" => "Non",
+        "description" => null
+    ],
+    "vaginal-birth-true" => [
+        "label" => "Oui",
+        "description" => null
+    ],
+    "vaginal-birth-false" => [
+        "label" => "Non",
+        "description" => null
+    ],
+    "c-section-true" => [
+        "label" => "Oui",
+        "description" => null
+    ],
+    "c-section-false" => [
+        "label" => "Non",
+        "description" => null
+    ],
+    "breastfeeding-current" => [
+        "label" => "Actuellement",
+        "description" => null
+    ],
+    "breastfeeding-past" => [
+        "label" => "Dans le passé",
+        "description" => null
+    ],
+    "breastfeeding-false" => [
+        "label" => "Non",
+        "description" => null
+    ],
+    "piercings-false" => [
+        "label" => "Aucun piercing",
+        "description" => null
+    ],
+    "piercings-nipple" => [
+        "label" => "Mamelon",
+        "description" => null
+    ],
+    "piercings-genital" => [
+        "label" => "Génital",
+        "description" => null
+    ],
+    "piercings-buttocks" => [
+        "label" => "Fesses",
+        "description" => null
+    ],
+    "piercings-other" => [
+        "label" => "Autre",
+        "description" => null
+    ],
+    "tattoos-false" => [
+        "label" => "Aucun tatouage",
+        "description" => null
+    ],
+    "tattoos-breasts" => [
+        "label" => "Tatouages sur la poitrine",
+        "description" => null
+    ],
+    "tattoos-vulva" => [
+        "label" => "Tatouages sur la vulve",
+        "description" => null
+    ],
+    "tattoos-penis" => [
+        "label" => "Tatouages sur le pénis",
+        "description" => null
+    ],
+    "tattoos-buttocks" => [
+        "label" => "Tatouages sur les fesses",
+        "description" => null
+    ],
+    "tattoos-other" => [
+        "label" => "Autres tatouages",
+        "description" => null
+    ],
+    "hormonal-influence-true" => [
+        "label" => "Oui",
+        "description" => null
+    ],
+    "hormonal-influence-false" => [
+        "label" => "Non",
+        "description" => null
+    ],
+    "menstrual-cycle-true" => [
+        "label" => "Oui",
+        "description" => null
+    ],
+    "menstrual-cycle-false" => [
+        "label" => "Non",
+        "description" => null
+    ],
+];
+
 // All countries
 $country_list = array(
     NULL => '',

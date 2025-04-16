@@ -39,6 +39,6 @@ function __($key) {
     global $DeepL;
     global $page;
 
-    return $DeepL->gettext($key, $page["sourcelang"]);
+    return $DeepL->gettext($key, 'en');
 }
 ?>

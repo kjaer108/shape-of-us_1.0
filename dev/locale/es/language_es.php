@@ -39,6 +39,165 @@ $current_anatomy = [
     ],
 ];
 
+$additional_information = [
+    "chest-hair-natural" => [
+        "label" => "Natural",
+        "description" => "El vello está completamente intacto y crece libremente."
+    ],
+    "chest-hair-trimmed" => [
+        "label" => "Recortado",
+        "description" => "El vello ha sido recortado o moldeado intencionadamente (por ejemplo, con tijeras o recortadora), pero no eliminado del todo."
+    ],
+    "chest-hair-hairless" => [
+        "label" => "Sin vello",
+        "description" => "La zona está completamente o casi sin vello, incluyendo afeitado, cera, láser o similar. Un poco de vello incipiente aún cuenta como sin vello."
+    ],
+    "genital-hair-above-natural" => [
+        "label" => "Natural",
+        "description" => "El vello está completamente intacto y crece libremente."
+    ],
+    "genital-hair-above-trimmed" => [
+        "label" => "Recortado",
+        "description" => "El vello ha sido recortado o moldeado intencionadamente (por ejemplo, con tijeras o recortadora), pero no eliminado del todo."
+    ],
+    "genital-hair-above-hairless" => [
+        "label" => "Sin vello",
+        "description" => "La zona está completamente o casi sin vello, incluyendo afeitado, cera, láser o similar. Un poco de vello incipiente aún cuenta como sin vello."
+    ],
+    "genital-hair-natural" => [
+        "label" => "Natural",
+        "description" => "El vello está completamente intacto y crece libremente."
+    ],
+    "genital-hair-trimmed" => [
+        "label" => "Recortado",
+        "description" => "El vello ha sido recortado o moldeado intencionadamente (por ejemplo, con tijeras o recortadora), pero no eliminado del todo."
+    ],
+    "genital-hair-hairless" => [
+        "label" => "Sin vello",
+        "description" => "La zona está completamente o casi sin vello, incluyendo afeitado, cera, láser o similar. Un poco de vello incipiente aún cuenta como sin vello."
+    ],
+    "buttocks-hair-natural" => [
+        "label" => "Natural",
+        "description" => "El vello está completamente intacto y crece libremente."
+    ],
+    "buttocks-hair-trimmed" => [
+        "label" => "Recortado",
+        "description" => "El vello ha sido recortado o moldeado intencionadamente (por ejemplo, con tijeras o recortadora), pero no eliminado del todo."
+    ],
+    "buttocks-hair-hairless" => [
+        "label" => "Sin vello",
+        "description" => "La zona está completamente o casi sin vello, incluyendo afeitado, cera, láser o similar. Un poco de vello incipiente aún cuenta como sin vello."
+    ],
+    "marks-none" => [
+        "label" => "Sin estrías ni cicatrices",
+        "description" => null
+    ],
+    "marks-stretch" => [
+        "label" => "Estrías",
+        "description" => null
+    ],
+    "marks-scars" => [
+        "label" => "Cicatrices",
+        "description" => null
+    ],
+    "pregnancy-true" => [
+        "label" => "Sí",
+        "description" => null
+    ],
+    "pregnancy-false" => [
+        "label" => "No",
+        "description" => null
+    ],
+    "vaginal-birth-true" => [
+        "label" => "Sí",
+        "description" => null
+    ],
+    "vaginal-birth-false" => [
+        "label" => "No",
+        "description" => null
+    ],
+    "c-section-true" => [
+        "label" => "Sí",
+        "description" => null
+    ],
+    "c-section-false" => [
+        "label" => "No",
+        "description" => null
+    ],
+    "breastfeeding-current" => [
+        "label" => "Actualmente",
+        "description" => null
+    ],
+    "breastfeeding-past" => [
+        "label" => "En el pasado",
+        "description" => null
+    ],
+    "breastfeeding-false" => [
+        "label" => "No",
+        "description" => null
+    ],
+    "piercings-false" => [
+        "label" => "Sin piercings",
+        "description" => null
+    ],
+    "piercings-nipple" => [
+        "label" => "Pezón",
+        "description" => null
+    ],
+    "piercings-genital" => [
+        "label" => "Genitales",
+        "description" => null
+    ],
+    "piercings-buttocks" => [
+        "label" => "Glúteos",
+        "description" => null
+    ],
+    "piercings-other" => [
+        "label" => "Otro",
+        "description" => null
+    ],
+    "tattoos-false" => [
+        "label" => "Sin tatuajes",
+        "description" => null
+    ],
+    "tattoos-breasts" => [
+        "label" => "Tatuajes en los senos",
+        "description" => null
+    ],
+    "tattoos-vulva" => [
+        "label" => "Tatuajes en la vulva",
+        "description" => null
+    ],
+    "tattoos-penis" => [
+        "label" => "Tatuajes en el pene",
+        "description" => null
+    ],
+    "tattoos-buttocks" => [
+        "label" => "Tatuajes en los glúteos",
+        "description" => null
+    ],
+    "tattoos-other" => [
+        "label" => "Otros tatuajes",
+        "description" => null
+    ],
+    "hormonal-influence-true" => [
+        "label" => "Sí",
+        "description" => null
+    ],
+    "hormonal-influence-false" => [
+        "label" => "No",
+        "description" => null
+    ],
+    "menstrual-cycle-true" => [
+        "label" => "Sí",
+        "description" => null
+    ],
+    "menstrual-cycle-false" => [
+        "label" => "No",
+        "description" => null
+    ],
+];
+
 // All countries
 $country_list = array(
     NULL => '',

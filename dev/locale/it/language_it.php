@@ -39,6 +39,165 @@ $current_anatomy = [
     ],
 ];
 
+$additional_information = [
+    "chest-hair-natural" => [
+        "label" => "Naturale",
+        "description" => "I peli sono completamente naturali e crescono liberamente."
+    ],
+    "chest-hair-trimmed" => [
+        "label" => "Rifinito",
+        "description" => "I peli sono stati intenzionalmente accorciati o modellati (ad es. con forbici o regolabarba), ma non completamente rimossi."
+    ],
+    "chest-hair-hairless" => [
+        "label" => "Senza peli",
+        "description" => "L'area è completamente o quasi priva di peli – ad esempio con rasatura, ceretta, laser o simili. Una leggera ricrescita conta comunque come senza peli."
+    ],
+    "genital-hair-above-natural" => [
+        "label" => "Naturale",
+        "description" => "I peli sono completamente naturali e crescono liberamente."
+    ],
+    "genital-hair-above-trimmed" => [
+        "label" => "Rifinito",
+        "description" => "I peli sono stati intenzionalmente accorciati o modellati (ad es. con forbici o regolabarba), ma non completamente rimossi."
+    ],
+    "genital-hair-above-hairless" => [
+        "label" => "Senza peli",
+        "description" => "L'area è completamente o quasi priva di peli – ad esempio con rasatura, ceretta, laser o simili. Una leggera ricrescita conta comunque come senza peli."
+    ],
+    "genital-hair-natural" => [
+        "label" => "Naturale",
+        "description" => "I peli sono completamente naturali e crescono liberamente."
+    ],
+    "genital-hair-trimmed" => [
+        "label" => "Rifinito",
+        "description" => "I peli sono stati intenzionalmente accorciati o modellati (ad es. con forbici o regolabarba), ma non completamente rimossi."
+    ],
+    "genital-hair-hairless" => [
+        "label" => "Senza peli",
+        "description" => "L'area è completamente o quasi priva di peli – ad esempio con rasatura, ceretta, laser o simili. Una leggera ricrescita conta comunque come senza peli."
+    ],
+    "buttocks-hair-natural" => [
+        "label" => "Naturale",
+        "description" => "I peli sono completamente naturali e crescono liberamente."
+    ],
+    "buttocks-hair-trimmed" => [
+        "label" => "Rifinito",
+        "description" => "I peli sono stati intenzionalmente accorciati o modellati (ad es. con forbici o regolabarba), ma non completamente rimossi."
+    ],
+    "buttocks-hair-hairless" => [
+        "label" => "Senza peli",
+        "description" => "L'area è completamente o quasi priva di peli – ad esempio con rasatura, ceretta, laser o simili. Una leggera ricrescita conta comunque come senza peli."
+    ],
+    "marks-none" => [
+        "label" => "Nessuna smagliatura o cicatrice",
+        "description" => null
+    ],
+    "marks-stretch" => [
+        "label" => "Smagliature",
+        "description" => null
+    ],
+    "marks-scars" => [
+        "label" => "Cicatrici",
+        "description" => null
+    ],
+    "pregnancy-true" => [
+        "label" => "Sì",
+        "description" => null
+    ],
+    "pregnancy-false" => [
+        "label" => "No",
+        "description" => null
+    ],
+    "vaginal-birth-true" => [
+        "label" => "Sì",
+        "description" => null
+    ],
+    "vaginal-birth-false" => [
+        "label" => "No",
+        "description" => null
+    ],
+    "c-section-true" => [
+        "label" => "Sì",
+        "description" => null
+    ],
+    "c-section-false" => [
+        "label" => "No",
+        "description" => null
+    ],
+    "breastfeeding-current" => [
+        "label" => "Attualmente",
+        "description" => null
+    ],
+    "breastfeeding-past" => [
+        "label" => "In passato",
+        "description" => null
+    ],
+    "breastfeeding-false" => [
+        "label" => "No",
+        "description" => null
+    ],
+    "piercings-false" => [
+        "label" => "Nessun piercing",
+        "description" => null
+    ],
+    "piercings-nipple" => [
+        "label" => "Capezzolo",
+        "description" => null
+    ],
+    "piercings-genital" => [
+        "label" => "Genitali",
+        "description" => null
+    ],
+    "piercings-buttocks" => [
+        "label" => "Glutei",
+        "description" => null
+    ],
+    "piercings-other" => [
+        "label" => "Altro",
+        "description" => null
+    ],
+    "tattoos-false" => [
+        "label" => "Nessun tatuaggio",
+        "description" => null
+    ],
+    "tattoos-breasts" => [
+        "label" => "Tatuaggi sul seno",
+        "description" => null
+    ],
+    "tattoos-vulva" => [
+        "label" => "Tatuaggi sulla vulva",
+        "description" => null
+    ],
+    "tattoos-penis" => [
+        "label" => "Tatuaggi sul pene",
+        "description" => null
+    ],
+    "tattoos-buttocks" => [
+        "label" => "Tatuaggi sui glutei",
+        "description" => null
+    ],
+    "tattoos-other" => [
+        "label" => "Altri tatuaggi",
+        "description" => null
+    ],
+    "hormonal-influence-true" => [
+        "label" => "Sì",
+        "description" => null
+    ],
+    "hormonal-influence-false" => [
+        "label" => "No",
+        "description" => null
+    ],
+    "menstrual-cycle-true" => [
+        "label" => "Sì",
+        "description" => null
+    ],
+    "menstrual-cycle-false" => [
+        "label" => "No",
+        "description" => null
+    ],
+];
+
 // All countries
 $country_list = array(
     NULL => '',
