@@ -11,7 +11,6 @@ $ageCount = $selectedAges ? count(array_filter(explode(",", $selectedAges))) : 0
 
 $totalSelectedFilters = $bodyPartCount + $ageCount;
 
-
 //zdebug("body-parts:");
 //zdebug($selectedBodyParts);
 //zdebug("age:");
