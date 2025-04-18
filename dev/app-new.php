@@ -120,14 +120,8 @@ require_once "src/inc/init.php";
     <!-- Image library wrapper -->
     <div class="pb-sm-0 pb-5 position-relative">
 
-        <div id="pull-to-refresh-spinner">
-            <div class="spinner-border" role="status" aria-hidden="true"></div>
-        </div>
-
         <!-- Gallery content -->
         <div class="row row-cols-xxl-6 row-cols-xl-5 row-cols-md-4 row-cols-sm-3 row-cols-2 g-0">
-
-
         </div>
 
         <!-- Sentinel element for infinite scroll -->

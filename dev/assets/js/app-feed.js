@@ -5,15 +5,11 @@ document.addEventListener('DOMContentLoaded', function () {
     const headerFilters = document.querySelectorAll('header .nav input[type="checkbox"]');
     const filtersForm = document.getElementById('offcanvas-filters');
     const resetButton = filtersForm?.querySelector('button[type="reset"]');
-    const pullToRefreshSpinner = document.getElementById('pull-to-refresh-spinner');
 
     let currentFilters = getFiltersFromUrl();
     let isLoading = false;
     let offset = 0;
     let limit = 30;
-
-    let isPulling = false;
-    let startY = 0;
 
     if (!galleryContainer || !sentinel) return;
 
@@ -129,8 +125,6 @@ document.addEventListener('DOMContentLoaded', function () {
             .catch(console.error)
             .finally(() => {
                 isLoading = false;
-                pullToRefreshSpinner.classList.remove('active');
-                isPulling = false;
             });
     }
 
@@ -223,57 +217,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    /* Pull to Refresh */
-    let isTouching = false;
-    let startY = 0;
-    let pullDistance = 0;
-    let isThresholdPassed = false;
-    const PULL_THRESHOLD = 80;
-
-    document.addEventListener('touchstart', (e) => {
-        if (window.scrollY === 0 && !isLoading) {
-            isTouching = true;
-            startY = e.touches[0].clientY;
-            pullDistance = 0;
-            isThresholdPassed = false;
-            pullToRefreshSpinner.classList.remove('active');
-        }
-    }, { passive: true });
-
-    document.addEventListener('touchmove', (e) => {
-        if (!isTouching) return;
-        const currentY = e.touches[0].clientY;
-        pullDistance = currentY - startY;
-
-        if (pullDistance > 0) {
-            e.preventDefault(); // block native bounce
-            pullToRefreshSpinner.style.transform = `translate(-50%, ${Math.min(pullDistance, PULL_THRESHOLD)}px)`;
-            pullToRefreshSpinner.style.opacity = Math.min(pullDistance / PULL_THRESHOLD, 1);
-
-            if (pullDistance > PULL_THRESHOLD) {
-                isThresholdPassed = true;
-            } else {
-                isThresholdPassed = false;
-            }
-        }
-    }, { passive: false });
-
-    document.addEventListener('touchend', () => {
-        if (isTouching && isThresholdPassed && !isLoading) {
-            isPulling = true;
-            pullToRefreshSpinner.classList.add('active');
-            loadImages(limit, true);
-        } else {
-            // animate back to hidden
-            pullToRefreshSpinner.style.transform = `translate(-50%, -100%)`;
-            pullToRefreshSpinner.style.opacity = 0;
-        }
-
-        isTouching = false;
-        isThresholdPassed = false;
-        pullDistance = 0;
-    }, { passive: true });
-
     window.addEventListener('resize', debounce(() => fillToFullViewport(), 200));
+
     fillToFullViewport();
 });
