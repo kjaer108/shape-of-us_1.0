@@ -79,6 +79,7 @@ if (isset($page["translate"]) && $page["translate"] == 1) {
     <!-- Bootstrap + Site styles -->
     <link rel="preload" href="assets/css/styles.min.css" as="style">
     <link rel="stylesheet" href="assets/css/styles.min.css">
+    <link rel="stylesheet" href="assets/css/shapeofus.css">
 </head>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-FD0JD8KJEE"></script>
