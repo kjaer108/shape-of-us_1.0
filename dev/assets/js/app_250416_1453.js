@@ -10,7 +10,6 @@
   const imageFullscreenModalInstance = new bootstrap.Modal(imageFullscreenModalEl);
 
   const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-  const maxLoadedImages = isMobile ? 40 : 100;
 
   //const apiBaseUrl = 'http://localhost:8001';
   const apiBaseUrl = 'src/xhr';
@@ -436,10 +435,8 @@
    * @param {Array} positions - Array of position objects {col, row}
    */
   function renderImages(viewer, images, positions) {
-    let addedImages = 0;
-
     images.forEach((image, i) => {
-      if (i >= positions.length) return;
+      if (i >= positions.length) return; // Guard against mismatched arrays
 
       let { col, row } = positions[i];
       const x = col * (imageSize + padding);
@@ -450,40 +447,30 @@
         x: x,
         y: y,
         width: imageSize,
-        success: function (event) {
-          if (!event.item) return;
-
+        success: function(event) {
+          // Note, the type of event.item is OpenSeadragon.TiledImage
+          // See https://openseadragon.github.io/docs/OpenSeadragon.TiledImage.html
           const tiledImage = event.item;
+          const bounds = tiledImage.getBounds();
           const uniqueKey = crypto.randomUUID();
+          //console.log(`Image ${image.id} added to viewer at coordinates x=${x}, y=${y}`, tiledImage);
+          //console.log(`Image bounds:`, bounds);
 
-          // Wait for image to be fully loaded before querying bounds
-          tiledImage.addOnceHandler('fully-loaded-change', function () {
-            const bounds = tiledImage.getBounds();
-            if (!bounds || typeof bounds.x !== 'number' || typeof bounds.width !== 'number') {
-              //console.warn(`Image bounds still invalid after load. Skipping image: ${image.id}`);
-              return;
-            }
-
-            loadedImages.set(uniqueKey, {
-              tiledImage,
-              imageId: image.id,
-              bounds
-            });
-
-            addedImages++;
-
-            if (addedImages === images.length) {
-              viewer.addOnceHandler('animation-finish', () => {
-                removeImagesOutsideViewport(viewer);
-              });
-            }
+          // Store image position information for hit detection
+          loadedImages.set(uniqueKey, {
+            bounds: bounds,
+            imageId: image.id,
           });
+
+          //console.log(`Bounds stored into position map under ${uniqueKey}`, loadedImages.get(uniqueKey));
         },
         error: function(event) {
-          //console.error('Failed to load image:', image.url);
-
+          // Handle failed image loads
+          console.error('Failed to load image:', image.url);
+          // Remove from the Map of Sets structure
           if (loadedPositions.has(row)) {
             loadedPositions.get(row).delete(col);
+            // Optionally remove the row Set if it's empty
             if (loadedPositions.get(row).size === 0) {
               loadedPositions.delete(row);
             }
@@ -493,34 +480,6 @@
     });
   }
 
-  function removeImagesOutsideViewport(viewer) {
-    const viewportBounds = viewer.viewport.getBounds();
-
-    for (const [key, data] of loadedImages.entries()) {
-      if (!data.tiledImage || typeof data.tiledImage.getBounds !== 'function') {
-        //console.warn(`Skipping image with missing tiledImage for key=${key}`);
-        loadedImages.delete(key);
-        continue;
-      }
-
-      const imageBounds = data.tiledImage.getBounds();
-
-      if (!imageBounds || typeof imageBounds.intersects !== 'function') {
-        //console.warn(`Skipping image with invalid bounds for key=${key}`);
-        loadedImages.delete(key);
-        continue;
-      }
-
-      if (!imageBounds.intersects(viewportBounds)) {
-        viewer.world.removeItem(data.tiledImage);
-        loadedImages.delete(key);
-      }
-    }
-  }
-
-
-
-
   /**
    * Load visible images based on current viewport
    * @param {OpenSeadragon.Viewer} viewer - The OpenSeadragon viewer
@@ -529,10 +488,6 @@
   function loadVisibleImages(viewer, filters = {}) {
     if (isLoading) return; // Prevent concurrent loading
     isLoading = true;
-
-    if (loadedImages.size >= maxLoadedImages) {
-      removeImagesOutsideViewport(viewer);
-    }
 
     // Calculate which positions need to be loaded
     const { positions, numCols, numRows } = calculatePositionsToLoad(viewer);
@@ -553,7 +508,7 @@
         isLoading = false;
       })
       .catch(error => {
-        //console.error('Error loading images:', error);
+        console.error('Error loading images:', error);
         // Free up positions that weren't loaded successfully
         positions.forEach(({ col, row }) => {
           // Remove from the Map of Sets structure
@@ -674,7 +629,7 @@
           showImagePreviewPopup(imageData);
         })
         .catch(error => {
-          //console.error('Error fetching image details:', error);
+          console.error('Error fetching image details:', error);
         });
     }
   }
@@ -783,7 +738,7 @@
 
     if (!accordionItem || !accordionHeader || !accordionBody) {
       // Looks like a broken markup, let's bail out
-      //console.warn('Control is not inside an .accordion-item', resetButton);
+      console.warn('Control is not inside an .accordion-item', resetButton);
       return;
     }
 
@@ -808,7 +763,7 @@
     const accordionBody = accordionItem?.querySelector('.accordion-body');
     if (!accordionItem || !accordionHeader || !accordionBody) {
       // Looks like a broken markup, let's bail out
-      //console.warn('Control is not inside an .accordion-item', control);
+      console.warn('Control is not inside an .accordion-item', control);
       return;
     }
 
@@ -832,7 +787,7 @@
     const offcanvasToggle = document.querySelector('header [data-bs-toggle="offcanvas"]');
     if (!offcanvasToggle) {
       // Looks like a broken markup, let's bail out
-      //console.warn('Offcanvas toggle button not found');
+      console.warn('Offcanvas toggle button not found');
       return;
     }
 
@@ -858,7 +813,7 @@
     const navTab = control.closest('.nav-tabs');
     if (!navTab) {
       // Looks like a broken markup, let's bail out
-      //console.warn('Control is not inside a .nav-tabs', control);
+      console.warn('Control is not inside a .nav-tabs', control);
       return;
     }
 
@@ -889,7 +844,7 @@
     const navItem = control.closest('.nav-item');
     if (!navItem) {
       // Looks like a broken markup, let's bail out
-      //console.warn('Control is not inside a .nav-item', control);
+      console.warn('Control is not inside a .nav-item', control);
       return;
     }
 
@@ -1001,7 +956,7 @@
         const controlName = control.name.replace(/\[|\]/g, '')
         const choicesInstance = window.choices[controlName];
         if (!choicesInstance) {
-          //console.warn('Choices instance not found for select', control);
+          console.warn('Choices instance not found for select', control);
           return;
         }
 
@@ -1078,7 +1033,7 @@
    */
   function showImagePreviewPopup(imageData) {
     if (!imagePreviewModalInstance) {
-      //console.error('Modal element not found');
+      console.error('Modal element not found');
       return;
     }
 

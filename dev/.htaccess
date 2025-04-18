@@ -26,6 +26,17 @@ Options -Indexes
 RewriteCond %{REQUEST_URI} \.(php|html?|jpg|jpeg|png|gif|svg|css|js|json|webp|mp3|mp4|pdf|zip|woff|woff2|eot|ttf|otf|ico|txt|xml)$ [NC]
 RewriteRule ^ - [L]
 
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresDefault "access plus 30 days"
+</IfModule>
+
+<IfModule mod_headers.c>
+  <FilesMatch "\.(jpg|jpeg|png|gif|webp|svg)$">
+    Header set Cache-Control "public, max-age=2592000"
+  </FilesMatch>
+</IfModule>
+
 # Allow access to existing files and directories
 RewriteCond %{REQUEST_FILENAME} -f [OR]
 RewriteCond %{REQUEST_FILENAME} -d

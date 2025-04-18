@@ -528,6 +528,21 @@ function get_param($param = null, $default = null, $convert_string_null = true) 
     return $default;
 }
 
+function get_array_param($param): array {
+    $raw = get_param($param);
+
+    if (is_array($raw)) {
+        return $raw;
+    }
+
+    if (is_string($raw) && trim($raw) !== '') {
+        return [trim($raw)];
+    }
+
+    return [];
+}
+
+
 function process_param_value($value, $convert_string_null) {
     if (is_array($value)) {
         foreach ($value as $k => $v) {

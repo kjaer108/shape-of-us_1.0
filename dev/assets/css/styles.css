@@ -11689,3 +11689,12 @@ h4 a, .h4 a, h5 a, .h5 a, h6 a, .h6 a {
 }
 
 /*# sourceMappingURL=styles.css.map */
+
+
+img.osd-thumbnail {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+img.osd-thumbnail[src]:not([data-src]) {
+  opacity: 1;
+}
