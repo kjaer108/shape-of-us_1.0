@@ -5,6 +5,9 @@ console.log("Current URL:", currentUrl.toString());
 let isLocalhost = currentUrl.hostname === "localhost" || currentUrl.hostname.startsWith("127.") || currentUrl.port;
 console.log("Running on localhost?", isLocalhost);
 
+function isMobile() {
+    return /Mobi|Android/i.test(navigator.userAgent);
+}
 
 /* *********************************************************************
     Handle language changes

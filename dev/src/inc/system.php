@@ -536,6 +536,10 @@ function get_array_param($param): array {
     }
 
     if (is_string($raw) && trim($raw) !== '') {
+        // Check for comma-separated values
+        if (strpos($raw, ',') !== false) {
+            return array_filter(array_map('trim', explode(',', $raw)));
+        }
         return [trim($raw)];
     }
 

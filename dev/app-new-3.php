@@ -2,15 +2,6 @@
 $page = ["name"=>"app", "translate"=>true, "sourcelang" => "en"];
 require_once "src/inc/init.php";
 
-// Get filters
-$selectedBodyParts = get_param("body-parts");
-$selectedAges = get_param("age");
-
-$bodyPartCount = is_array($selectedBodyParts) ? count(array_filter($selectedBodyParts)) : 0;
-$ageCount = $selectedAges ? count(array_filter(explode(",", $selectedAges))) : 0;
-
-$totalSelectedFilters = $bodyPartCount + $ageCount;
-
 //*** HERE WE GO! Let's render the page ***************************************?>
 <?php include "src/html/html-begin.php"; ?>
 
@@ -27,11 +18,9 @@ $totalSelectedFilters = $bodyPartCount + $ageCount;
             <div class="col-xl-4 col-md-8">
                 <div class="d-flex justify-content-md-start justify-content-between align-items-center gap-xxl-4 gap-md-3 gap-4">
                     <div>
-                        <a href="https://shapeofus.eu/app" rel="noopener" class="d-block ms-sm-2">
-                            <img src="assets/img/shape-of-us.png" width="283" alt="Shape of Us">
-                        </a>
+                        <img src="assets/img/shape-of-us.png" width="283" alt="Shape of Us">
                     </div>
-                    <a href="https://zandora.net/" target="_blank" rel="noopener" class="d-block ms-sm-2">
+                    <a href="#" target="_blank" rel="noopener" class="d-block ms-sm-2">
                         <img src="assets/img/zandora.png" width="125" alt="by Zandora">
                     </a>
                 </div>
@@ -41,31 +30,31 @@ $totalSelectedFilters = $bodyPartCount + $ageCount;
             <div class="col-xl-4 d-xl-block d-none">
                 <ul class="nav navbar-nav justify-content-center gap-1 flex-nowrap">
                     <li class="nav-item">
-                        <input id="header-filter-penis" type="checkbox" name="body-parts[]" value="penis" class="btn-check"<?= (in_comma_list("penis", $selectedBodyParts) ? " checked" : "") ?>>
+                        <input id="header-filter-penis" type="checkbox" name="body-parts[]" value="penis" class="btn-check">
                         <label for="header-filter-penis" class="nav-link rounded-pill" style="cursor: pointer;">
                             <i class="zi-close-circle-fill btn-check-label"></i>
-                            <?= __("Penis") ?>
+                            Penis
                         </label>
                     </li>
                     <li class="nav-item">
-                        <input id="header-filter-vulva" type="checkbox" name="body-parts[]" value="vulva" class="btn-check"<?= (in_comma_list("vulva", $selectedBodyParts) ? " checked" : "") ?>>
+                        <input id="header-filter-vulva" type="checkbox" name="body-parts[]" value="vulva" class="btn-check">
                         <label for="header-filter-vulva" class="nav-link rounded-pill" style="cursor: pointer;">
                             <i class="zi-close-circle-fill btn-check-label"></i>
-                            <?= __("Vulva") ?>
+                            Vulva
                         </label>
                     </li>
                     <li class="nav-item">
-                        <input id="header-filter-breast" type="checkbox" name="body-parts[]" value="breast" class="btn-check"<?= (in_comma_list("breast", $selectedBodyParts) ? " checked" : "") ?>>
+                        <input id="header-filter-breast" type="checkbox" name="body-parts[]" value="breast" class="btn-check">
                         <label for="header-filter-breast" class="nav-link rounded-pill" style="cursor: pointer;">
                             <i class="zi-close-circle-fill btn-check-label"></i>
-                            <?= __("Breast") ?>
+                            Breast
                         </label>
                     </li>
                     <li class="nav-item">
-                        <input id="header-filter-buttocks" type="checkbox" name="body-parts[]" value="buttocks" class="btn-check"<?= (in_comma_list("buttocks", $selectedBodyParts) ? " checked" : "") ?>>
+                        <input id="header-filter-buttocks" type="checkbox" name="body-parts[]" value="buttocks" class="btn-check">
                         <label for="header-filter-buttocks" class="nav-link rounded-pill" style="cursor: pointer;">
                             <i class="zi-close-circle-fill btn-check-label"></i>
-                            <?= __("Buttocks") ?>
+                            Buttocks
                         </label>
                     </li>
                 </ul>
