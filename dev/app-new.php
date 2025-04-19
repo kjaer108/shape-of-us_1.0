@@ -131,7 +131,7 @@ $totalSelectedFilters = $bodyPartCount + $ageCount;
         <!-- Offcanvas toggle (mobile) -->
         <div class="position-fixed bottom-0 start-0 end-0 p-sm-4 p-3 d-flex flex-sm-row flex-column justify-content-sm-end d-md-none d-block">
             <button type="button" class="btn btn-lg btn-light rounded-pill" data-bs-toggle="offcanvas" data-bs-target="#offcanvas-filters" style="--zs-btn-padding-y: .75rem;" data-filter-button data-filter-text="<?= __("Filters") ?>">
-                <?= __("Filters") ?><?= $totalSe > 0 ? " ($totalSelectedFilters)" : "" ?>
+                <?= __("Filters") ?><?= $totalSelectedFilters > 0 ? " ($totalSelectedFilters)" : "" ?>
                 <svg xmlns="http://www.w3.org/2000/svg" class="ms-2" width="16" height="16" fill="none"><path d="M12.956 5.766c-.101-.244-.272-.452-.491-.599s-.477-.225-.741-.225H4.276c-.264 0-.521.078-.741.225s-.39.355-.491.598-.127.512-.076.77.178.496.365.683l3.724 3.724c.25.25.589.39.943.39s.693-.14.943-.39l3.724-3.724c.186-.186.313-.424.365-.682s.025-.527-.076-.77z" fill="currentColor"/></svg>
             </button>
         </div>
@@ -798,7 +798,7 @@ $totalSelectedFilters = $bodyPartCount + $ageCount;
 
         <!-- Offcanvas footer -->
         <div class="offcanvas-header flex-column gap-2">
-            <button type="reset" class="btn btn-lg btn-link w-100">
+            <button type="button" class="btn btn-lg btn-link w-100" id="reset-all-btn">
                 Reset all filters
             </button>
             <!--<button type="submit" class="btn btn-lg btn-primary w-100 rounded-pill">

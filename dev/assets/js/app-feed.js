@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const sentinel = document.getElementById('scroll-sentinel');
     const headerFilters = document.querySelectorAll('header .nav input[type="checkbox"]');
     const filtersForm = document.getElementById('offcanvas-filters');
-    const resetButton = filtersForm?.querySelector('button[type="reset"]');
+    const resetButton = document.getElementById('reset-all-btn');
     const imageViewerModalEl = document.getElementById('modal-image-viewer');
     const imageViewerModalInstance = new bootstrap.Modal(imageViewerModalEl);
     const fullscreenBtn = imageViewerModalEl.querySelector('#toggle-fullscreen');
@@ -118,15 +118,18 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function loadImages(count, reset = false) {
-        console.log('[loadImages]', { count, reset, currentFilters });
+        //console.log('[loadImages]', { count, reset, currentFilters });
 
         if (isLoading) return;
         isLoading = true;
 
         if (reset) {
-            sentinel.style.display = 'none'; // ⛔ hide temporarily
             pauseObserver = true;
-            observer.disconnect();
+            try {
+                observer.unobserve(sentinel);
+            } catch (e) {
+                //console.warn('Sentinel unobserve failed', e);
+            }
         }
 
         const requestFilters = { ...currentFilters };
@@ -161,8 +164,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 isLoading = false;
                 if (reset) {
                     setTimeout(() => {
-                        observer.observe(sentinel);
-                        pauseObserver = false; // ✅ Reset the pause flag
+                        try {
+                            observer.observe(sentinel);
+                            pauseObserver = false;
+                        } catch (e) {
+                            //console.warn('Sentinel observe failed', e);
+                        }
                     }, 100);
                 }
             });
@@ -301,7 +308,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const observer = new IntersectionObserver(entries => {
         if (!pauseObserver && entries[0].isIntersecting && !isLoading) {
-            console.log('[observer triggered]');
+            //console.log('[observer triggered]');
             loadImages(limit);
         }
     }, {
