@@ -52,4 +52,4 @@ RewriteRule ^(en|da|de|es|fr|it|pl)/form/?$ form.php?lang=$1 [L,QSA]
 
 # Rewrite /app and localized versions
 RewriteRule ^app/?$ app-new.php [L]
-RewriteRule ^(en|da|de|es|fr|it|pl)/app/?$ app.php?lang=$1 [L]
+RewriteRule ^(en|da|de|es|fr|it|pl)/app/?$ app-new.php?lang=$1 [L,QSA]

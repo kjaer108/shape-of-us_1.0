@@ -110,6 +110,7 @@ $totalSelectedFilters = $bodyPartCount + $ageCount;
                     </button> -->
                 </div>
             </div>
+
         </div>
     </div>
 </header>

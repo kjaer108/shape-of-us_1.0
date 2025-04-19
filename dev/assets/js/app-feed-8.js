@@ -51,11 +51,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function updateUrlFilters(partialFilters) {
         const url = new URL(window.location);
-        const params = new URLSearchParams(window.location.search);
-        const preservedLang = params.get('lang');
-        params.forEach((_, key) => params.delete(key)); // clear all
-        if (preservedLang) params.set('lang', preservedLang); // re-add lang
-
+        const params = new URLSearchParams(url.search);
 
         // Remove all keys we're going to update
         Object.keys(partialFilters).forEach(key => {
@@ -312,16 +308,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
     observer.observe(sentinel);
 
-    headerFilters.forEach(input => {
-        input.addEventListener('change', () => {
-            const values = getCurrentBodyPartFilters();
-            currentFilters['body-parts'] = values;
-            updateUrlFilters({ 'body-parts': values });
-            syncFilterControls('body-parts', values);
-            loadImages(limit, true);
-            updateFilterCountDisplay();
-        });
-    });
+    // headerFilters.forEach(input => {
+    //     input.addEventListener('change', () => {
+    //         const values = getCurrentBodyPartFilters();
+    //         currentFilters['body-parts'] = values;
+    //         updateUrlFilters({ 'body-parts': values });
+    //         syncFilterControls('body-parts', values);
+    //         loadImages(limit, true);
+    //         updateFilterCountDisplay();
+    //     });
+    // });
 
     if (filtersForm) {
         filtersForm.addEventListener('change', () => {
@@ -364,42 +360,38 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (resetButton) {
         resetButton.addEventListener('click', () => {
-            // 🔁 Gather all keys currently in filters
-            const clearAllFilters = {};
-            Object.keys(currentFilters).forEach(key => {
-                clearAllFilters[key] = [];
-            });
-
-            // 🧼 Clear URL
-            updateUrlFilters(clearAllFilters);
-
-            // 🧠 Clear internal state
+            // Reset internal filters
             currentFilters = {};
 
-            // 🧽 Reset UI
+            // Clear URL
+            updateUrlFilters(currentFilters);
+
             // Reset form inputs
             filtersForm.reset();
 
-// Manually uncheck all checkboxes (including custom checkboxes in offcanvas and nav)
-            document.querySelectorAll('input[type="checkbox"]').forEach(input => {
+            // Explicitly uncheck all checkboxes and re-render their visual states
+            const allCheckboxes = document.querySelectorAll('input[type="checkbox"]');
+            allCheckboxes.forEach(input => {
                 input.checked = false;
+
+                // Repaint the label manually (Bootstrap uses :checked + label for styling)
+                const label = filtersForm.querySelector(`label[for="${input.id}"]`);
+                if (label) {
+                    label.classList.remove('active'); // just in case
+                    label.classList.remove('focus');  // if using bootstrap-touchspin or others
+                }
             });
 
-// Clean up labels if needed
-            document.querySelectorAll('label.active, label.focus').forEach(label => {
-                label.classList.remove('active', 'focus');
+            // Also reset the header filter checkboxes
+            const headerCheckboxes = document.querySelectorAll('header input[type="checkbox"]');
+            headerCheckboxes.forEach(input => {
+                input.checked = false;
+                const label = document.querySelector(`label[for="${input.id}"]`);
+                if (label) {
+                    label.classList.remove('active');
+                    label.classList.remove('focus');
+                }
             });
-
-// 🧠 Sync UI checkboxes in offcanvas (manual force, just in case)
-            ['body-parts', 'age'].forEach(filterName => {
-                syncFilterControls(filterName, []);
-            });
-
-
-            // 🔁 Resync filters (e.g., header nav pills)
-            syncFilterControls('body-parts', []);
-            syncFilterControls('age', []);
-            // Add more filter groups if needed
 
             updateFilterCountDisplay();
             loadImages(limit, true);

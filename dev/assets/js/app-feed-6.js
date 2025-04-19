@@ -15,9 +15,6 @@ document.addEventListener('DOMContentLoaded', function () {
     let isLoading = false;
     let offset = 0;
     let limit = 30;
-    let currentImageId = null;
-    let suppressFilterChange = false;
-    let pauseObserver = false;
 
     if (!galleryContainer || !sentinel) return;
 
@@ -51,25 +48,20 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function updateUrlFilters(partialFilters) {
         const url = new URL(window.location);
-        const params = new URLSearchParams(window.location.search);
-        const preservedLang = params.get('lang');
-        params.forEach((_, key) => params.delete(key)); // clear all
-        if (preservedLang) params.set('lang', preservedLang); // re-add lang
+        const params = new URLSearchParams(url.search);
 
-
-        // Remove all keys we're going to update
         Object.keys(partialFilters).forEach(key => {
             params.delete(`${key}[]`);
-            params.delete(key); // Handle both array and single keys
         });
 
-        // Only re-add keys that have non-empty values
         Object.entries(partialFilters).forEach(([key, value]) => {
             if (Array.isArray(value)) {
                 if (value.length > 0) {
-                    value.forEach(v => params.append(`${key}[]`, v));
+                    params.set(key, value.join(','));
+                } else {
+                    params.delete(key);
                 }
-            } else if (value) {
+            } else {
                 params.set(key, value);
             }
         });
@@ -82,7 +74,6 @@ document.addEventListener('DOMContentLoaded', function () {
         headerFilters.forEach(input => {
             if (input.checked) values.push(input.value);
         });
-
         return values;
     }
 
@@ -92,8 +83,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 input.checked = values.includes(input.value);
             }
         });
-        updateFilterCountDisplay();
-
         if (filtersForm) {
             const offcanvasFilters = filtersForm.querySelectorAll(`[name="${filterName}[]"]`);
             offcanvasFilters.forEach(input => {
@@ -102,33 +91,9 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    function updateFilterCountDisplay() {
-        const allInputs = filtersForm.querySelectorAll('input[type="checkbox"]');
-        const checkedCount = Array.from(allInputs).filter(input => input.checked).length;
-
-        const filterButtons = document.querySelectorAll('[data-filter-button]');
-        filterButtons.forEach(button => {
-            const baseLabel = button.dataset.filterText || "Filters";
-            button.innerHTML = `
-            ${baseLabel}${checkedCount > 0 ? ` (${checkedCount})` : ""}
-            <svg xmlns="http://www.w3.org/2000/svg" class="ms-2" width="16" height="16" fill="none">
-                <path d="M12.956 5.766c-.101-.244-.272-.452-.491-.599s-.477-.225-.741-.225H4.276c-.264 0-.521.078-.741.225s-.39.355-.491.598-.127.512-.076.77.178.496.365.683l3.724 3.724c.25.25.589.39.943.39s.693-.14.943-.39l3.724-3.724c.186-.186.313-.424.365-.682s.025-.527-.076-.77z" fill="currentColor"/>
-            </svg>`;
-        });
-    }
-
     function loadImages(count, reset = false) {
-        console.log('[loadImages]', { count, reset, currentFilters });
-
         if (isLoading) return;
         isLoading = true;
-
-        if (reset) {
-            sentinel.style.display = 'none'; // ⛔ hide temporarily
-            pauseObserver = true;
-            observer.disconnect();
-        }
-
         const requestFilters = { ...currentFilters };
         requestFilters.limit = count;
         requestFilters.offset = reset ? 0 : offset;
@@ -159,15 +124,8 @@ document.addEventListener('DOMContentLoaded', function () {
             .catch(console.error)
             .finally(() => {
                 isLoading = false;
-                if (reset) {
-                    setTimeout(() => {
-                        observer.observe(sentinel);
-                        pauseObserver = false; // ✅ Reset the pause flag
-                    }, 100);
-                }
             });
     }
-
 
     function renderImages(images) {
         images.forEach(img => {
@@ -194,7 +152,6 @@ document.addEventListener('DOMContentLoaded', function () {
         event.preventDefault();
         const imageId = event.currentTarget.getAttribute('data-image-id');
         if (!imageId) return;
-        currentImageId = imageId; // ✅ Track current ID
         fetch(`src/xhr/get-image-info.php?imageId=${encodeURIComponent(imageId)}`)
             .then(res => res.json())
             .then(imageData => {
@@ -203,31 +160,15 @@ document.addEventListener('DOMContentLoaded', function () {
             .catch(console.error);
     }
 
-    function openSiblingImage(direction) {
-        const allAnchors = [...document.querySelectorAll('[data-image-id]')];
-        const index = allAnchors.findIndex(a => a.getAttribute('data-image-id') === currentImageId);
-        if (index === -1) return;
-
-        const newIndex = direction === 'next' ? index + 1 : index - 1;
-        const targetAnchor = allAnchors[newIndex];
-        if (!targetAnchor) return;
-
-        // Simulate a click event to reuse handleImageClick logic without navigating
-        const fakeEvent = new Event('click');
-        Object.defineProperty(fakeEvent, 'currentTarget', { value: targetAnchor });
-        handleImageClick(fakeEvent);
-    }
-
     function showImageWithProps(imageData) {
-        // Clear props immediately
+        // Clear previous props
         imagePropsContainer.innerHTML = '';
 
-        // Populate props while image is loading
+        // Populate props immediately
         if (Array.isArray(imageData.sections)) {
             const ul = document.createElement('ul');
             ul.className = 'list-unstyled gap-4 ms-xl-2';
             imagePropsContainer.appendChild(ul);
-
             imageData.sections.forEach(section => {
                 const sectionContainer = document.createElement('li');
                 sectionContainer.className = 'pb-4 border-bottom';
@@ -240,7 +181,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (Array.isArray(section.fields)) {
                     const fieldsContainer = document.createElement('ul');
                     fieldsContainer.className = 'list-unstyled gap-xl-2 gap-3';
-
                     section.fields.forEach(field => {
                         const fieldItem = document.createElement('li');
                         fieldItem.className = 'd-flex flex-wrap align-items-center gap-1';
@@ -259,7 +199,6 @@ document.addEventListener('DOMContentLoaded', function () {
                                 fieldItem.appendChild(valueButton);
                             });
                         }
-
                         if (field.note) {
                             const fieldNote = document.createElement('p');
                             fieldNote.className = 'mt-1 mb-0 ff-extra fs-sm fst-italic text-dark w-100';
@@ -269,24 +208,20 @@ document.addEventListener('DOMContentLoaded', function () {
 
                         fieldsContainer.appendChild(fieldItem);
                     });
-
                     sectionContainer.appendChild(fieldsContainer);
                 }
-
                 ul.appendChild(sectionContainer);
             });
         }
 
-        // Swap image + trigger modal only if it's not open yet
-        const isAlreadyShown = imageViewerModalEl.classList.contains('show');
+        // Only show modal after image loads
+        imgEl.onload = () => {
+            imageViewerModalInstance.show();
+        };
 
-        imgEl.onload = null; // clear previous listener
+        // Set src/alt last
         imgEl.src = imageData.url;
         imgEl.alt = imageData.alt || 'Image';
-
-        if (!isAlreadyShown) {
-            imageViewerModalInstance.show();
-        }
     }
 
     if (!isMobile()) {
@@ -300,8 +235,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     const observer = new IntersectionObserver(entries => {
-        if (!pauseObserver && entries[0].isIntersecting && !isLoading) {
-            console.log('[observer triggered]');
+        if (entries[0].isIntersecting) {
             loadImages(limit);
         }
     }, {
@@ -309,7 +243,6 @@ document.addEventListener('DOMContentLoaded', function () {
         rootMargin: '500px',
         threshold: 0.1
     });
-
     observer.observe(sentinel);
 
     headerFilters.forEach(input => {
@@ -319,94 +252,28 @@ document.addEventListener('DOMContentLoaded', function () {
             updateUrlFilters({ 'body-parts': values });
             syncFilterControls('body-parts', values);
             loadImages(limit, true);
-            updateFilterCountDisplay();
         });
     });
 
     if (filtersForm) {
         filtersForm.addEventListener('change', () => {
-            if (suppressFilterChange) return; // 👈 Prevent loop
-
             const formData = new FormData(filtersForm);
-            const newFilters = {};
-
-            for (const [key, value] of formData.entries()) {
-                if (key.endsWith('[]')) {
-                    const name = key.slice(0, -2);
-                    if (!newFilters[name]) newFilters[name] = [];
-                    newFilters[name].push(value);
-                } else {
-                    newFilters[key] = value;
-                }
-            }
-
-            currentFilters = newFilters;
-            updateUrlFilters(currentFilters);
-
-            suppressFilterChange = true; // 👈 Prevent recursive firing
-            syncFilterControls('body-parts', currentFilters['body-parts'] || []);
-            suppressFilterChange = false;
-
+            const bodyPartValues = formData.getAll('body-parts[]');
+            currentFilters['body-parts'] = bodyPartValues;
+            updateUrlFilters({ 'body-parts': bodyPartValues });
+            syncFilterControls('body-parts', bodyPartValues);
             loadImages(limit, true);
         });
     }
-
-    function syncAllFilterControls() {
-        // Uncheck ALL checkboxes (includes body-parts, age, etc.)
-        const allCheckboxes = filtersForm.querySelectorAll('input[type="checkbox"]');
-        allCheckboxes.forEach(input => {
-            input.checked = false;
-        });
-
-        updateFilterCountDisplay();
-    }
-
 
     if (resetButton) {
         resetButton.addEventListener('click', () => {
-            // 🔁 Gather all keys currently in filters
-            const clearAllFilters = {};
-            Object.keys(currentFilters).forEach(key => {
-                clearAllFilters[key] = [];
-            });
-
-            // 🧼 Clear URL
-            updateUrlFilters(clearAllFilters);
-
-            // 🧠 Clear internal state
             currentFilters = {};
-
-            // 🧽 Reset UI
-            // Reset form inputs
-            filtersForm.reset();
-
-// Manually uncheck all checkboxes (including custom checkboxes in offcanvas and nav)
-            document.querySelectorAll('input[type="checkbox"]').forEach(input => {
-                input.checked = false;
-            });
-
-// Clean up labels if needed
-            document.querySelectorAll('label.active, label.focus').forEach(label => {
-                label.classList.remove('active', 'focus');
-            });
-
-// 🧠 Sync UI checkboxes in offcanvas (manual force, just in case)
-            ['body-parts', 'age'].forEach(filterName => {
-                syncFilterControls(filterName, []);
-            });
-
-
-            // 🔁 Resync filters (e.g., header nav pills)
+            updateUrlFilters({ 'body-parts': [] });
             syncFilterControls('body-parts', []);
-            syncFilterControls('age', []);
-            // Add more filter groups if needed
-
-            updateFilterCountDisplay();
             loadImages(limit, true);
         });
     }
-
-
 
     function fillToFullViewport() {
         const placeholder = document.createElement('div');
@@ -416,10 +283,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
         requestAnimationFrame(() => {
             const rowHeight = placeholder.getBoundingClientRect().height;
-            galleryContainer.removeChild(placeholder);
-
-            if (rowHeight < 10 || galleryContainer.querySelectorAll('.col').length > 1) {
-                // Already filled, or invalid row height, skip fill
+            if (rowHeight < 10) {
+                // fallback for mobile when placeholder has no height yet
+                galleryContainer.removeChild(placeholder);
+                loadImages(limit, true);
                 return;
             }
 
@@ -428,11 +295,10 @@ document.addEventListener('DOMContentLoaded', function () {
             const rows = Math.max(20, Math.floor(availableHeight / rowHeight));
             const cols = getColumnCount();
             const total = rows * cols;
-
+            galleryContainer.removeChild(placeholder);
             loadImages(total, true);
         });
     }
-
 
     function isMobile() {
         return /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
@@ -447,22 +313,6 @@ document.addEventListener('DOMContentLoaded', function () {
             resizeTimeout = setTimeout(() => location.reload(), 200);
         });
     }
-
-    imageViewerModalEl.addEventListener('shown.bs.modal', () => {
-        document.addEventListener('keydown', handleKeyNavigation);
-    });
-    imageViewerModalEl.addEventListener('hidden.bs.modal', () => {
-        document.removeEventListener('keydown', handleKeyNavigation);
-    });
-
-    function handleKeyNavigation(e) {
-        if (e.key === 'ArrowLeft') {
-            openSiblingImage('prev');
-        } else if (e.key === 'ArrowRight') {
-            openSiblingImage('next');
-        }
-    }
-
 
     /*
     (function setupLogOverlay() {
@@ -487,35 +337,6 @@ document.addEventListener('DOMContentLoaded', function () {
         };
     })();
     */
-
-    if (isMobile()) {
-        let startX = 0;
-
-        const modalContent = imageViewerModalEl.querySelector('.modal-content');
-
-        modalContent.addEventListener('touchstart', e => {
-            if (e.touches.length === 1) {
-                startX = e.touches[0].clientX;
-            }
-        });
-
-        modalContent.addEventListener('touchend', e => {
-            if (e.changedTouches.length === 1) {
-                const endX = e.changedTouches[0].clientX;
-                const deltaX = endX - startX;
-
-                if (Math.abs(deltaX) > 50) {
-                    if (deltaX > 0) {
-                        openSiblingImage('prev');
-                    } else {
-                        openSiblingImage('next');
-                    }
-                }
-            }
-        });
-
-    }
-
 
     fillToFullViewport();
 });
