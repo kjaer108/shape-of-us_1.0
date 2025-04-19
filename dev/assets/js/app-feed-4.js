@@ -213,15 +213,13 @@ document.addEventListener('DOMContentLoaded', function () {
         imageViewerModalInstance.show();
     }
 
-    if (!isMobile()) {
-        fullscreenBtn?.addEventListener('click', () => {
-            imageViewerModalEl.classList.toggle('fullscreen-mode');
-        });
+    fullscreenBtn?.addEventListener('click', () => {
+        imageViewerModalEl.classList.toggle('fullscreen-mode');
+    });
 
-        imgEl.addEventListener('click', () => {
-            imageViewerModalEl.classList.toggle('fullscreen-mode');
-        });
-    }
+    imgEl.addEventListener('click', () => {
+        imageViewerModalEl.classList.toggle('fullscreen-mode');
+    });
 
     const observer = new IntersectionObserver(entries => {
         if (entries[0].isIntersecting) {
@@ -302,30 +300,6 @@ document.addEventListener('DOMContentLoaded', function () {
             resizeTimeout = setTimeout(() => location.reload(), 200);
         });
     }
-
-    /*
-    (function setupLogOverlay() {
-        const logBox = document.createElement('pre');
-        logBox.style.position = 'fixed';
-        logBox.style.bottom = '0';
-        logBox.style.left = '0';
-        logBox.style.right = '0';
-        logBox.style.maxHeight = '50vh';
-        logBox.style.overflow = 'auto';
-        logBox.style.background = 'rgba(0,0,0,0.8)';
-        logBox.style.color = '#0f0';
-        logBox.style.fontSize = '12px';
-        logBox.style.padding = '10px';
-        logBox.style.zIndex = '9999';
-        document.body.appendChild(logBox);
-
-        const originalLog = console.log;
-        console.log = (...args) => {
-            originalLog(...args);
-            logBox.textContent += args.map(String).join(' ') + '\n';
-        };
-    })();
-    */
 
     fillToFullViewport();
 });

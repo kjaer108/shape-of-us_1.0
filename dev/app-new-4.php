@@ -863,7 +863,7 @@ $totalSelectedFilters = $bodyPartCount + $ageCount;
                         <div class="flex-shrink-0 position-relative w-100 w-lg-60 text-center">
                             <img src="" alt="Image" class="img-fluid" style="max-height: 90vh; object-fit: contain;">
                             <button type="button"
-                                    class="btn btn-lg btn-icon btn-light bg-transparent text-white border-0 position-absolute top-0 end-0 m-2 d-none d-lg-inline"
+                                    class="btn btn-lg btn-icon btn-light bg-transparent text-white border-0 position-absolute top-0 end-0 m-2"
                                     id="toggle-fullscreen" aria-label="Toggle fullscreen">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="none">
                                     <path d="M21.067 5.067l1.867 2L20 10c-.533.533-.533 1.333 0 1.867s1.333.533 1.867 0L24.8 8.933l2 1.867c.533.533 1.2.133 1.2-.4V4.667c0-.4-.267-.667-.667-.667H21.6c-.533 0-.933.667-.533 1.067zm-16 5.733l1.867-1.867 2.933 2.933c.533.533 1.333.533 1.867 0s.533-1.333 0-1.867l-2.8-2.933 1.867-2c.533-.4.133-1.067-.4-1.067H4.667c-.4 0-.667.267-.667.667V10.4c0 .533.667.933 1.067.4zm5.733 16l-2-1.867L11.733 22c.533-.533.533-1.333 0-1.867s-1.333-.533-1.867 0l-2.933 2.933-2-1.867c-.267-.533-.933-.133-.933.4v5.733c0 .4.267.667.667.667H10.4c.533 0 .933-.667.4-1.2zm16.133-5.733l-2 1.867L22 20c-.533-.533-1.333-.533-1.867 0s-.533 1.333 0 1.867l2.933 2.933-1.867 2c-.4.4-.133 1.2.533 1.2h5.733c.4 0 .667-.267.667-.667V21.6c-.133-.533-.8-.933-1.2-.533z"
