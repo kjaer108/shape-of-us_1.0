@@ -68,6 +68,7 @@ if ($noFiltersSelected) {
         }
         $ageWhere = implode(' OR ', $ageConditions);
     }
+    zdebug($ageWhere);
 
     $queries = [];
 
@@ -77,7 +78,7 @@ if ($noFiltersSelected) {
             FROM sou_form_images i
             JOIN sou_form_entries e ON i.entry_id = e.id
             WHERE i.breast_thumb IS NOT NULL
-              AND ($ageWhere)
+              AND $ageWhere
         ";
     }
 
@@ -87,7 +88,7 @@ if ($noFiltersSelected) {
             FROM sou_form_images i
             JOIN sou_form_entries e ON i.entry_id = e.id
             WHERE i.buttocks_thumb IS NOT NULL
-              AND ($ageWhere)
+              AND $ageWhere
         ";
     }
 
@@ -99,7 +100,7 @@ if ($noFiltersSelected) {
             JOIN sou_form_anatomy a ON a.entry_id = i.entry_id
             WHERE i.genital_thumb IS NOT NULL
               AND a.value = 'anatomy-male-penis'
-              AND ($ageWhere)
+              AND $ageWhere
         ";
     }
 
@@ -111,7 +112,7 @@ if ($noFiltersSelected) {
             JOIN sou_form_anatomy a ON a.entry_id = i.entry_id
             WHERE i.genital_thumb IS NOT NULL
               AND a.value = 'anatomy-female-vulva'
-              AND ($ageWhere)
+              AND $ageWhere
         ";
     }
 
@@ -151,13 +152,16 @@ try {
     $maxAttempts = $batchSize * 10;
     $attempts = 0;
 
+    $applyRecentExclusion = count($imageRows) > $batchSize;
+
     while (count($images) < $batchSize && $attempts < $maxAttempts) {
         $row = $imageRows[random_int(0, $numAvailable - 1)];
         $filename = $row['filename'];
         $id = pathinfo($filename, PATHINFO_FILENAME);
         $id = preg_replace('/-\d+t?$/', '', $id);
 
-        if (in_array($id, $recentIds)) {
+        // Only skip recent IDs if we have enough to exclude from
+        if ($applyRecentExclusion && in_array($id, $recentIds)) {
             $attempts++;
             continue;
         }
@@ -167,15 +171,20 @@ try {
             'url' => "https://shapeofus.eu/files/{$filename}"
         ];
 
-        $recentIds[] = $id;
-        if (count($recentIds) > $recentLimit) {
-            array_shift($recentIds);
+        if ($applyRecentExclusion) {
+            $recentIds[] = $id;
+            if (count($recentIds) > $recentLimit) {
+                array_shift($recentIds);
+            }
         }
 
         $attempts++;
     }
 
-    $_SESSION['recent_image_ids'] = $recentIds;
+    if ($applyRecentExclusion) {
+        $_SESSION['recent_image_ids'] = $recentIds;
+    }
+
 
 } catch (Exception $e) {
     http_response_code(500);

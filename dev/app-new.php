@@ -801,9 +801,9 @@ $totalSelectedFilters = $bodyPartCount + $ageCount;
             <button type="button" class="btn btn-lg btn-link w-100" id="reset-all-btn">
                 Reset all filters
             </button>
-            <!--<button type="submit" class="btn btn-lg btn-primary w-100 rounded-pill">
+            <button type="button" class="btn btn-lg btn-primary w-100 rounded-pill" data-bs-dismiss="offcanvas">
                 Apply filters
-            </button>-->
+            </button>
         </div>
     </form>
 

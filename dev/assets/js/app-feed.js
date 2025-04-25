@@ -183,8 +183,9 @@ document.addEventListener('DOMContentLoaded', function () {
             const anchor = document.createElement('a');
             anchor.href = '#modal-image-viewer';
             anchor.className = 'd-block ratio ratio-1x1';
-            anchor.setAttribute('data-bs-toggle', 'modal');
-            anchor.setAttribute('data-image-id', img.id);
+            //anchor.setAttribute('data-bs-toggle', 'modal');
+            const filename = img.url.split('/').pop().split('.')[0];
+            anchor.setAttribute('data-image-id', filename);
             anchor.addEventListener('click', handleImageClick);
             const image = document.createElement('img');
             image.src = img.url;
@@ -229,7 +230,11 @@ document.addEventListener('DOMContentLoaded', function () {
         // Clear props immediately
         imagePropsContainer.innerHTML = '';
 
-        // Populate props while image is loading
+        // Clear the image src first to avoid flash of previous image
+        imgEl.src = '';
+        imgEl.alt = '';
+
+        // Populate props
         if (Array.isArray(imageData.sections)) {
             const ul = document.createElement('ul');
             ul.className = 'list-unstyled gap-4 ms-xl-2';
@@ -284,16 +289,14 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         }
 
-        // Swap image + trigger modal only if it's not open yet
-        const isAlreadyShown = imageViewerModalEl.classList.contains('show');
-
-        imgEl.onload = null; // clear previous listener
-        imgEl.src = imageData.url;
-        imgEl.alt = imageData.alt || 'Image';
-
-        if (!isAlreadyShown) {
+        // Load image and only show modal when ready
+        const tempImg = new Image();
+        tempImg.onload = () => {
+            imgEl.src = tempImg.src;
+            imgEl.alt = imageData.alt || 'Image';
             imageViewerModalInstance.show();
-        }
+        };
+        tempImg.src = imageData.url;
     }
 
     if (!isMobile()) {
