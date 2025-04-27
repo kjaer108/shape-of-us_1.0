@@ -799,10 +799,10 @@ $totalSelectedFilters = $bodyPartCount + $ageCount;
         <!-- Offcanvas footer -->
         <div class="offcanvas-header flex-column gap-2">
             <button type="button" class="btn btn-lg btn-link w-100" id="reset-all-btn">
-                Reset all filters
+                <?= __("Reset all filters") ?>
             </button>
             <button type="button" class="btn btn-lg btn-primary w-100 rounded-pill" data-bs-dismiss="offcanvas">
-                Apply filters
+                <?= __("Apply filters") ?>
             </button>
         </div>
     </form>
