@@ -78,7 +78,7 @@ if ($noFiltersSelected) {
             FROM sou_form_images i
             JOIN sou_form_entries e ON i.entry_id = e.id
             WHERE i.breast_thumb IS NOT NULL
-              AND $ageWhere
+              AND ($ageWhere)
         ";
     }
 
@@ -88,7 +88,7 @@ if ($noFiltersSelected) {
             FROM sou_form_images i
             JOIN sou_form_entries e ON i.entry_id = e.id
             WHERE i.buttocks_thumb IS NOT NULL
-              AND $ageWhere
+              AND ($ageWhere)
         ";
     }
 
@@ -100,7 +100,7 @@ if ($noFiltersSelected) {
             JOIN sou_form_anatomy a ON a.entry_id = i.entry_id
             WHERE i.genital_thumb IS NOT NULL
               AND a.value = 'anatomy-male-penis'
-              AND $ageWhere
+              AND ($ageWhere)
         ";
     }
 
@@ -112,7 +112,7 @@ if ($noFiltersSelected) {
             JOIN sou_form_anatomy a ON a.entry_id = i.entry_id
             WHERE i.genital_thumb IS NOT NULL
               AND a.value = 'anatomy-female-vulva'
-              AND $ageWhere
+              AND ($ageWhere)
         ";
     }
 
@@ -121,7 +121,6 @@ if ($noFiltersSelected) {
 
 // Debug output
 if ($debug) echo "<pre>" . htmlspecialchars($sql) . "</pre>";
-
 
 /* *********************************************************************
     Get images and return to frontend
@@ -140,57 +139,51 @@ try {
         throw new Exception("No image filenames found in database.");
     }
 
-    // Use session to avoid recent duplicates
-    if (!isset($_SESSION['recent_image_ids'])) {
-        $_SESSION['recent_image_ids'] = [];
+    $currentSqlHash = md5($sql);
+
+    if (!isset($_SESSION['gallery_shuffle']) || $_SESSION['gallery_sql_hash'] !== $currentSqlHash) {
+        // Filters changed → shuffle new images
+        shuffle($imageRows);
+        $_SESSION['gallery_shuffle'] = $imageRows;
+        $_SESSION['gallery_pointer'] = 0;
+        $_SESSION['gallery_sql_hash'] = $currentSqlHash;
+    } else {
+        // Filters same → continue from saved shuffle
+        $imageRows = $_SESSION['gallery_shuffle'];
     }
 
-    $recentIds = $_SESSION['recent_image_ids'];
-    $recentLimit = 20;
-
+    $pointer = $_SESSION['gallery_pointer'];
     $images = [];
-    $maxAttempts = $batchSize * 10;
-    $attempts = 0;
 
-    $applyRecentExclusion = count($imageRows) > $batchSize;
+    for ($i = 0; $i < $batchSize; $i++) {
+        if ($pointer >= count($imageRows)) {
+            shuffle($imageRows);
+            $pointer = 0;
+        }
 
-    while (count($images) < $batchSize && $attempts < $maxAttempts) {
-        $row = $imageRows[random_int(0, $numAvailable - 1)];
+        $row = $imageRows[$pointer];
         $filename = $row['filename'];
         $id = pathinfo($filename, PATHINFO_FILENAME);
         $id = preg_replace('/-\d+t?$/', '', $id);
-
-        // Only skip recent IDs if we have enough to exclude from
-        if ($applyRecentExclusion && in_array($id, $recentIds)) {
-            $attempts++;
-            continue;
-        }
 
         $images[] = [
             'id' => $id,
             'url' => "https://shapeofus.eu/files/{$filename}"
         ];
 
-        if ($applyRecentExclusion) {
-            $recentIds[] = $id;
-            if (count($recentIds) > $recentLimit) {
-                array_shift($recentIds);
-            }
-        }
-
-        $attempts++;
+        $pointer++;
     }
 
-    if ($applyRecentExclusion) {
-        $_SESSION['recent_image_ids'] = $recentIds;
-    }
-
+    $_SESSION['gallery_shuffle'] = $imageRows;
+    $_SESSION['gallery_pointer'] = $pointer;
 
 } catch (Exception $e) {
     http_response_code(500);
     echo json_encode(['error' => 'Image generation failed', 'details' => $e->getMessage()]);
     exit;
 }
+
+
 
 // Send response
 http_response_code(200);
@@ -200,3 +193,4 @@ header('Access-Control-Allow-Origin: https://shapeofus.eu');
 header('Cache-Control: public, max-age=2592000');
 header('Expires: ' . gmdate('D, d M Y H:i:s', time() + 2592000) . ' GMT');
 echo json_encode($images, JSON_THROW_ON_ERROR);
+?>
