@@ -20,7 +20,8 @@ $totalSelectedFilters = $bodyPartCount + $ageCount;
 <body>
 
 <!-- Navigation bar (Page header) -->
-<header class="px-xl-4 px-lg-3 p-2 bg-body" style="z-index: 999;">
+<header class="sticky-top px-xl-4 px-lg-3 p-2 bg-body" style="z-index: 1030;">
+
     <div class="container-fluid">
         <div class="row align-items-center">
 
@@ -112,7 +113,7 @@ $totalSelectedFilters = $bodyPartCount + $ageCount;
 <main class="content-wrapper">
 
     <!-- Image library wrapper -->
-    <div class="pb-sm-0 pb-5 position-relative">
+    <div id="nsfw-wrapper" class="pb-sm-0 pb-5 position-relative nsfw-blur">
 
         <!-- Gallery content -->
         <div class="row row-cols-xxl-6 row-cols-xl-5 row-cols-md-4 row-cols-sm-3 row-cols-2 g-0">

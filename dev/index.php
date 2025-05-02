@@ -1,5 +1,5 @@
 <?php
 
-header("Location: /coming-soon");
+header("Location: /app");
 
 ?>
