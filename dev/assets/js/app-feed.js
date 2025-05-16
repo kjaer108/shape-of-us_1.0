@@ -1,4 +1,50 @@
 document.addEventListener('DOMContentLoaded', function () {
+
+    localStorage.removeItem("nsfwConfirmedDate");
+
+    const today = new Date().toISOString().slice(0, 10); // e.g. "2025-05-02"
+    const lastConfirmed = localStorage.getItem("nsfwConfirmedDate");
+
+    const wrapper = document.getElementById("nsfw-wrapper");
+    const modalElement = document.getElementById("nsfw-confirm-modal");
+    const modal = new bootstrap.Modal(modalElement);
+
+    if (lastConfirmed === today) {
+        wrapper.classList.add("nsfw-unlocked");
+    } else {
+        modal.show();
+
+        document.getElementById("nsfw-yes-btn").addEventListener("click", function () {
+            localStorage.setItem("nsfwConfirmedDate", today);
+            wrapper.classList.add("nsfw-unlocked");
+            modal.hide();
+        });
+
+        document.querySelector("#nsfw-confirm-modal .btn-secondary").addEventListener("click", function (e) {
+            modal.hide();
+            e.stopPropagation();
+
+            // Delay attaching click handler until modal is fully hidden
+            setTimeout(() => {
+                if (!wrapper.classList.contains("nsfw-unlocked")) {
+                    wrapper.addEventListener("click", function blurClickHandler(e) {
+                        e.stopPropagation();
+                        modal.show();
+                    }, { once: true });
+                }
+            }, 300);
+        });
+    }
+
+    document.addEventListener("scroll", function () {
+        const header = document.querySelector("header.sticky-top");
+        if (window.scrollY > 10) {
+            header.classList.add("scrolled");
+        } else {
+            header.classList.remove("scrolled");
+        }
+    });
+
     const endpoint = 'src/xhr/get-images.php';
     const galleryContainer = document.querySelector('.row.row-cols-xl-5');
     const sentinel = document.getElementById('scroll-sentinel');

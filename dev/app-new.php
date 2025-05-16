@@ -20,7 +20,7 @@ $totalSelectedFilters = $bodyPartCount + $ageCount;
 <body>
 
 <!-- Navigation bar (Page header) -->
-<header class="sticky-top px-xl-4 px-lg-3 p-2 bg-body" style="z-index: 1030;">
+<header class="sticky-top shadow-on-scroll px-xl-4 px-lg-3 p-2 bg-body" style="z-index: 1030;">
 
     <div class="container-fluid">
         <div class="row align-items-center">
@@ -114,6 +114,7 @@ $totalSelectedFilters = $bodyPartCount + $ageCount;
 
     <!-- Image library wrapper -->
     <div id="nsfw-wrapper" class="pb-sm-0 pb-5 position-relative nsfw-blur">
+        <div id="nsfw-mask"></div>
 
         <!-- Gallery content -->
         <div class="row row-cols-xxl-6 row-cols-xl-5 row-cols-md-4 row-cols-sm-3 row-cols-2 g-0">
@@ -848,6 +849,24 @@ $totalSelectedFilters = $bodyPartCount + $ageCount;
         </div>
     </div>
 
+    <!-- NSFW Confirmation Modal -->
+    <div class="modal fade" id="nsfw-confirm-modal" tabindex="-1" aria-labelledby="nsfwModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-4">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title" id="nsfwModalLabel">Body-positive content ahead</h5>
+                </div>
+                <div class="modal-body">
+                    <p>The Shape of Us gallery features uncensored, real images of diverse bodies. It's a space for celebration, not judgment — but it includes nudity.</p>
+                    <p>Do you want to remove the blur and view the images?</p>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">No</button>
+                    <button type="button" class="btn btn-primary rounded-pill" id="nsfw-yes-btn">Yes, show content</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 </main>
 

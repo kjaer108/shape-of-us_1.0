@@ -82,3 +82,46 @@
 .modal.fade .modal-dialog {
     transition: transform 0.3s ease-out;
 }
+
+
+/* Add this to your stylesheet */
+.sticky-top.shadow-on-scroll {
+    transition: box-shadow 0.3s ease;
+}
+
+.sticky-top.shadow-on-scroll.scrolled {
+    box-shadow: 0 .125rem .25rem rgba(0, 0, 0, 0.15);
+}
+
+
+.nsfw-blur::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(14px);
+    z-index: 5;
+    pointer-events: none;
+}
+
+.nsfw-unlocked::before,
+.nsfw-unlocked #nsfw-mask {
+    display: none !important;
+}
+
+#nsfw-mask {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 6; /* higher than blur::before's z-index: 5 */
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+
+.nsfw-unlocked #nsfw-mask {
+    display: none !important;
+}
+
