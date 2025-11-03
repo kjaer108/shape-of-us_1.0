@@ -46,6 +46,10 @@ RewriteRule ^ - [L]
 RewriteRule ^coming-soon/?$ coming-soon.php [L]
 RewriteRule ^(en|da|de|es|fr|it|pl)/coming-soon/?$ coming-soon.php?lang=$1 [L]
 
+# Rewrite /about and localized versions
+RewriteRule ^about/?$ about.php [L,QSA]
+RewriteRule ^(en|da|de|es|fr|it|pl)/about/?$ about.php?lang=$1 [L,QSA]
+
 # Rewrite /form and localized versions
 RewriteRule ^form/?$ form.php [L,QSA]
 RewriteRule ^(en|da|de|es|fr|it|pl)/form/?$ form.php?lang=$1 [L,QSA]

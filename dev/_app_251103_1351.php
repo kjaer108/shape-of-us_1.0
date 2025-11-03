@@ -2,13 +2,6 @@
 $page = ["name"=>"mainapp", "translate"=>true, "sourcelang" => "en"];
 require_once "src/inc/init.php";
 
-/*****************************************************************************
- * This file have been replaced with the app-new.php file.
- *
- * We retain this file in the repository for legacy reasons.
- *****************************************************************************/
-
-
 // Get filters
 $selectedBodyParts = get_param("body-parts");
 $selectedAges = get_param("age");
