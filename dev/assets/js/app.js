@@ -144,8 +144,8 @@
       document.addEventListener('click', function(event) {
         // Check if clicked element is a reset button
         if (
-          event.target.hasAttribute('data-sou-reset-filter-group') ||
-          event.target.closest('[data-sou-reset-filter-group]')
+            event.target.hasAttribute('data-sou-reset-filter-group') ||
+            event.target.closest('[data-sou-reset-filter-group]')
         ) {
           //console.log(['document.click.data-sou-reset-filter-group', event]);
           handleFilterGroupResetClick(event);
@@ -548,25 +548,25 @@
 
     // Fetch and render images
     fetchImages(positions.length, filters)
-      .then(images => {
-        renderImages(viewer, images, positions);
-        isLoading = false;
-      })
-      .catch(error => {
-        //console.error('Error loading images:', error);
-        // Free up positions that weren't loaded successfully
-        positions.forEach(({ col, row }) => {
-          // Remove from the Map of Sets structure
-          if (loadedPositions.has(row)) {
-            loadedPositions.get(row).delete(col);
-            // Optionally remove the row Set if it's empty
-            if (loadedPositions.get(row).size === 0) {
-              loadedPositions.delete(row);
+        .then(images => {
+          renderImages(viewer, images, positions);
+          isLoading = false;
+        })
+        .catch(error => {
+          //console.error('Error loading images:', error);
+          // Free up positions that weren't loaded successfully
+          positions.forEach(({ col, row }) => {
+            // Remove from the Map of Sets structure
+            if (loadedPositions.has(row)) {
+              loadedPositions.get(row).delete(col);
+              // Optionally remove the row Set if it's empty
+              if (loadedPositions.get(row).size === 0) {
+                loadedPositions.delete(row);
+              }
             }
-          }
+          });
+          isLoading = false;
         });
-        isLoading = false;
-      });
   }
 
   /**
@@ -670,12 +670,12 @@
     if (clickedImageId) {
       // Get image data from server
       fetchImageDetails(clickedImageId)
-        .then(imageData => {
-          showImagePreviewPopup(imageData);
-        })
-        .catch(error => {
-          //console.error('Error fetching image details:', error);
-        });
+          .then(imageData => {
+            showImagePreviewPopup(imageData);
+          })
+          .catch(error => {
+            //console.error('Error fetching image details:', error);
+          });
     }
   }
 
@@ -773,8 +773,8 @@
     event.stopPropagation();
 
     const resetButton = event.target.hasAttribute('data-sou-reset-filter-group') ?
-                        event.target :
-                        event.target.closest('[data-sou-reset-filter-group]');
+        event.target :
+        event.target.closest('[data-sou-reset-filter-group]');
 
     const accordionItemId = resetButton.getAttribute('data-sou-reset-filter-group').slice(1);
     const accordionItem = document.getElementById(accordionItemId);

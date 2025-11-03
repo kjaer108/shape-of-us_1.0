@@ -180,7 +180,7 @@ INSERT INTO sou_form_entries (
 
         if (empty($values)) return;
 
-        $sql = "INSERT INTO `$table` (entry_id, value) VALUES (:entry_id, :value)";
+        $sql = "INSERT INTO `$table` (`entry_id`, `value`) VALUES (:entry_id, :value)";
         foreach ($values as $val) {
             $params = [
                 ':entry_id' => $entryId,

@@ -20,8 +20,7 @@ $totalSelectedFilters = $bodyPartCount + $ageCount;
 <body>
 
 <!-- Navigation bar (Page header) -->
-<header class="sticky-top shadow-on-scroll px-xl-4 px-lg-3 p-2 bg-body" style="z-index: 1030;">
-
+<header class="px-xl-4 px-lg-3 p-2 bg-body" style="z-index: 999;">
     <div class="container-fluid">
         <div class="row align-items-center">
 
@@ -113,8 +112,7 @@ $totalSelectedFilters = $bodyPartCount + $ageCount;
 <main class="content-wrapper">
 
     <!-- Image library wrapper -->
-    <div id="nsfw-wrapper" class="pb-sm-0 pb-5 position-relative nsfw-blur">
-        <div id="nsfw-mask"></div>
+    <div class="pb-sm-0 pb-5 position-relative">
 
         <!-- Gallery content -->
         <div class="row row-cols-xxl-6 row-cols-xl-5 row-cols-md-4 row-cols-sm-3 row-cols-2 g-0">
@@ -133,7 +131,7 @@ $totalSelectedFilters = $bodyPartCount + $ageCount;
         <!-- Offcanvas toggle (mobile) -->
         <div class="position-fixed bottom-0 start-0 end-0 p-sm-4 p-3 d-flex flex-sm-row flex-column justify-content-sm-end d-md-none d-block">
             <button type="button" class="btn btn-lg btn-light rounded-pill" data-bs-toggle="offcanvas" data-bs-target="#offcanvas-filters" style="--zs-btn-padding-y: .75rem;" data-filter-button data-filter-text="<?= __("Filters") ?>">
-                <?= __("Filters") ?><?= $totalSelectedFilters > 0 ? " ($totalSelectedFilters)" : "" ?>
+                <?= __("Filters") ?><?= $totalSe > 0 ? " ($totalSelectedFilters)" : "" ?>
                 <svg xmlns="http://www.w3.org/2000/svg" class="ms-2" width="16" height="16" fill="none"><path d="M12.956 5.766c-.101-.244-.272-.452-.491-.599s-.477-.225-.741-.225H4.276c-.264 0-.521.078-.741.225s-.39.355-.491.598-.127.512-.076.77.178.496.365.683l3.724 3.724c.25.25.589.39.943.39s.693-.14.943-.39l3.724-3.724c.186-.186.313-.424.365-.682s.025-.527-.076-.77z" fill="currentColor"/></svg>
             </button>
         </div>
@@ -800,12 +798,12 @@ $totalSelectedFilters = $bodyPartCount + $ageCount;
 
         <!-- Offcanvas footer -->
         <div class="offcanvas-header flex-column gap-2">
-            <button type="button" class="btn btn-lg btn-link w-100" id="reset-all-btn">
-                <?= __("Reset all filters") ?>
+            <button type="reset" class="btn btn-lg btn-link w-100">
+                Reset all filters
             </button>
-            <button type="button" class="btn btn-lg btn-primary w-100 rounded-pill" data-bs-dismiss="offcanvas">
-                <?= __("Apply filters") ?>
-            </button>
+            <!--<button type="submit" class="btn btn-lg btn-primary w-100 rounded-pill">
+                Apply filters
+            </button>-->
         </div>
     </form>
 
@@ -844,26 +842,6 @@ $totalSelectedFilters = $bodyPartCount + $ageCount;
                         </div>
 
                     </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- NSFW Confirmation Modal -->
-    <div class="modal fade" id="nsfw-confirm-modal" tabindex="-1" aria-labelledby="nsfwModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="nsfwModalLabel">Viewer Discretion</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    This page contains intimate, body-positive content. Please confirm that you are ready to view it.
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" id="nsfw-no-btn">No</button>
-                    <button type="button" class="btn btn-primary" id="nsfw-show-once-btn">Show Once</button>
-                    <button type="button" class="btn btn-primary" id="nsfw-show-for-day-btn">Show for the Day</button>
                 </div>
             </div>
         </div>

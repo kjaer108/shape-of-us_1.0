@@ -69,47 +69,66 @@ if ($cmd == "save-step-state") {
 
     } elseif ($curStep == 3) {
 
-        $vulva_vulva = get_param("section-vulva-vulva");
-        $vulva_vulva_text = get_param("medical-vulva-other-surgical-procedures-text");
+        // Aggregate Step 3 checkbox ids by section prefix and keep related text fields
+        $collectChecked = function(array $prefixes) {
+            $out = [];
+            foreach ($_POST as $key => $val) {
+                // Accept common truthy representations from form.js
+                if ($val === '1' || $val === 1 || $val === 'on' || $val === true) {
+                    foreach ($prefixes as $pfx) {
+                        if (strpos($key, $pfx) === 0) {
+                            $out[] = $key;
+                            break;
+                        }
+                    }
+                }
+            }
+            // Return comma-separated list of ids
+            return implode(',', $out);
+        };
 
-        $vulva_breast = get_param("section-vulva-breast");
-        $vulva_breast_text = get_param("medical-breast-other-surgical-procedures-text");
+        // Build aggregated values per section
+        $vulva_vulva      = $collectChecked(['medical-vulva-']);
+        $vulva_vulva_text = get_param('medical-vulva-other-surgical-procedures-text');
 
-        $penis_penis = get_param("section-penis-penis");
-        $penis_penis_text = get_param("medical-penis-other-surgical-procedures-text");
+        $vulva_breast      = $collectChecked(['medical-breast-']);
+        $vulva_breast_text = get_param('medical-breast-other-surgical-procedures-text');
 
-        $penis_breast = get_param("section-penis-breast");
-        $penis_breast_text = get_param("medical-penis-breast-other-surgical-procedures-text");
+        $penis_penis      = $collectChecked(['medical-penis-']);
+        $penis_penis_text = get_param('medical-penis-other-surgical-procedures-text');
 
-        $trans_mtf = get_param("section-trans-mtf");
-        $trans_mtf_text = get_param("mtf-other-surgical-procedures-text");
+        $penis_breast      = $collectChecked(['medical-penis-breast-']);
+        $penis_breast_text = get_param('medical-penis-breast-other-surgical-procedures-text');
 
-        $trans_ftm = get_param("section-trans-ftm");
-        $trans_ftm_text = get_param("trans-ftm-bottom-other-surgical-procedures-text");
+        $trans_mtf      = $collectChecked(['mtf-']);
+        $trans_mtf_text = get_param('mtf-other-surgical-procedures-text');
 
-        $buttocks = get_param("section-buttocks");
-        $buttocks_text = get_param("buttocks-other-surgical-procedures-text");
+        $trans_ftm      = $collectChecked(['trans-ftm-']);
+        $trans_ftm_text = get_param('trans-ftm-bottom-other-surgical-procedures-text');
 
-        $hormone = get_param("section-hormone");
-        $hormone_text = get_param("hormone-other-procedures-text");
+        $buttocks      = $collectChecked(['buttocks-']);
+        $buttocks_text = get_param('buttocks-other-surgical-procedures-text');
 
-        $_SESSION["formdata"][3] = [
-            "vulva_vulva" => $vulva_vulva,
-            "vulva_vulva_text" => $vulva_vulva_text,
-            "vulva_breast" => $vulva_breast,
-            "vulva_breast_text" => $vulva_breast_text,
-            "penis_penis" => $penis_penis,
-            "penis_penis_text" => $penis_penis_text,
-            "penis_breast" => $penis_breast,
-            "penis_breast_text" => $penis_breast_text,
-            "trans_mtf" => $trans_mtf,
-            "trans_mtf_text" => $trans_mtf_text,
-            "trans_ftm" => $trans_ftm,
-            "trans_ftm_text" => $trans_ftm_text,
-            "buttocks" => $buttocks,
-            "buttocks_text" => $buttocks_text,
-            "hormone" => $hormone,
-            "hormone_text" => $hormone_text
+        $hormone      = $collectChecked(['hormone-']);
+        $hormone_text = get_param('hormone-other-procedures-text');
+
+        $_SESSION['formdata'][3] = [
+            'vulva_vulva' => $vulva_vulva,
+            'vulva_vulva_text' => $vulva_vulva_text ?: null,
+            'vulva_breast' => $vulva_breast,
+            'vulva_breast_text' => $vulva_breast_text ?: null,
+            'penis_penis' => $penis_penis,
+            'penis_penis_text' => $penis_penis_text ?: null,
+            'penis_breast' => $penis_breast,
+            'penis_breast_text' => $penis_breast_text ?: null,
+            'trans_mtf' => $trans_mtf,
+            'trans_mtf_text' => $trans_mtf_text ?: null,
+            'trans_ftm' => $trans_ftm,
+            'trans_ftm_text' => $trans_ftm_text ?: null,
+            'buttocks' => $buttocks,
+            'buttocks_text' => $buttocks_text ?: null,
+            'hormone' => $hormone,
+            'hormone_text' => $hormone_text ?: null,
         ];
 
     } elseif ($curStep == 4) {
