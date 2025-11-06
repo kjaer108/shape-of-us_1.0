@@ -125,3 +125,114 @@
     display: none !important;
 }
 
+
+/* --- TV Presentation scoped styles --- */
+body.presentation-tv {
+  --tv-gap: clamp(8px, 1.8vmin, 24px);
+  --tv-hpad: clamp(8px, 2.5vmin, 40px);
+}
+
+body.presentation-tv main.content-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Sections: compact vertical spacing for TV */
+body.presentation-tv .section-logo,
+body.presentation-tv .section-caption {
+  padding-block: 1.5vmin;
+}
+
+/* Grid section expands between header (logo) and footer (caption) */
+body.presentation-tv .section-grid {
+  padding-inline: var(--tv-hpad);
+  display: flex;
+  align-items: center; /* vertically center the grid if there is extra space */
+  flex: 0 0 auto; /* do not consume leftover height; leave it for the logo area */
+}
+
+/* TV grid: 4 columns at lg+, responsive fallback below */
+body.presentation-tv .tv-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--tv-gap);
+  width: 100%;
+}
+
+@media (min-width: 576px) {
+  body.presentation-tv .tv-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (min-width: 992px) {
+  body.presentation-tv .tv-grid { grid-template-columns: repeat(4, 1fr); }
+}
+
+/* Reset Bootstrap column padding inside CSS Grid children */
+body.presentation-tv .tv-grid > .col {
+  padding: 0;
+  min-width: 0;
+}
+
+/* Tile wrappers keep 16:9 via Bootstrap .ratio, ensure rounded and overflow */
+body.presentation-tv .tv-grid .ratio {
+  border-radius: .5rem;
+  overflow: hidden;
+  background: #f5f5f5;
+}
+
+/* Images fill tiles */
+body.presentation-tv .tv-grid img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+/* Logo scales with distance; override inline max-width */
+body.presentation-tv .section-logo img {
+  max-width: clamp(480px, 44vmin, 1040px) !important;
+  height: auto;
+}
+
+/* Caption legibility at distance */
+body.presentation-tv .section-caption p,
+body.presentation-tv .section-caption .rotator {
+  font-size: clamp(16px, 2.2vmin, 28px);
+  line-height: 1.3;
+  margin: 0;
+}
+
+/* Caption rotator crossfade */
+body.presentation-tv .section-caption .rotator {
+  position: relative;
+  min-height: 1.6em; /* prevents layout shift during transitions */
+}
+body.presentation-tv .section-caption .rotator .msg {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 700ms ease, transform 700ms ease;
+  will-change: opacity, transform;
+}
+body.presentation-tv .section-caption .rotator .msg.is-active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.presentation-tv .section-caption .rotator .msg {
+    transition: none;
+    transform: none;
+  }
+}
+
+/* Spacers and bottom pinning for TV layout */
+body.presentation-tv .logo-spacer { flex: 1 1 0; min-height: 0; }
+body.presentation-tv .section-caption { margin-top: auto; }
+
+.tv-grid .ratio { position: relative; }
+.tv-grid .ratio img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center; }
+.tv-grid .ratio .fade-overlay { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; pointer-events: none; opacity: 0; }

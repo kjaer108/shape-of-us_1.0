@@ -1,0 +1,38 @@
+<ul class="rotator-css">
+    <li>Anonymous portraits that redefine how we see beauty.</li>
+    <li>A visual archive of the human body, free from filters and shame.</li>
+    <li>Bodies without labels, beauty without limits.</li>
+    <li>This is what real looks like.</li>
+</ul>
+
+<style>
+    .rotator-css {
+        position: relative;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        height: 1.6em;
+    }
+    .rotator-css li {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        animation: fade 12s infinite; /* 4 items × 3s each */
+    }
+    .rotator-css li:nth-child(1) { animation-delay: 0s;  }
+    .rotator-css li:nth-child(2) { animation-delay: 3s;  }
+    .rotator-css li:nth-child(3) { animation-delay: 6s;  }
+    .rotator-css li:nth-child(4) { animation-delay: 9s;  }
+
+    @keyframes fade {
+        0%   { opacity: 0; transform: translateY(6px); }
+        5%   { opacity: 1; transform: translateY(0); }
+        25%  { opacity: 1; transform: translateY(0); }
+        30%  { opacity: 0; transform: translateY(-6px); }
+        100% { opacity: 0; transform: translateY(-6px); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .rotator-css li { animation: none; opacity: 1; }
+    }
+</style>
