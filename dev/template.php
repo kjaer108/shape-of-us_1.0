@@ -8,7 +8,7 @@ require_once "src/inc/init.php";
 <?php include "src/html/html-begin.php"; ?>
 
 <!-- Body -->
-<body>
+<body data-name="<?= $page["name"] ?>">
 
 <?php include "src/html/html-scripts.php"; ?>
 <?php include "src/html/html-end.php"; ?>

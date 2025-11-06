@@ -347,6 +347,8 @@
     // Create form data with image ID
     const formData = new FormData();
     formData.append('imageId', imageId);
+    const pageName = document.body?.dataset?.name || '';
+    if (pageName) formData.append('page-name', pageName);
     
     // Send request to server
     const response = await fetch(apiImageUrl, {

@@ -1,5 +1,14 @@
 
 <?php
+// Ensure page context is available for DeepL before init.php constructs the translator
+$page = $page ?? null;
+if ($page === null) {
+    $pageName = $_REQUEST['page-name'] ?? $_REQUEST['page'] ?? null;
+    if ($pageName !== null) {
+        $page = ['name' => $pageName];
+    }
+}
+
 require_once __DIR__."/../inc/init.php";
 
 $imageId = get_param("imageId");

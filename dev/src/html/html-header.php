@@ -141,8 +141,13 @@
         <!-- Navigation -->
         <ul class="nav nav-hover-underline flex-column" style="--zs-nav-link-font-size: 1.5rem; --zs-nav-link-padding-y: 1.5rem; --zs-nav-link-padding-x: 0; --zs-nav-link-color: var(--zs-component-hover-color);">
             <li class="nav-item">
+                <a href="<?= get_url("form") ?>" class="nav-link">
+                    <?= __("Participation Form") ?>
+                </a>
+            </li>
+            <li class="nav-item">
                 <a href="<?= get_url("present") ?>" class="nav-link">
-                    Presentation Mode
+                    <?= __("Presentation Mode") ?>
                 </a>
             </li>
         </ul>

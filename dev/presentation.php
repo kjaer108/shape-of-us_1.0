@@ -43,7 +43,7 @@ $captions_i18n = array_map(function($c){
 <?php include "src/html/html-begin.php"; ?>
 
 <!-- Body -->
-<body class="presentation-tv">
+<body data-name="<?= $page["name"] ?>" class="presentation-tv">
 
     <!-- Page content -->
     <main class="content-wrapper d-flex flex-column min-vh-100">

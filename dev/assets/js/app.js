@@ -330,7 +330,8 @@
    * @returns {Promise} - Promise resolving to image details
    */
   async function fetchImageDetails(imageId) {
-    const response = await fetch(`${apiImageUrl}?imageId=${encodeURIComponent(imageId)}`);
+    const pageName = document.body?.dataset?.name || '';
+        const response = await fetch(`${apiImageUrl}?imageId=${encodeURIComponent(imageId)}${pageName ? `&page-name=${encodeURIComponent(pageName)}` : ''}`);
     if (!response.ok) {
       throw new Error(`Failed to fetch image details for ID: ${imageId}`);
     }

@@ -263,7 +263,9 @@ document.addEventListener('DOMContentLoaded', function () {
         const imageId = event.currentTarget.getAttribute('data-image-id');
         if (!imageId) return;
         currentImageId = imageId; // ✅ Track current ID
-        fetch(`src/xhr/get-image-info.php?imageId=${encodeURIComponent(imageId)}`)
+        const pageName = document.body?.dataset?.name || '';
+        const url = `src/xhr/get-image-info.php?imageId=${encodeURIComponent(imageId)}${pageName ? `&page-name=${encodeURIComponent(pageName)}` : ''}`;
+        fetch(url)
             .then(res => res.json())
             .then(imageData => {
                 showImageWithProps(imageData);

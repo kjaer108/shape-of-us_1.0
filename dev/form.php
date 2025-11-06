@@ -222,7 +222,7 @@ $isFtM = $_SESSION["formdata"][1]["ftm"] ?? false;
 <?php include "src/html/html-begin.php"; ?>
 
 <!-- Body -->
-<body>
+<body data-name="<?= $page["name"] ?>">
 
 <!-- Navigation bar (Page header) -->
 <header class="container-fluid position-absolute top-0 start-0 end-0">

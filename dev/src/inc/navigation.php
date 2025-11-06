@@ -4,9 +4,10 @@ $url_map = [
     "index" => ["/", "", "/", ""],  // get_url("index")
 
     // Form pages
+    "form" => ["form.php", "", "form", ""],
     "form-step" => ["form.php", "step=#", "form", "?step=#"],  // get_url("form-step", 1)
     "about" => ["about.php", "", "about", ""],
-    "app" => ["app-new.php", "", "app", ""],
+    "app" => ["app.php", "", "app", ""],
     "present" => ["presentation.php", "", "present", ""],
 ];
 
