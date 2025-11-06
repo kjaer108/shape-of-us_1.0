@@ -37,8 +37,7 @@ function setLanguage($lang) {
 
 function __($key) {
     global $DeepL;
-    global $page;
 
-    return $DeepL->gettext($key, 'en');
+    return $DeepL->gettext($key);
 }
 ?>

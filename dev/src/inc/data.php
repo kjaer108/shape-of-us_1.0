@@ -1,15 +1,16 @@
 <?php
-$language_support = ["da", "en", "de", "fr", "es", "it", "pl"];
+$language_support = ["da", "en", "de", "fr", "es", "it", "pl", "cs"];
 $language_data = [
     "name" => [
         "da" => "Dansk",
         "en" => "English",
-        "de" => "Deutch",
+        "de" => "Deutsch",
         "fr" => "Français",
         "es" => "Español",
         "it" => "Italiano",
-        "pl" => "Polski"
+        "pl" => "Polski",
+        "cs" => "Čeština"
     ]
 ];
 
-$country_favorites = ["dk", "gb", "de", "fr", "es", "it", "pl"];
+$country_favorites = ["dk", "gb", "de", "fr", "es", "it", "pl", "cs"];
