@@ -130,12 +130,20 @@
 body.presentation-tv {
   --tv-gap: clamp(8px, 1.8vmin, 24px);
   --tv-hpad: clamp(8px, 2.5vmin, 40px);
+  --tv-scale: 1;
+  overflow: hidden; /* prevent scrollbars when we downscale to fit */
 }
 
 body.presentation-tv main.content-wrapper {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    transform: scale(var(--tv-scale));
+    transform-origin: top center;
+    /* Keep natural intrinsic dimensions; only downscale to fit height via JS.
+       Avoid inverse width/height expansion which could cause visual bleed/overflow. */
+    max-width: 100vw;
+    will-change: transform;
 }
 
 /* Sections: compact vertical spacing for TV */

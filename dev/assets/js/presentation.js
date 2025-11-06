@@ -49,6 +49,9 @@
       // flip active
       active = nextSlot;
 
+      // Since caption length can change number of lines, recompute viewport fit
+      try { if (typeof recomputeTvScale === 'function') requestAnimationFrame(recomputeTvScale); } catch(_) {}
+
       // schedule according to the message we just switched TO
       scheduleNext(nextMsg.display_time);
     }
@@ -242,3 +245,43 @@
     init();
   }
 })();
+// --- Viewport fit safeguard: downscale the whole presentation if it would overflow ---
+function debounce(fn, wait){
+  var t; return function(){
+    var ctx=this, args=arguments; clearTimeout(t); t=setTimeout(function(){ fn.apply(ctx,args); }, wait||100);
+  };
+}
+
+function computeAndApplyTvScale(){
+  try {
+    var root = document.body;
+    if (!root || !root.classList || !root.classList.contains('presentation-tv')) return;
+    var wrapper = document.querySelector('main.content-wrapper');
+    if (!wrapper) return;
+
+    // Reset to natural size to measure
+    root.style.setProperty('--tv-scale','1');
+
+    requestAnimationFrame(function(){
+      // Use scrollHeight to account for intrinsic (unscaled) content height
+      var naturalHeight = wrapper.scrollHeight;
+      var vh = window.innerHeight || document.documentElement.clientHeight || 1080;
+      if (!naturalHeight) return;
+
+      var scaleY = vh / naturalHeight;
+      // Keep within sensible bounds to avoid too tiny UI on extreme cases
+      var minScale = 0.6; // configurable
+      var scale = Math.max(Math.min(scaleY, 1), minScale);
+
+      root.style.setProperty('--tv-scale', String(scale));
+    });
+  } catch(e) {
+    // ignore
+  }
+}
+
+var recomputeTvScale = debounce(computeAndApplyTvScale, 120);
+
+window.addEventListener('resize', recomputeTvScale);
+window.addEventListener('orientationchange', recomputeTvScale);
+window.addEventListener('load', recomputeTvScale);
