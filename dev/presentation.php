@@ -53,7 +53,9 @@ $captions_i18n = array_map(function($c){
         <!-- Logo on top -->
         <section class="section-logo">
             <div class="container text-center">
-                <img src="assets/img/logo_2000px.png" alt="Shape of Us" class="img-fluid" style="max-width: 420px; width: 100%; height: auto;" />
+                <a href="<?= get_url("app") ?>">
+                    <img src="assets/img/logo_2000px.png" alt="Shape of Us" class="img-fluid" style="max-width: 420px; width: 100%; height: auto;" />
+                </a>
             </div>
         </section>
 

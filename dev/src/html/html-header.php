@@ -75,11 +75,11 @@
                         <?= __("Gallery") ?>
                     </a>
 
-                    <!-- Menu toggle
+                    <!-- Menu toggle -->
                     <button type="button" class="btn btn-light rounded-pill" data-bs-toggle="offcanvas" data-bs-target="#offcanvas-menu" style="--zs-btn-padding-y: .75rem;">
                         Menu
                         <svg xmlns="http://www.w3.org/2000/svg" class="ms-2" width="16" height="16" fill="none"><path d="M12.956 5.766c-.101-.244-.272-.452-.491-.599s-.477-.225-.741-.225H4.276c-.264 0-.521.078-.741.225s-.39.355-.491.598-.127.512-.076.77.178.496.365.683l3.724 3.724c.25.25.589.39.943.39s.693-.14.943-.39l3.724-3.724c.186-.186.313-.424.365-.682s.025-.527-.076-.77z" fill="currentColor"/></svg>
-                    </button> -->
+                    </button>
 <?php endif; ?>
 
                     <!-- Lang switcher -->
@@ -141,33 +141,8 @@
         <!-- Navigation -->
         <ul class="nav nav-hover-underline flex-column" style="--zs-nav-link-font-size: 1.5rem; --zs-nav-link-padding-y: 1.5rem; --zs-nav-link-padding-x: 0; --zs-nav-link-color: var(--zs-component-hover-color);">
             <li class="nav-item">
-                <a href="#" class="nav-link">
-                    Gallery Highlights
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="#" class="nav-link">
-                    Featured Artists
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="#" class="nav-link">
-                    Upcoming Events
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="#" class="nav-link">
-                    Visitor Information
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="#" class="nav-link">
-                    Community Stories
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="#" class="nav-link">
-                    Support Us
+                <a href="<?= get_url("present") ?>" class="nav-link">
+                    Presentation Mode
                 </a>
             </li>
         </ul>
@@ -208,13 +183,13 @@
                     </a>
                 </div>
 
-                <!-- Menu toggle
+                <!-- Menu toggle -->
                 <div class="col-6 text-center">
                     <button type="button" class="btn btn-light rounded-pill w-100 justify-content-between" data-bs-toggle="offcanvas" data-bs-target="#offcanvas-menu" style="--zs-btn-padding-y: .75rem;">
                         Menu
                         <svg xmlns="http://www.w3.org/2000/svg" class="ms-2" width="16" height="16" fill="none"><path d="M12.956 5.766c-.101-.244-.272-.452-.491-.599s-.477-.225-.741-.225H4.276c-.264 0-.521.078-.741.225s-.39.355-.491.598-.127.512-.076.77.178.496.365.683l3.724 3.724c.25.25.589.39.943.39s.693-.14.943-.39l3.724-3.724c.186-.186.313-.424.365-.682s.025-.527-.076-.77z" fill="currentColor"/></svg>
                     </button>
-                </div>-->
+                </div>
 <?php endif; ?>
 
                 <!-- Lang switcher -->
