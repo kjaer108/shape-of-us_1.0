@@ -9,7 +9,7 @@ $captions = [
         'display_time' => 4000
     ],
     [
-        'text' => 'A visual archive of the human body, free from filters and shame.',
+        'text' => 'A visual archive of the body, free from filters and shame.',
         'display_time' => 4000
     ],
     [

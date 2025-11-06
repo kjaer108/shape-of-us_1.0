@@ -116,80 +116,6 @@ function zdebugDB($str) {
   Misc. Functions
  *****************************************************************************/
 
-function get_setting($group, $key, $shop_id = NULL) {
-    global $pdo;
-    global $zandora;
-
-    $sql = "SELECT `data` FROM (
-                ( SELECT `data`, 5 AS `order` FROM `settings` WHERE `group` = :group1 AND `key` = :key1 AND `shop_id` IS NULL AND `startdate` <= CURDATE() AND `enddate` >= CURDATE() AND `active` = 1 )
-                UNION
-                ( SELECT `data`, 4 AS `order` FROM `settings` WHERE `group` = :group2 AND `key` = :key2 AND `shop_id` IS NULL AND `startdate` <= CURDATE() AND `enddate` IS NULL AND `active` = 1 )
-                UNION
-                ( SELECT `data`, 3 AS `order` FROM `settings` WHERE `group` = :group3 AND `key` = :key3 AND `shop_id` IS NULL AND `startdate` IS NULL AND `enddate` >= CURDATE() AND `active` = 1 )
-                UNION
-                ( SELECT `data`, 1 AS `order` FROM `settings` WHERE `group` = :group4 AND `key` = :key4 AND `shop_id` IS NULL AND `startdate` IS NULL AND `enddate` IS NULL AND `active` = 1 )
-            ) as `tblS` WHERE 1 LIMIT 1";
-
-    $params = [
-        ':group1' => $group,
-        ':key1' => $key,
-        ':group2' => $group,
-        ':key2' => $key,
-        ':group3' => $group,
-        ':key3' => $key,
-        ':group4' => $group,
-        ':key4' => $key,
-    ];
-
-    if (!is_null($shop_id)) {
-        $sql = "SELECT `data` FROM (
-                    ( SELECT `data`, 5 AS `order` FROM `settings` WHERE `group` = :group5 AND `key` = :key5 AND `shop_id` = :shop_id AND `startdate` <= CURDATE() AND `enddate` >= CURDATE() AND `active` = 1 )
-                    UNION
-                    ( SELECT `data`, 4 AS `order` FROM `settings` WHERE `group` = :group6 AND `key` = :key6 AND `shop_id` = :shop_id AND `startdate` <= CURDATE() AND `enddate` IS NULL AND `active` = 1 )
-                    UNION
-                    ( SELECT `data`, 3 AS `order` FROM `settings` WHERE `group` = :group7 AND `key` = :key7 AND `shop_id` = :shop_id AND `startdate` IS NULL AND `enddate` >= CURDATE() AND `active` = 1 )
-                    UNION
-                    ( SELECT `data`, 1 AS `order` FROM `settings` WHERE `group` = :group8 AND `key` = :key8 AND `shop_id` = :shop_id AND `startdate` IS NULL AND `enddate` IS NULL AND `active` = 1 )
-                ) as `tblS` WHERE 1 LIMIT 1";
-
-        $params[':shop_id'] = $shop_id;
-        $params[':group5'] = $group;
-        $params[':key5'] = $key;
-        $params[':group6'] = $group;
-        $params[':key6'] = $key;
-        $params[':group7'] = $group;
-        $params[':key7'] = $key;
-        $params[':group8'] = $group;
-        $params[':key8'] = $key;
-    }
-
-    try {
-        $result = pdo_get_row($pdo, $sql, $params);
-
-        if (!$result) {
-            return null;
-        } else {
-            $data = json_decode(trim($result['data']), true);
-
-            if (isset($data["textkey-mobile"]) && $data["textkey-mobile"]) {
-                $text = get_translation($data["textkey-mobile"], $zandora["language"]);
-                if ($data["text-mobile"]) $data["text-mobile"] = $text;
-            }
-
-            if (isset($data["textkey-desktop"]) && $data["textkey-desktop"]) {
-                $text = get_translation($data["textkey-desktop"], $zandora["language"]);
-                if ($text) $data["text-desktop"] = $text;
-            }
-
-            unset($text);
-
-            return $data;
-        }
-    } catch (Exception $e) {
-        echo "Error: " . $e->getMessage();
-    }
-}
-
 /*function get_translation($key, $language) {
     global $pdo;
 
@@ -1315,35 +1241,12 @@ function generate_guid_v4() {
 function get_country_from_ip($ip) {
     global $pdo;
 
-    // *** Using ip-api.com ***************************************************
-/*    $url = "http://ip-api.com/json/" . $ip;
-
-    // Fetch the response using file_get_contents
-    $response = @file_get_contents($url); // Suppress warnings with @
-
-    // Check if the response was successful
-    if ($response === false) {
-        // Handle the error (e.g., log it, throw an exception, etc.)
-        return null; // Or return a default value or an error message
+    if (in_array($ip, ['127.0.0.1', '::1'])) {
+        return 'DK'; // or whatever you want as default
     }
 
-    // Decode the JSON response
-    $data = json_decode($response);
-
-    // Check if JSON decoding was successful
-    if (json_last_error() !== JSON_ERROR_NONE) {
-        // Handle JSON decoding error
-        return null; // Or return a default value or an error message
-    }
-
-    // Return the country code if it exists
-    return isset($data->countryCode) ? $data->countryCode : null;*/
-
-
-    // *** Using api.country.is ***********************************************
     $sql = "SELECT `country_code` FROM `cache_ipcountry` WHERE `ip` = :ip";
     $params = [':ip' => $ip];
-
     $data = pdo_get_col($pdo, $sql, $params);
 
     if ($data) {
@@ -1351,23 +1254,16 @@ function get_country_from_ip($ip) {
     }
 
     $url = "https://api.country.is/" . $ip;
+    $response = @file_get_contents($url);
 
-    // Fetch the response using file_get_contents
-    $response = @file_get_contents($url); // Suppress warnings with @
-
-    // Check if the response was successful
     if ($response === false) {
-        // Handle the error (e.g., log it, throw an exception, etc.)
-        return null; // Or return a default value or an error message
+        return null;
     }
 
-    // Decode the JSON response
     $data = json_decode($response);
 
-    // Check if JSON decoding was successful
     if (json_last_error() !== JSON_ERROR_NONE) {
-        // Handle JSON decoding error
-        return null; // Or return a default value or an error message
+        return null;
     }
 
     $sql = "INSERT INTO `cache_ipcountry` (`ip`, `country_code`, `data`) VALUES (:ip, :country_code, :data)";
@@ -1378,8 +1274,19 @@ function get_country_from_ip($ip) {
     ];
     pdo_execute($pdo, $sql, $params);
 
-    // Return the country if it exists
     return isset($data->country) ? $data->country : null;
+}
+
+function get_browser_language(): ?string {
+    if (!empty($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+        // Example: "en-US,en;q=0.9,fr;q=0.8"
+        $langs = explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
+        if (!empty($langs[0])) {
+            // Take the primary language part and make it uppercase
+            return strtoupper(substr($langs[0], 0, 2));
+        }
+    }
+    return null;
 }
 
 function timeToSeconds($time) {
@@ -1488,4 +1395,3 @@ function in_comma_list(string $needle, $list, bool $case_insensitive = true): bo
 
     return in_array($needle, $items);
 }
-

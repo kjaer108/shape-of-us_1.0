@@ -58,7 +58,7 @@ function addValue(array &$additionalInfo, string $title, $values, string $note =
     ];
 
     if (!empty($note)) {
-        $field['note'] = $note;
+        $field['note'] = __($note);
     }
 
     // Normalize $values to an array if it's a string

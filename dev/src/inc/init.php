@@ -29,8 +29,23 @@ $DeepL = new translate(
 $page['name'] ?? NULL,
 true);
 
+// Set user IP
+if( array_key_exists('HTTP_X_FORWARDED_FOR', $_SERVER) && !empty($_SERVER['HTTP_X_FORWARDED_FOR']) ) {
+    if (strpos($_SERVER['HTTP_X_FORWARDED_FOR'], ',')>0) {
+        $addr = explode(",",$_SERVER['HTTP_X_FORWARDED_FOR']);
+        define("user_ip", trim($addr[0]));
+    } else {
+        define("user_ip", $_SERVER['HTTP_X_FORWARDED_FOR']);
+    }
+}
+else {
+    define("user_ip", $_SERVER['REMOTE_ADDR']);
+}
+
 $selectedLang = getLanguage();
 //$selectedLang = "en"; // TODO: Remove this line when the language selection is implemented
+
+$countryCode = strtolower(get_country_from_ip(user_ip)) ?? "dk";
 
 // Include arrays with translations
 require_once __DIR__."/../../locale/".$selectedLang."/language_".$selectedLang.".php";

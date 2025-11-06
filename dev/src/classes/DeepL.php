@@ -167,7 +167,8 @@ class translate
                 'text'               => $text,                 // single text (we encode properly)
                 'target_lang'        => $this->targetLang,
                 'tag_handling'       => 'html',
-                'outline_detection'  => '1'
+                'outline_detection'  => '1',
+                'model_type'         => 'quality_optimized'    // highest translation quality
             ];
 
             $result = $this->makeCurl($this->endpoint . 'v2/translate', $data);
