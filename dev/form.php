@@ -1,6 +1,9 @@
 <?php
 $page = ["name"=>"form", "translate"=>true, "sourcelang" => "en"];
 require_once "src/inc/init.php";
+require_once "src/fx/fx-settings.php";
+
+$country_favorites = get_setting('form.country_locale_favorites.'.$countryCode, []);
 
 //log_page_load();
 
@@ -559,7 +562,7 @@ $isFtM = $_SESSION["formdata"][1]["ftm"] ?? false;
                                         <?php foreach ($country_list as $code => $name): ?>
                                             <?php
                                             if (!empty($code) && !in_array(strtolower($code), $country_favorites, true)):
-                                                $selected = ($selectedBirth === $code) ? 'selected' : '';
+                                                $selected = ($selectedResidence === $code) ? 'selected' : '';
                                                 ?>
                                                 <option value="<?= htmlspecialchars($code) ?>" <?= $selected ?>>
                                                     <?= htmlspecialchars($name) ?>
@@ -1956,7 +1959,7 @@ $tattooOptions = [
                             <?= __("We truly appreciate your participation in the Shape of Us project. Your contribution helps create a more inclusive and representative collection.") ?>
                         </p>
                         <a href="<?= get_url("app") ?>" class="btn btn-lg btn-light rounded-pill">
-                            <?= __("Visit Shape of Us Site") ?>
+                            <?= __("Visit the Shape of us Gallery") ?>
                             <svg xmlns="http://www.w3.org/2000/svg" class="ms-2" width="16" height="16" fill="none"><path d="M5.628 3.182c-.244.101-.452.272-.599.491s-.225.477-.225.741v7.448c0 .264.078.521.225.741s.355.39.598.491.512.127.77.076.496-.178.683-.365l3.724-3.724c.25-.25.39-.589.39-.943s-.14-.693-.39-.943L7.081 3.472c-.186-.186-.424-.313-.682-.365s-.527-.025-.77.076z" fill="currentColor"/></svg>
                         </a>
                         <div class="mt-lg-5 mt-4 pt-lg-0 pt-md-2">

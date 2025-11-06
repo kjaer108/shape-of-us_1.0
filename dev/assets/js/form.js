@@ -234,7 +234,29 @@ const stepHandlers = {
         // Re-validate on input change
         ageInput?.addEventListener("input", validateStep2Form);
         skinRadios.forEach(radio => radio.addEventListener("change", validateStep2Form));
-        residenceSelect?.addEventListener("change", validateStep2Form);
+        residenceSelect?.addEventListener("change", () => {
+            // If Country of Birth is not selected yet, mirror Country of Residence
+            if (birthSelect && (!birthSelect.value || birthSelect.value.trim() === "")) {
+                const newVal = residenceSelect ? residenceSelect.value : "";
+
+                // Update underlying select value
+                birthSelect.value = newVal;
+
+                // If Choices.js enhanced select exists, update via its API for UI sync
+                try {
+                    const choicesInstance = window?.choices?.general_birth;
+                    if (choicesInstance && typeof choicesInstance.setChoiceByValue === "function") {
+                        choicesInstance.setChoiceByValue(newVal);
+                    }
+                } catch (e) {
+                    console.debug("Choices update for #general_birth failed or not present:", e);
+                }
+
+                // Notify any listeners and our validation
+                birthSelect.dispatchEvent(new Event("change", { bubbles: true }));
+            }
+            validateStep2Form();
+        });
         birthSelect?.addEventListener("change", validateStep2Form);
         anatomyCheckboxes.forEach(cb => cb.addEventListener("change", validateStep2Form));
 
