@@ -64,6 +64,7 @@ if (isset($page["translate"]) && $page["translate"] == 1) {
 
     <link rel="icon" type="image/png" href="assets/app-icons/icon-32x32.png" sizes="32x32">
     <link rel="apple-touch-icon" href="assets/app-icons/icon-180x180.png">
+    <script src="https://kit.fontawesome.com/e08239c9c4.js" crossorigin="anonymous"></script>
 
     <!-- Preloaded local web font (Clash Display + Satoshi) -->
     <link rel="preload" href="assets/fonts/clash-display-variable.woff2" as="font" type="font/woff2" crossorigin>

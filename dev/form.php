@@ -228,10 +228,10 @@ $isFtM = $_SESSION["formdata"][1]["ftm"] ?? false;
 <header class="container-fluid position-absolute top-0 start-0 end-0">
     <div class="d-flex align-items-center justify-content-sm-end justify-content-between gap-2 py-2">
         <div class="d-sm-none d-flex align-items-center gap-4">
-            <div>
+            <a href="<?= get_url("app") ?>" class="d-block">
                 <img src="assets/img/shape-of-us.png" width="180" alt="Shape of Us">
-            </div>
-            <a href="#" target="_blank" rel="noopener" class="d-block mt-n1">
+            </a>
+            <a href="https://zandora.net" target="_blank" rel="noopener" class="d-block mt-n1">
                 <img src="assets/img/zandora.png" width="108" alt="by Zandora">
             </a>
         </div>
@@ -272,12 +272,12 @@ $isFtM = $_SESSION["formdata"][1]["ftm"] ?? false;
             <!-- Sidebar -->
             <aside class="col-lg-3 col-sm-4 px-3 d-sm-block d-none" style="background-color: #e5ded1;">
                 <div class="p-3 sticky-top">
-                    <a href="#" target="_blank" rel="noopener" class="d-block mb-lg-3 mb-2">
+                    <a href="https://zandora.net" target="_blank" rel="noopener" class="d-block mb-lg-3 mb-2">
                         <img src="assets/img/zandora.png" width="106" alt="by Zandora">
                     </a>
-                    <div class="mb-4 pb-md-2">
+                    <a href="<?=get_url("app")?>" class="d-block mb-4 pb-md-2">
                         <img src="assets/img/shape-of-us.png" width="318" alt="Shape of Us">
-                    </div>
+                    </a>
 
                     <!-- Illustration -->
                     <div class="mb-4 pb-md-2">
