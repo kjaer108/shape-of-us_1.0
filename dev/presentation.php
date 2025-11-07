@@ -22,21 +22,12 @@ $captions = [
     ],
     [
         'text' => 'Step inside the labyrinth and be part of the gallery.',
-        'display_time' => 7000
+        'display_time' => 6000
     ]
 ];
 
 $image_rotate = range(1, 12);
 shuffle($image_rotate);
-
-
-// Localize captions for current language and expose as JSON for JS
-$captions_i18n = array_map(function($c){
-    return [
-        'text' => $c['text'],
-        'display_time' => (int)($c['display_time'] ?? 3000)
-    ];
-}, $captions);
 
 
 //*** HERE WE GO! Let's render the page ***************************************?>
@@ -144,7 +135,10 @@ $captions_i18n = array_map(function($c){
                     <span class="msg"></span>
                 </div>
                 <script id="captions-data" type="application/json">
-                    <?= json_encode($captions_i18n, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?>
+                    <?= json_encode($captions, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?>
+                </script>
+                <script id="image-rotate" type="application/json">
+                    <?= json_encode($image_rotate, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?>
                 </script>
             </div>
         </section>
