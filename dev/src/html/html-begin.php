@@ -14,41 +14,28 @@ $absoluteUrlWithoutParams = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === '
     <!-- Language -->
 <?php
 if (isset($page["translate"]) && $page["translate"] == 1) {
-    // ✅ Define $currentLangPattern before it's used
-    $currentLangPattern = '@/(' . implode('|', $language_support) . ')/@';
+    if (IS_LOCALHOST) {
+        foreach ($language_support as $lang) {
+            echo '<link rel="alternate" hreflang="' . $lang . '" href="' . htmlspecialchars($absoluteUrlWithoutParams . '?lang=' . $lang) . '" />' . PHP_EOL;
+        }
+    } else {
+        // Only routes that have a localized rewrite rule in .htaccess can have language URLs.
+        $routablePages = ['coming-soon', 'about', 'form', 'app', 'present'];
 
-    foreach ($language_support as $lang) {
-        if (IS_LOCALHOST) {
-            echo '<link rel="alternate" hreflang="' . $lang . '" href="' . $absoluteUrlWithoutParams . '?lang=' . $lang . '" />' . PHP_EOL;
-        } else {
-            // Detect if the URL already contains a language prefix
-            if (preg_match($currentLangPattern, parse_url($absoluteUrlWithoutParams, PHP_URL_PATH), $matches)) {
-                // Replace existing language prefix with the correct one
-                $updatedUrl = preg_replace($currentLangPattern, "/$lang/", $absoluteUrlWithoutParams, 1);
-            } else {
-                // No language prefix found, prepend the new language
-                $updatedUrl = "https://shapeofus.eu/$lang" . parse_url($absoluteUrlWithoutParams, PHP_URL_PATH);
+        // Strip an existing language prefix, trailing slash and ".php"; presentation.php is served as /present
+        $basePath = preg_replace('@^/(' . implode('|', $language_support) . ')(?=/|$)@', '', $currentUrlWithoutParams);
+        $pageSlug = trim(preg_replace('@\.php$@', '', $basePath), '/');
+        if ($pageSlug === 'presentation') $pageSlug = 'present';
+
+        // Skip pages without a localized route instead of emitting links that 404
+        if (in_array($pageSlug, $routablePages, true)) {
+            foreach ($language_support as $lang) {
+                echo '<link rel="alternate" hreflang="' . $lang . '" href="https://' . SITE_DOMAIN . '/' . $lang . '/' . $pageSlug . '" />' . PHP_EOL;
             }
-
-            // Ensure no double slashes
-            $updatedUrl = preg_replace('@(?<!:)//+@', '/', $updatedUrl);
-
-            echo '<link rel="alternate" hreflang="' . $lang . '" href="' . $updatedUrl . '" />' . PHP_EOL;
+            // x-default: the English version (previously varied per visitor)
+            echo '<link rel="alternate" hreflang="x-default" href="https://' . SITE_DOMAIN . '/en/' . $pageSlug . '" />' . PHP_EOL;
         }
     }
-
-    // ✅ x-default handling (Fixes error)
-    $xDefaultLang = $_SESSION['lang'] ?? $_COOKIE['lang'] ?? substr($_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? 'en', 0, 2);
-    $xDefaultLang = in_array($xDefaultLang, $language_support) ? $xDefaultLang : 'en';
-
-    // Remove existing language prefix before setting x-default
-    $cleanUrl = preg_replace($currentLangPattern, "/", $absoluteUrlWithoutParams, 1);
-    $xDefaultUrl = "https://shapeofus.eu/$xDefaultLang" . parse_url($cleanUrl, PHP_URL_PATH);
-
-    // Ensure no extra slashes in x-default URL
-    $xDefaultUrl = preg_replace('@(?<!:)//+@', '/', $xDefaultUrl);
-
-    echo '<link rel="alternate" hreflang="x-default" href="' . $xDefaultUrl . '" />' . PHP_EOL;
 }
 ?>
 

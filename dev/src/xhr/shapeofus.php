@@ -1,6 +1,5 @@
 <?php
 require_once __DIR__."/../inc/init.php";
-require_once __DIR__."/../inc/lang.php";
 
 $debug = FALSE;
 $dont_write = FALSE;
@@ -95,10 +94,14 @@ if ($cmd == "newsletter-signup") {
 
     $lang = get_param("lang");
 
-    setLanguage($lang);
+    $success = setLanguage($lang);
 
     // We are done, let's return the data
     $result["success"] = $success;
+    if (!$success) {
+        http_response_code(400);
+        $result["error"] = "unsupported_language";
+    }
 
 }
 

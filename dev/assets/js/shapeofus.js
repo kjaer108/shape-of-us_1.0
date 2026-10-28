@@ -2,7 +2,15 @@ let currentUrl = new URL(window.location.href);
 console.log("Current URL:", currentUrl.toString());
 
 // Check if running on localhost (assumes port 8000, 8080, etc., or "localhost" in hostname)
-let isLocalhost = currentUrl.hostname === "localhost" || currentUrl.hostname.startsWith("127.") || currentUrl.port;
+const SUPPORTED_LANGUAGES = ["da", "en", "de", "fr", "es", "it", "pl", "cs"];
+
+function isLocalhostHost(hostname) {
+    return hostname === "localhost" ||
+        hostname === "[::1]" || hostname === "::1" ||
+        /^127(\.\d{1,3}){3}$/.test(hostname);
+}
+
+let isLocalhost = isLocalhostHost(currentUrl.hostname);
 console.log("Running on localhost?", isLocalhost);
 
 function isMobile() {
@@ -32,6 +40,8 @@ function setLanguage(lang) {
         .then((data) => {
             if (data.success) {
                 changeLanguage(lang);
+            } else {
+                console.error("Language change failed:", data.error || "unknown error");
             }
         })
         .catch((error) => {
@@ -42,17 +52,20 @@ function setLanguage(lang) {
 
 function changeLanguage(lang) {
     let url = new URL(window.location.href);
-    let isLocalhost = url.hostname === "localhost" || url.hostname.startsWith("127.") || url.port;
+    let isLocalhost = isLocalhostHost(url.hostname);
 
     if (isLocalhost) {
         // Use query parameter for localhost
         url.searchParams.set('lang', lang);
     } else {
         // Use subdirectory for live site
+        // The path prefix carries the language; drop any ?lang= (keeps other params, e.g. gallery filters)
+        if (url.searchParams.has('lang')) url.searchParams.delete('lang');
+
         let pathParts = url.pathname.split('/');
 
         // Ensure we have a valid language structure in the URL
-        if (pathParts.length > 1 && /^[a-z]{2}$/.test(pathParts[1])) {
+        if (pathParts.length > 1 && SUPPORTED_LANGUAGES.includes(pathParts[1])) {
             pathParts[1] = lang; // Replace the first segment (language)
         } else {
             pathParts.splice(1, 0, lang); // Insert language at the beginning if missing
